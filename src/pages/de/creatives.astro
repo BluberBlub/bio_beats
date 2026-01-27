@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ArrowRight, Palette, Camera, Video, Music, Globe } from "lucide-react";
+
+const pageTitle = "Für Kreative — BIO BEATS";
+const pageDescription =
+    "Verbinde dich mit Künstlern und Events als kreativer Profi.";
+
+const roles = [
+    {
+        icon: "Palette",
+        title: "Designer",
+        description: "Grafik, Branding, Merchandise",
+    },
+    {
+        icon: "Camera",
+        title: "Fotografen",
+        description: "Event, Portrait, Promo",
+    },
+    {
+        icon: "Video",
+        title: "Videografen",
+        description: "Musikvideos, Live-Mitschnitte, Promo",
+    },
+    {
+        icon: "Music",
+        title: "Visual Artists",
+        description: "VJ, Lichtdesign, Mapping",
+    },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span class="badge-accent mb-4">Für Kreative</span>
+                <h1 class="text-bio-white mb-6">
+                    Dein kreatives Talent, unsere Plattform.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    BIO BEATS verbindet kreative Profis mit Künstlern, Labels
+                    und Events – für nachhaltige Zusammenarbeit in der
+                    elektronischen Musik.
+                </p>
+                <a
+                    href="/de/join/creative"
+                    class="btn-primary inline-flex items-center gap-2"
+                >
+                    Als Kreative/r registrieren
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roles -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">Kreative Disziplinen</h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    Egal ob Designer, Fotograf oder VJ – hier findest du deine
+                    Nische.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    roles.map((role) => (
+                        <div class="card text-center">
+                            <div class="w-16 h-16 rounded-full bg-bio-accent/10 flex items-center justify-center mx-auto mb-4">
+                                {role.icon === "Palette" && (
+                                    <Palette className="w-8 h-8 text-bio-accent" />
+                                )}
+                                {role.icon === "Camera" && (
+                                    <Camera className="w-8 h-8 text-bio-accent" />
+                                )}
+                                {role.icon === "Video" && (
+                                    <Video className="w-8 h-8 text-bio-accent" />
+                                )}
+                                {role.icon === "Music" && (
+                                    <Music className="w-8 h-8 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
+                                {role.title}
+                            </h3>
+                            <p class="text-bio-gray-400">{role.description}</p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">
+                Bereit, dein Portfolio zu erweitern?
+            </h2>
+            <p class="text-bio-gray-400 text-lg mb-8">
+                Erstelle dein Kreativ-Profil und verbinde dich mit der Szene.
+            </p>
+            <a
+                href="/de/join/creative"
+                class="btn-primary inline-flex items-center gap-2"
+            >
+                Jetzt registrieren
+                <ArrowRight className="w-4 h-4" />
+            </a>
+        </div>
+    </section>
+</BaseLayout>

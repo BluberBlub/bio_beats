@@ -1,0 +1,135 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+    ArrowRight,
+    Building,
+    Calendar,
+    Users,
+    Globe,
+    Shield,
+    TrendingUp,
+} from "lucide-react";
+
+const pageTitle = "Für Booker — BIO BEATS";
+const pageDescription =
+    "Buche verifizierte Künstler mit professioneller Infrastruktur über BIO BEATS.";
+
+const benefits = [
+    {
+        icon: "Users",
+        title: "Verifizierte Künstler",
+        description:
+            "Zugang zu geprüften Profis mit vollständigen Profilen, Referenzen und Bewertungen.",
+    },
+    {
+        icon: "Calendar",
+        title: "Einfache Verfügbarkeit",
+        description:
+            "Echtzeit-Verfügbarkeitskalender und direkte Booking-Anfragen.",
+    },
+    {
+        icon: "Shield",
+        title: "Sichere Abwicklung",
+        description:
+            "Vertragsvorlagen, sichere Zahlungen und professionelle Standards.",
+    },
+    {
+        icon: "Globe",
+        title: "Globales Netzwerk",
+        description: "Finde Künstler aus der ganzen Welt für deine Events.",
+    },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span class="badge-accent mb-4">Für Booker</span>
+                <h1 class="text-bio-white mb-6">
+                    Buche Künstler mit Vertrauen.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    BIO BEATS gibt dir Zugang zu einem verifizierten Netzwerk
+                    professioneller Künstler – mit allen Tools, die du für
+                    reibungslose Bookings brauchst.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a
+                        href="/de/join/booker"
+                        class="btn-primary inline-flex items-center gap-2"
+                    >
+                        Als Booker registrieren
+                        <ArrowRight className="w-4 h-4" />
+                    </a>
+                    <a href="/de/artists" class="btn-secondary">
+                        Künstler entdecken
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">
+                    Warum Booker BIO BEATS lieben
+                </h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    Weniger Risiko, mehr Professionalität, bessere Events.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    benefits.map((benefit) => (
+                        <div class="card">
+                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                                {benefit.icon === "Users" && (
+                                    <Users className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Calendar" && (
+                                    <Calendar className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Shield" && (
+                                    <Shield className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Globe" && (
+                                    <Globe className="w-6 h-6 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
+                                {benefit.title}
+                            </h3>
+                            <p class="text-bio-gray-400">
+                                {benefit.description}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">
+                Bereit, bessere Bookings zu machen?
+            </h2>
+            <p class="text-bio-gray-400 text-lg mb-8">
+                Registriere dich kostenlos und entdecke unser Künstler-Netzwerk.
+            </p>
+            <a
+                href="/de/join/booker"
+                class="btn-primary inline-flex items-center gap-2"
+            >
+                Jetzt registrieren
+                <ArrowRight className="w-4 h-4" />
+            </a>
+        </div>
+    </section>
+</BaseLayout>

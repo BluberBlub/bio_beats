@@ -1,13 +1,10 @@
 ---
-import { mainNavigation, secondaryNavigation } from "../../data/navigation";
-import { getLangFromUrl, getTranslations } from "../../i18n";
+import { mainNavigation } from "../../data/navigation";
 import MobileNav from "../react/MobileNav";
-import LanguageSwitcher from "../react/LanguageSwitcher";
+import { getLangFromUrl } from "../../i18n";
 
 const url = new URL(Astro.request.url);
 const lang = getLangFromUrl(url);
-const t = getTranslations(lang);
-const currentPath = url.pathname;
 ---
 
 <header
@@ -44,22 +41,17 @@ const currentPath = url.pathname;
 
       <!-- Desktop Actions -->
       <div class="hidden lg:flex items-center gap-3">
-        <LanguageSwitcher
-          client:load
-          currentLang={lang}
-          currentPath={currentPath}
-        />
         <a
           href={lang === "de" ? "/de/login" : "/login"}
           class="btn-ghost text-sm"
         >
-          {t.nav.login}
+          {lang === "de" ? "Anmelden" : "Login"}
         </a>
         <a
           href={lang === "de" ? "/de/join" : "/join"}
           class="btn-primary text-sm"
         >
-          {t.nav.join}
+          {lang === "de" ? "Beitreten" : "Join"}
         </a>
       </div>
 

@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+    ArrowRight,
+    Lightbulb,
+    Settings,
+    HeartHandshake,
+    Globe,
+} from "lucide-react";
+
+const pageTitle = "Services — BIO BEATS";
+const pageDescription =
+    "Modulare Services für Künstler, Labels und Booker auf BIO BEATS.";
+
+const services = [
+    {
+        icon: "Lightbulb",
+        title: "Brand Consulting",
+        description:
+            "Entwickle deine Künstlermarke mit professioneller Beratung zu Positionierung, Messaging und visuellem Auftritt.",
+    },
+    {
+        icon: "Settings",
+        title: "Booking Management",
+        description:
+            "Lass unser Team deine Bookings managen – von Anfragen über Verhandlungen bis zur Vertragsabwicklung.",
+    },
+    {
+        icon: "HeartHandshake",
+        title: "Label Services",
+        description:
+            "Distribution, Promotion und Rechteverwaltung für Labels jeder Größe.",
+    },
+    {
+        icon: "Globe",
+        title: "International Expansion",
+        description:
+            "Unterstützung bei der Erschließung neuer Märkte und dem Aufbau internationaler Netzwerke.",
+    },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span class="badge-accent mb-4">Services</span>
+                <h1 class="text-bio-white mb-6">
+                    Modulare Services für dein Wachstum.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    Wähle die Services, die du brauchst – von Brand Consulting
+                    bis Booking Management.
+                </p>
+                <a
+                    href="/de/contact?ref=Enterprise%20Services%20Inquiry"
+                    class="btn-primary inline-flex items-center gap-2"
+                >
+                    Kontakt aufnehmen
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {
+                    services.map((service) => (
+                        <div class="card p-8">
+                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                                {service.icon === "Lightbulb" && (
+                                    <Lightbulb className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {service.icon === "Settings" && (
+                                    <Settings className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {service.icon === "HeartHandshake" && (
+                                    <HeartHandshake className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {service.icon === "Globe" && (
+                                    <Globe className="w-6 h-6 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-3">
+                                {service.title}
+                            </h3>
+                            <p class="text-bio-gray-400">
+                                {service.description}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">
+                Interessiert an unseren Services?
+            </h2>
+            <p class="text-bio-gray-400 text-lg mb-8">
+                Kontaktiere uns für ein unverbindliches Gespräch.
+            </p>
+            <a href="/de/contact" class="btn-primary">Kontakt aufnehmen</a>
+        </div>
+    </section>
+</BaseLayout>

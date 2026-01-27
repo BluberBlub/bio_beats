@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FAQSection from "../../components/react/FAQSection";
+
+const pageTitle = "FAQ — BIO BEATS";
+const pageDescription =
+    "Häufig gestellte Fragen zu BIO BEATS und unserer Plattform.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Header -->
+    <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow text-center">
+            <h1 class="text-bio-white mb-4">Häufig gestellte Fragen</h1>
+            <p class="text-xl text-bio-gray-400">
+                Finde Antworten auf die wichtigsten Fragen zu BIO BEATS.
+            </p>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <FAQSection client:load />
+        </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-2xl font-bold text-bio-white mb-4">Noch Fragen?</h2>
+            <p class="text-bio-gray-400 mb-6">Wir helfen dir gerne weiter.</p>
+            <a href="/de/contact" class="btn-primary">Kontakt aufnehmen</a>
+        </div>
+    </section>
+</BaseLayout>

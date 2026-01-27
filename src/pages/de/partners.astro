@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ArrowRight, Building, Music, Calendar, Briefcase } from "lucide-react";
+
+const pageTitle = "Partner — BIO BEATS";
+const pageDescription = "Unsere Partner aus der elektronischen Musik-Szene.";
+
+const partners = [
+    { name: "Berghain", type: "Venue", location: "Berlin, DE" },
+    { name: "Dekmantel", type: "Festival", location: "Amsterdam, NL" },
+    { name: "Fabric", type: "Venue", location: "London, UK" },
+    { name: "Tresor", type: "Label", location: "Berlin, DE" },
+    { name: "Time Warp", type: "Festival", location: "Mannheim, DE" },
+    { name: "Watergate", type: "Venue", location: "Berlin, DE" },
+    { name: "Resident Advisor", type: "Media", location: "Berlin, DE" },
+    { name: "Awakenings", type: "Festival", location: "Amsterdam, NL" },
+];
+
+const stats = [
+    { label: "Venues", count: "50+" },
+    { label: "Labels", count: "30+" },
+    { label: "Festivals", count: "25+" },
+    { label: "Agenturen", count: "15+" },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span class="badge-accent mb-4">Partner</span>
+                <h1 class="text-bio-white mb-6">
+                    Gemeinsam für elektronische Kultur.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    Wir arbeiten mit führenden Venues, Labels, Festivals und
+                    Agenturen zusammen, um die elektronische Musikszene zu
+                    stärken.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {
+                    stats.map((stat) => (
+                        <div class="card text-center py-8">
+                            <div class="text-4xl font-bold text-bio-accent mb-2">
+                                {stat.count}
+                            </div>
+                            <div class="text-bio-gray-400">{stat.label}</div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Grid -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">Unsere Partner</h2>
+                <p class="text-bio-gray-400">
+                    Eine Auswahl unserer Partner aus der Szene.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {
+                    partners.map((partner) => (
+                        <div class="card p-6 hover:border-bio-gray-700 transition-colors">
+                            <h3 class="font-semibold text-bio-white mb-1">
+                                {partner.name}
+                            </h3>
+                            <p class="text-sm text-bio-gray-400">
+                                {partner.type} • {partner.location}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section bg-bio-black">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">Partner werden?</h2>
+            <p class="text-bio-gray-400 text-lg mb-8">
+                Werde Teil unseres Netzwerks und profitiere von der BIO BEATS
+                Community.
+            </p>
+            <a
+                href="/de/contact?reason=partnership"
+                class="btn-primary inline-flex items-center gap-2"
+            >
+                Kontakt aufnehmen
+                <ArrowRight className="w-4 h-4" />
+            </a>
+        </div>
+    </section>
+</BaseLayout>

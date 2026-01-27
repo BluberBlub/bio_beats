@@ -1,0 +1,134 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+    ArrowRight,
+    Briefcase,
+    Calendar,
+    BarChart,
+    Shield,
+    Users,
+} from "lucide-react";
+
+const pageTitle = "Für Manager — BIO BEATS";
+const pageDescription =
+    "Verwalte deine Künstler-Roster professionell mit BIO BEATS.";
+
+const benefits = [
+    {
+        icon: "Users",
+        title: "Roster-Verwaltung",
+        description:
+            "Verwalte alle deine Künstler an einem Ort mit individuellen Profilen und Dashboards.",
+    },
+    {
+        icon: "Calendar",
+        title: "Booking-Koordination",
+        description:
+            "Zentrale Übersicht aller Anfragen, Termine und Verhandlungen.",
+    },
+    {
+        icon: "BarChart",
+        title: "Analytics & Reporting",
+        description:
+            "Detaillierte Einblicke in Performance, Einnahmen und Wachstum.",
+    },
+    {
+        icon: "Shield",
+        title: "Professionelle Tools",
+        description:
+            "Vertragsvorlagen, Rechnungsstellung und sichere Kommunikation.",
+    },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span class="badge-accent mb-4">Für Manager</span>
+                <h1 class="text-bio-white mb-6">
+                    Dein Künstler-Roster, professionell verwaltet.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    BIO BEATS gibt dir alle Tools, um deine Künstler erfolgreich
+                    zu managen – von Bookings über Finanzen bis zur
+                    Karriereplanung.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a
+                        href="/de/join/manager"
+                        class="btn-primary inline-flex items-center gap-2"
+                    >
+                        Als Manager registrieren
+                        <ArrowRight className="w-4 h-4" />
+                    </a>
+                    <a href="/de/contact" class="btn-secondary">
+                        Demo anfragen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">Management-Tools für Profis</h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    Alles was du brauchst, um Künstlerkarrieren aufzubauen.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    benefits.map((benefit) => (
+                        <div class="card">
+                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                                {benefit.icon === "Users" && (
+                                    <Users className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Calendar" && (
+                                    <Calendar className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "BarChart" && (
+                                    <BarChart className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Shield" && (
+                                    <Shield className="w-6 h-6 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
+                                {benefit.title}
+                            </h3>
+                            <p class="text-bio-gray-400">
+                                {benefit.description}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">
+                Bereit, dein Management auf das nächste Level zu bringen?
+            </h2>
+            <p class="text-bio-gray-400 text-lg mb-8">
+                Registriere dich jetzt und verwalte deine Künstler
+                professionell.
+            </p>
+            <a
+                href="/de/join/manager"
+                class="btn-primary inline-flex items-center gap-2"
+            >
+                Jetzt registrieren
+                <ArrowRight className="w-4 h-4" />
+            </a>
+        </div>
+    </section>
+</BaseLayout>
