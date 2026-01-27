@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ArrowLeft, Mail } from "lucide-react";
+
+/**
+ * IMPRESSUM TEMPLATE
+ *
+ * This is a standard template compliant with German TMG (Telemediengesetz).
+ * Requirements:
+ * - Name and address of the service provider
+ * - Contact information (email, phone)
+ * - Legal representative
+ * - VAT ID (if applicable)
+ * - Register entry (if applicable)
+ */
+
+const pageTitle = "Impressum — BIO BEATS";
+const pageDescription = "Impressum & Rechtliche Informationen.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <section class="section bg-bio-black">
+        <div class="container-narrow">
+            <h1 class="text-bio-white mb-8">Impressum</h1>
+
+            <div class="prose prose-invert max-w-none text-bio-gray-300">
+                <h2 class="text-bio-white">Angaben gemäß § 5 TMG</h2>
+                <p>
+                    BIO BEATS GmbH<br />
+                    Musterstraße 123<br />
+                    10115 Berlin<br />
+                    Deutschland
+                </p>
+
+                <h2 class="text-bio-white">Vertreten durch</h2>
+                <p>
+                    Max Mustermann (Geschäftsführer)<br />
+                    Erika Musterfrau (Geschäftsführerin)
+                </p>
+
+                <h2 class="text-bio-white">Kontakt</h2>
+                <p>
+                    Telefon: +49 (0) 30 12345678<br />
+                    E-Mail: contact@biobeats.io
+                </p>
+
+                <h2 class="text-bio-white">Registereintrag</h2>
+                <p>
+                    Eintragung im Handelsregister.<br />
+                    Registergericht: Amtsgericht Berlin-Charlottenburg<br />
+                    Registernummer: HRB 123456
+                </p>
+
+                <h2 class="text-bio-white">Umsatzsteuer-ID</h2>
+                <p>
+                    Umsatzsteuer-Identifikationsnummer gemäß §27 a
+                    Umsatzsteuergesetz:<br />
+                    DE 123 456 789
+                </p>
+
+                <h2 class="text-bio-white">
+                    Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+                </h2>
+                <p>
+                    Max Mustermann<br />
+                    Musterstraße 123<br />
+                    10115 Berlin
+                </p>
+
+                <h2 class="text-bio-white">Streitschlichtung</h2>
+                <p>
+                    Die Europäische Kommission stellt eine Plattform zur
+                    Online-Streitbeilegung (OS) bereit:
+                    https://ec.europa.eu/consumers/odr.<br />
+                    Unsere E-Mail-Adresse finden Sie oben im Impressum.
+                </p>
+                <p>
+                    Wir sind nicht bereit oder verpflichtet, an
+                    Streitbeilegungsverfahren vor einer
+                    Verbraucherschlichtungsstelle teilzunehmen.
+                </p>
+
+                <h2 class="text-bio-white">Haftung für Inhalte</h2>
+                <p>
+                    Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene
+                    Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
+                    verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
+                    Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
+                    gespeicherte fremde Informationen zu überwachen oder nach
+                    Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
+                    hinweisen.
+                </p>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

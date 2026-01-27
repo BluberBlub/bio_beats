@@ -1,10 +1,18 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FAQSection from "../../components/react/FAQSection";
+import { faqItems } from "../../data/faq";
 
 const pageTitle = "FAQ — BIO BEATS";
 const pageDescription =
     "Häufig gestellte Fragen zu BIO BEATS und unserer Plattform.";
+
+// Prepare FAQ data for React component
+const faqData = faqItems.map((item) => ({
+    question: item.question,
+    answer: item.answer,
+    category: item.category,
+}));
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -20,8 +28,8 @@ const pageDescription =
 
     <!-- FAQ Section -->
     <section class="section bg-bio-black">
-        <div class="container-wide">
-            <FAQSection client:load />
+        <div class="container-narrow">
+            <FAQSection client:visible items={faqData} />
         </div>
     </section>
 

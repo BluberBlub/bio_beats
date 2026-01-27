@@ -1,0 +1,93 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Target, Heart, Globe, Zap } from "lucide-react";
+
+/**
+ * MISSION PAGE (German)
+ */
+
+const pageTitle = "Unsere Mission — BIO BEATS";
+const pageDescription =
+    "Wir revolutionieren das Management elektronischer Musik.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section
+        class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black text-center"
+    >
+        <div class="container-narrow">
+            <span class="badge-accent mb-4">Mission & Vision</span>
+            <h1 class="text-4xl md:text-5xl font-bold text-bio-white mb-6">
+                Ein neues Ökosystem für elektronische Musik.
+            </h1>
+            <p class="text-xl text-bio-gray-400">
+                Wir verbinden Künstler, Agenturen und Veranstalter auf einer
+                Plattform, die mehr bietet als bloßes Booking.
+            </p>
+        </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card p-8">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-6"
+                    >
+                        <Target className="w-6 h-6 text-bio-accent" />
+                    </div>
+                    <h3 class="text-xl font-bold text-bio-white mb-3">Fokus</h3>
+                    <p class="text-bio-gray-400">
+                        Wir konzentrieren uns ausschließlich auf elektronische
+                        Musik und verstehen die spezifischen Bedürfnisse der
+                        Szene.
+                    </p>
+                </div>
+                <div class="card p-8">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-6"
+                    >
+                        <Heart className="w-6 h-6 text-bio-accent" />
+                    </div>
+                    <h3 class="text-xl font-bold text-bio-white mb-3">
+                        Leidenschaft
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        Angetrieben von der Liebe zur Musik, schaffen wir faire
+                        Bedingungen und nachhaltige Beziehungen.
+                    </p>
+                </div>
+                <div class="card p-8">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-6"
+                    >
+                        <Globe className="w-6 h-6 text-bio-accent" />
+                    </div>
+                    <h3 class="text-xl font-bold text-bio-white mb-3">
+                        Community
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        Wir bauen eine globale Gemeinschaft von Kreativen, die
+                        sich gegenseitig unterstützt und inspiriert.
+                    </p>
+                </div>
+                <div class="card p-8">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-6"
+                    >
+                        <Zap className="w-6 h-6 text-bio-accent" />
+                    </div>
+                    <h3 class="text-xl font-bold text-bio-white mb-3">
+                        Innovation
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        Technologie dient der Kunst. Wir entwickeln Tools, die
+                        komplexe Prozesse vereinfachen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Beaker, BarChart, Network, Cpu } from "lucide-react";
+
+/**
+ * SCIENCE PAGE (German)
+ */
+
+const pageTitle = "Science — BIO BEATS";
+const pageDescription = "Datengetriebenes Artist Management und Analyse.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div
+            class="container-wide grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+        >
+            <div>
+                <span class="badge-accent mb-4">BIO BEATS Science</span>
+                <h1 class="text-4xl md:text-5xl font-bold text-bio-white mb-6">
+                    Die Wissenschaft hinter dem Beat.
+                </h1>
+                <p class="text-xl text-bio-gray-400 mb-8">
+                    Wir nutzen fortschrittliche Datenanalyse und Machine
+                    Learning, um Trends vorherzusagen, Karrieren zu optimieren
+                    und das perfekte Match zwischen Künstler und Event zu
+                    finden.
+                </p>
+            </div>
+            <div class="relative">
+                <div
+                    class="absolute inset-0 bg-bio-accent/20 blur-3xl rounded-full"
+                >
+                </div>
+                <div
+                    class="card relative bg-bio-gray-900/80 backdrop-blur border-bio-gray-700 p-8"
+                >
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="space-y-4 font-mono text-sm text-bio-accent">
+                        <p>> analyzing_beat_patterns...</p>
+                        <p>> calculating_audience_affinity...</p>
+                        <p>> predicting_viral_potential...</p>
+                        <p class="text-green-400">> match_found: 98.5%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card p-6">
+                    <BarChart className="w-8 h-8 text-bio-accent mb-4" />
+                    <h3 class="text-xl font-bold text-bio-white mb-2">
+                        Performance Metriken
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        Echtzeit-Tracking von Streaming-Zahlen,
+                        Social-Media-Wachstum und Booking-Frequenz.
+                    </p>
+                </div>
+                <div class="card p-6">
+                    <Network className="w-8 h-8 text-bio-accent mb-4" />
+                    <h3 class="text-xl font-bold text-bio-white mb-2">
+                        Netzwerk-Analyse
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        Visualisierung von Verbindungen in der Szene, um
+                        strategische Kollaborationen zu identifizieren.
+                    </p>
+                </div>
+                <div class="card p-6">
+                    <Cpu className="w-8 h-8 text-bio-accent mb-4" />
+                    <h3 class="text-xl font-bold text-bio-white mb-2">
+                        Algorithmisches A&R
+                    </h3>
+                    <p class="text-bio-gray-400">
+                        KI-gestützte Entdeckung von aufstrebenden Talenten
+                        basierend auf musikalischen Signaturen.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

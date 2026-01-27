@@ -1,6 +1,7 @@
 ---
 import { mainNavigation } from "../../data/navigation";
 import MobileNav from "../react/MobileNav";
+import LanguageSwitcher from "../react/LanguageSwitcher";
 import { getLangFromUrl } from "../../i18n";
 
 const url = new URL(Astro.request.url);
@@ -41,6 +42,11 @@ const lang = getLangFromUrl(url);
 
       <!-- Desktop Actions -->
       <div class="hidden lg:flex items-center gap-3">
+        <LanguageSwitcher
+          client:load
+          currentLang={lang}
+          currentPath={url.pathname}
+        />
         <a
           href={lang === "de" ? "/de/login" : "/login"}
           class="btn-ghost text-sm"

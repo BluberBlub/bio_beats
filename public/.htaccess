@@ -1,0 +1,15 @@
+# IONOS default settings often disable directory listing
+# and expect index.html
+DirectoryIndex index.html
+
+# Prevent listing of directories without index file
+Options -Indexes
+
+# Custom 404 page
+ErrorDocument 404 /404.html
+
+# Ensure proper MIME types for assets
+<IfModule mod_mime.c>
+  AddType image/svg+xml .svg
+  AddType application/manifest+json .webmanifest
+</IfModule>

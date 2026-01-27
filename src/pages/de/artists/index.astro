@@ -1,31 +1,64 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ArtistDirectory from "../../components/react/ArtistDirectory";
-import { artists } from "../../data/artists";
-import { getTranslations } from "../../i18n";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ArtistDirectory from "../../../components/react/ArtistDirectory";
+import { artists, labels } from "../../../data/artists";
 
-const t = getTranslations("de");
-
-const pageTitle = "Künstler-Verzeichnis — BIO BEATS";
+const pageTitle = "Künstler & Labels — BIO BEATS";
 const pageDescription =
-    "Entdecke verifizierte Künstler der elektronischen Musik, die über BIO BEATS gebucht werden können.";
+    "Entdecke verifizierte Künstler und Labels der elektronischen Musik.";
+
+// Prepare data for React component
+const artistsData = artists.map((a) => ({
+    id: a.id,
+    name: a.name,
+    slug: a.slug,
+    type: a.type,
+    genres: a.genres,
+    bpmRange: a.bpmRange,
+    location: a.location,
+    shortBio: a.shortBio,
+    image: a.image,
+    isVerified: a.isVerified,
+    availability: a.availability,
+}));
+
+const labelsData = labels.map((l) => ({
+    id: l.id,
+    name: l.name,
+    slug: l.slug,
+    location: l.location,
+    shortBio: l.shortBio,
+    image: l.image,
+    genres: l.genres,
+    isVerified: l.isVerified,
+    artistCount: l.artistCount,
+    founded: l.founded,
+}));
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
     <!-- Header -->
     <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
-        <div class="container-narrow text-center">
-            <h1 class="text-bio-white mb-4">Künstler-Verzeichnis</h1>
-            <p class="text-xl text-bio-gray-400">
-                Entdecke verifizierte Künstler der elektronischen Musik
-            </p>
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <h1 class="text-bio-white mb-4">Künstler & Labels</h1>
+                <p class="text-xl text-bio-gray-400">
+                    Entdecke verifizierte Künstler, DJs, Live-Acts und Labels
+                    der elektronischen Musik.
+                </p>
+            </div>
         </div>
     </section>
 
-    <!-- Artists Directory -->
+    <!-- Directory -->
     <section class="section bg-bio-black">
         <div class="container-wide">
-            <ArtistDirectory client:load artists={artists} lang="de" />
+            <ArtistDirectory
+                client:visible
+                artists={artistsData}
+                labels={labelsData}
+                lang="de"
+            />
         </div>
     </section>
 </BaseLayout>

@@ -5,9 +5,79 @@ interface AuthFormProps {
     mode: 'login' | 'register';
     role?: string;
     onSuccess?: () => void;
+    lang?: 'en' | 'de';
 }
 
-export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
+const translations = {
+    en: {
+        emailRequired: 'Email is required',
+        invalidEmail: 'Invalid email format',
+        passwordRequired: 'Password is required',
+        passwordLength: 'Password must be at least 8 characters',
+        nameRequired: 'Name is required',
+        termsRequired: 'You must agree to the terms',
+        accountCreated: 'Account created!',
+        welcomeBack: 'Welcome back!',
+        redirectingEmail: 'Redirecting to email verification...',
+        redirecting: 'Redirecting...',
+        artistName: 'Artist Name / Alias',
+        fullName: 'Full Name',
+        yourArtistName: 'Your artist name',
+        yourName: 'Your name',
+        email: 'Email',
+        password: 'Password',
+        forgotPassword: 'Forgot password?',
+        location: 'Location',
+        cityCountry: 'City, Country',
+        agreeTerms: 'I agree to the',
+        termsOfService: 'Terms of Service',
+        and: 'and',
+        privacyPolicy: 'Privacy Policy',
+        rememberMe: 'Remember me',
+        creatingAccount: 'Creating account...',
+        loggingIn: 'Logging in...',
+        createAccount: 'Create Account',
+        login: 'Login',
+        hidePassword: 'Hide password',
+        showPassword: 'Show password'
+    },
+    de: {
+        emailRequired: 'E-Mail ist erforderlich',
+        invalidEmail: 'Ungültiges E-Mail-Format',
+        passwordRequired: 'Passwort ist erforderlich',
+        passwordLength: 'Passwort muss mindestens 8 Zeichen lang sein',
+        nameRequired: 'Name ist erforderlich',
+        termsRequired: 'Du musst den Bedingungen zustimmen',
+        accountCreated: 'Konto erstellt!',
+        welcomeBack: 'Willkommen zurück!',
+        redirectingEmail: 'Weiterleitung zur E-Mail-Verifizierung...',
+        redirecting: 'Weiterleitung...',
+        artistName: 'Künstlername / Alias',
+        fullName: 'Vollständiger Name',
+        yourArtistName: 'Dein Künstlername',
+        yourName: 'Dein Name',
+        email: 'E-Mail',
+        password: 'Passwort',
+        forgotPassword: 'Passwort vergessen?',
+        location: 'Standort',
+        cityCountry: 'Stadt, Land',
+        agreeTerms: 'Ich stimme den',
+        termsOfService: 'Nutzungsbedingungen',
+        and: 'und der',
+        privacyPolicy: 'Datenschutzerklärung zu',
+        rememberMe: 'Angemeldet bleiben',
+        creatingAccount: 'Erstelle Konto...',
+        loggingIn: 'Melde an...',
+        createAccount: 'Konto erstellen',
+        login: 'Anmelden',
+        hidePassword: 'Passwort verbergen',
+        showPassword: 'Passwort anzeigen'
+    }
+};
+
+export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFormProps) {
+    const t = translations[lang];
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -36,19 +106,19 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
 
         switch (field) {
             case 'email':
-                if (!formData.email) return 'Email is required';
-                if (!validateEmail(formData.email)) return 'Invalid email format';
+                if (!formData.email) return t.emailRequired;
+                if (!validateEmail(formData.email)) return t.invalidEmail;
                 break;
             case 'password':
-                if (!formData.password) return 'Password is required';
+                if (!formData.password) return t.passwordRequired;
                 if (mode === 'register' && !validatePassword(formData.password))
-                    return 'Password must be at least 8 characters';
+                    return t.passwordLength;
                 break;
             case 'name':
-                if (mode === 'register' && !formData.name) return 'Name is required';
+                if (mode === 'register' && !formData.name) return t.nameRequired;
                 break;
             case 'terms':
-                if (mode === 'register' && !formData.terms) return 'You must agree to the terms';
+                if (mode === 'register' && !formData.terms) return t.termsRequired;
                 break;
         }
         return null;
@@ -96,10 +166,11 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
 
         // Redirect after success
         setTimeout(() => {
+            const baseUrl = lang === 'de' ? '/de' : '';
             if (mode === 'register') {
-                window.location.href = '/verify-email';
+                window.location.href = `${baseUrl}/verify-email`;
             } else {
-                window.location.href = '/';
+                window.location.href = `${baseUrl}/`;
             }
         }, 1000);
     };
@@ -111,10 +182,10 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                     <CheckCircle className="w-8 h-8 text-green-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    {mode === 'register' ? 'Account created!' : 'Welcome back!'}
+                    {t.accountCreated}
                 </h3>
                 <p className="text-gray-400">
-                    {mode === 'register' ? 'Redirecting to email verification...' : 'Redirecting...'}
+                    {mode === 'register' ? t.redirectingEmail : t.redirecting}
                 </p>
             </div>
         );
@@ -132,7 +203,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
             {mode === 'register' && (
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                        {role === 'artist' ? 'Artist Name / Alias' : 'Full Name'} *
+                        {role === 'artist' ? t.artistName : t.fullName} *
                     </label>
                     <input
                         type="text"
@@ -143,7 +214,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                         onBlur={() => handleBlur('name')}
                         className={`w-full px-4 py-3 bg-[#262626] border rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors ${getFieldError('name') ? 'border-red-500' : 'border-[#404040]'
                             }`}
-                        placeholder={role === 'artist' ? 'Your artist name' : 'Your name'}
+                        placeholder={role === 'artist' ? t.yourArtistName : t.yourName}
                     />
                     {getFieldError('name') && (
                         <p className="mt-1 text-sm text-red-400">{getFieldError('name')}</p>
@@ -153,7 +224,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
 
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                    Email *
+                    {t.email} *
                 </label>
                 <input
                     type="email"
@@ -174,11 +245,11 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
             <div>
                 <div className="flex items-center justify-between mb-2">
                     <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                        Password *
+                        {t.password} *
                     </label>
                     {mode === 'login' && (
-                        <a href="/forgot-password" className="text-sm text-[#ff0700] hover:underline">
-                            Forgot password?
+                        <a href={lang === 'de' ? "/de/forgot-password" : "/forgot-password"} className="text-sm text-[#ff0700] hover:underline">
+                            {t.forgotPassword}
                         </a>
                     )}
                 </div>
@@ -198,7 +269,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        aria-label={showPassword ? t.hidePassword : t.showPassword}
                     >
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -207,14 +278,14 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                     <p className="mt-1 text-sm text-red-400">{getFieldError('password')}</p>
                 )}
                 {mode === 'register' && !getFieldError('password') && (
-                    <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+                    <p className="mt-1 text-xs text-gray-500">{t.passwordLength}</p>
                 )}
             </div>
 
             {mode === 'register' && (
                 <div>
                     <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-2">
-                        Location
+                        {t.location}
                     </label>
                     <input
                         type="text"
@@ -223,7 +294,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                         value={formData.location}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
-                        placeholder="City, Country"
+                        placeholder={t.cityCountry}
                     />
                 </div>
             )}
@@ -240,10 +311,10 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                             className="mt-1 w-4 h-4 rounded border-[#404040] bg-[#262626] text-[#ff0700] focus:ring-[#ff0700]"
                         />
                         <label htmlFor="terms" className="text-sm text-gray-400">
-                            I agree to the{' '}
-                            <a href="/terms" className="text-[#ff0700] hover:underline">Terms of Service</a>
-                            {' '}and{' '}
-                            <a href="/privacy" className="text-[#ff0700] hover:underline">Privacy Policy</a>
+                            {t.agreeTerms}{' '}
+                            <a href={lang === 'de' ? "/de/terms" : "/terms"} className="text-[#ff0700] hover:underline">{t.termsOfService}</a>
+                            {' '}{t.and}{' '}
+                            <a href={lang === 'de' ? "/de/privacy" : "/privacy"} className="text-[#ff0700] hover:underline">{t.privacyPolicy}</a>
                         </label>
                     </div>
                     {getFieldError('terms') && (
@@ -261,7 +332,7 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                         className="w-4 h-4 rounded border-[#404040] bg-[#262626] text-[#ff0700] focus:ring-[#ff0700]"
                     />
                     <label htmlFor="remember" className="text-sm text-gray-400">
-                        Remember me
+                        {t.rememberMe}
                     </label>
                 </div>
             )}
@@ -274,10 +345,10 @@ export default function AuthForm({ mode, role, onSuccess }: AuthFormProps) {
                 {loading ? (
                     <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        {mode === 'register' ? 'Creating account...' : 'Logging in...'}
+                        {mode === 'register' ? t.creatingAccount : t.loggingIn}
                     </>
                 ) : (
-                    mode === 'register' ? 'Create Account' : 'Login'
+                    mode === 'register' ? t.createAccount : t.login
                 )}
             </button>
         </form>

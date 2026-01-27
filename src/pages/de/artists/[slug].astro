@@ -1,0 +1,277 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { artists } from "../../../data/artists";
+import {
+    BadgeCheck,
+    MapPin,
+    Music,
+    Calendar,
+    ExternalLink,
+    ArrowLeft,
+} from "lucide-react";
+
+export function getStaticPaths() {
+    return artists.map((artist) => ({
+        params: { slug: artist.slug },
+        props: { artist },
+    }));
+}
+
+const { artist } = Astro.props;
+
+const availabilityColors = {
+    available: "bg-green-500/20 text-green-400 border-green-500/30",
+    limited: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+    unavailable: "bg-red-500/20 text-red-400 border-red-500/30",
+};
+
+const availabilityLabels = {
+    available: "Verfügbar für Bookings",
+    limited: "Begrenzte Verfügbarkeit",
+    unavailable: "Derzeit nicht verfügbar",
+};
+
+const typeLabels = {
+    dj: "DJ",
+    live: "Live Act",
+    hybrid: "Hybrid",
+};
+---
+
+<BaseLayout title={`${artist.name} — BIO BEATS`} description={artist.shortBio}>
+    <!-- Back Link -->
+    <div class="bg-bio-black py-4">
+        <div class="container-wide">
+            <a
+                href="/de/artists"
+                class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4" />
+                Zurück zu Künstlern
+            </a>
+        </div>
+    </div>
+
+    <!-- Artist Header -->
+    <section class="py-12 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Image -->
+                <div class="lg:col-span-1">
+                    <div
+                        class="aspect-square rounded-2xl overflow-hidden bg-bio-gray-800 relative"
+                    >
+                        <img
+                            src={artist.image}
+                            alt={artist.name}
+                            class="w-full h-full object-cover"
+                        />
+                        {
+                            artist.isVerified && (
+                                <div class="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-bio-accent/20 backdrop-blur-sm border border-bio-accent/30">
+                                    <BadgeCheck className="w-4 h-4 text-bio-accent" />
+                                    <span class="text-sm font-medium text-bio-accent">
+                                        Verifiziert
+                                    </span>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="lg:col-span-2">
+                    <div class="flex flex-wrap items-center gap-3 mb-4">
+                        <span class="badge">{typeLabels[artist.type]}</span>
+                        <span
+                            class={`px-3 py-1 rounded-full text-sm font-medium border ${availabilityColors[artist.availability]}`}
+                        >
+                            {availabilityLabels[artist.availability]}
+                        </span>
+                    </div>
+
+                    <h1
+                        class="text-4xl md:text-5xl font-bold text-bio-white mb-4"
+                    >
+                        {artist.name}
+                    </h1>
+
+                    <div class="flex items-center gap-2 text-bio-gray-400 mb-6">
+                        <MapPin className="w-5 h-5" />
+                        <span class="text-lg">{artist.location}</span>
+                    </div>
+
+                    <p class="text-lg text-bio-gray-300 leading-relaxed mb-8">
+                        {artist.bio}
+                    </p>
+
+                    <!-- Genres & BPM -->
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        {
+                            artist.genres.map((genre) => (
+                                <span class="badge-accent">{genre}</span>
+                            ))
+                        }
+                        <span class="badge">
+                            <Music className="w-3 h-3 mr-1" />
+                            {artist.bpmRange.min}–{artist.bpmRange.max} BPM
+                        </span>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        {
+                            artist.socials.instagram && (
+                                <a
+                                    href={artist.socials.instagram}
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn-ghost text-sm"
+                                >
+                                    Instagram
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </a>
+                            )
+                        }
+                        {
+                            artist.socials.soundcloud && (
+                                <a
+                                    href={artist.socials.soundcloud}
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn-ghost text-sm"
+                                >
+                                    SoundCloud
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </a>
+                            )
+                        }
+                        {
+                            artist.socials.spotify && (
+                                <a
+                                    href={artist.socials.spotify}
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn-ghost text-sm"
+                                >
+                                    Spotify
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </a>
+                            )
+                        }
+                        {
+                            artist.socials.bandcamp && (
+                                <a
+                                    href={artist.socials.bandcamp}
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn-ghost text-sm"
+                                >
+                                    Bandcamp
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </a>
+                            )
+                        }
+                        {
+                            artist.socials.website && (
+                                <a
+                                    href={artist.socials.website}
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="btn-ghost text-sm"
+                                >
+                                    Website
+                                    <ExternalLink className="w-3 h-3 ml-1" />
+                                </a>
+                            )
+                        }
+                    </div>
+
+                    <!-- Booking CTA -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href={`/de/book/${artist.slug}`} class="btn-primary">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            Buchung anfragen
+                        </a>
+                        <button class="btn-secondary"> Zur Wunschliste </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Info -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Stats Card -->
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-bio-white mb-4">
+                        Quick Stats
+                    </h3>
+                    <dl class="space-y-4">
+                        <div class="flex justify-between">
+                            <dt class="text-bio-gray-400">Typ</dt>
+                            <dd class="text-bio-white font-medium">
+                                {typeLabels[artist.type]}
+                            </dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-bio-gray-400">BPM Bereich</dt>
+                            <dd class="text-bio-white font-medium">
+                                {artist.bpmRange.min}–{artist.bpmRange.max}
+                            </dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-bio-gray-400">Standort</dt>
+                            <dd class="text-bio-white font-medium">
+                                {artist.location}
+                            </dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-bio-gray-400">Status</dt>
+                            <dd class="text-bio-white font-medium">
+                                {
+                                    artist.isVerified
+                                        ? "Verifiziert"
+                                        : "Unverifiziert"
+                                }
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Genres Card -->
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-bio-white mb-4">
+                        Genres
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {
+                            artist.genres.map((genre) => (
+                                <span class="badge">{genre}</span>
+                            ))
+                        }
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-bio-white mb-4">
+                        Kontakt
+                    </h3>
+                    <p class="text-bio-gray-400 mb-4">
+                        Interessiert an einer Buchung von {artist.name}? Sende
+                        eine Anfrage über die Plattform.
+                    </p>
+                    <a
+                        href={`/de/book/${artist.slug}`}
+                        class="btn-primary w-full text-center"
+                    >
+                        Buchungsanfrage senden
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

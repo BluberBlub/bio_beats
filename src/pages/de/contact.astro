@@ -1,40 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
-import { getTranslations } from "../../i18n";
-
-const t = getTranslations("de");
 
 const pageTitle = "Kontakt — BIO BEATS";
 const pageDescription = "Nimm Kontakt mit dem BIO BEATS Team auf.";
-
-// Read URL parameters for context-aware pre-filling
-const url = new URL(Astro.request.url);
-const subjectParam = url.searchParams.get("subject") || "";
-const artistParam = url.searchParams.get("artist") || "";
-const reasonParam = url.searchParams.get("reason") || "";
-const refParam = url.searchParams.get("ref") || "";
-
-// Build pre-filled message based on context (German)
-let prefilledMessage = "";
-let prefilledSubject = subjectParam;
-
-if (artistParam && reasonParam === "booking") {
-    prefilledMessage = `Hallo,\n\nich interessiere mich für eine Buchung von ${artistParam} für ein bevorstehendes Event.\n\nEvent-Details:\n- Event-Name: \n- Datum: \n- Venue: \n- Ort: \n- Erwartete Kapazität: \n\nBitte teilen Sie mir Verfügbarkeit und Konditionen mit.\n\nMit freundlichen Grüßen`;
-    prefilledSubject = "general";
-} else if (reasonParam === "partnership") {
-    prefilledMessage = `Hallo,\n\nich bin an einer Partnerschaft mit BIO BEATS interessiert.\n\nUnsere Organisation:\n- Name: \n- Branche: \n- Art der Partnerschaft: \n\nIch freue mich auf den Austausch.\n\nMit freundlichen Grüßen`;
-    prefilledSubject = "partnership";
-} else if (reasonParam === "festival-booking") {
-    const festivalName = url.searchParams.get("festival") || "euer Festival";
-    prefilledMessage = `Hallo,\n\nich interessiere mich für BIO BEATS Künstler für ${festivalName}.\n\nEvent-Details:\n- Festival: ${festivalName}\n- Datum: \n- Bühnen: \n- Budget-Rahmen: \n- Gewünschte Künstler: \n\nBitte teilen Sie mir Verfügbarkeit und nächste Schritte mit.\n\nMit freundlichen Grüßen`;
-    prefilledSubject = "general";
-} else if (reasonParam === "support") {
-    prefilledMessage = `Hallo,\n\nich benötige Hilfe bei folgendem Thema:\n\n[Bitte beschreiben Sie Ihr Anliegen hier]\n\nMit freundlichen Grüßen`;
-    prefilledSubject = "support";
-} else if (refParam) {
-    prefilledMessage = `Hallo,\n\nich kontaktiere Sie bezüglich: ${refParam}\n\n`;
-}
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -165,37 +134,17 @@ if (artistParam && reasonParam === "booking") {
                                     id="subject"
                                     class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                                 >
-                                    <option
-                                        value=""
-                                        selected={!prefilledSubject}
-                                        >Thema auswählen</option
-                                    >
-                                    <option
-                                        value="general"
-                                        selected={prefilledSubject ===
-                                            "general"}
+                                    <option value="">Thema auswählen</option>
+                                    <option value="general"
                                         >Allgemeine Anfrage</option
                                     >
-                                    <option
-                                        value="partnership"
-                                        selected={prefilledSubject ===
-                                            "partnership"}>Partnerschaft</option
+                                    <option value="partnership"
+                                        >Partnerschaft</option
                                     >
-                                    <option
-                                        value="support"
-                                        selected={prefilledSubject ===
-                                            "support"}>Support</option
-                                    >
-                                    <option
-                                        value="press"
-                                        selected={prefilledSubject === "press"}
-                                        >Presse</option
-                                    >
-                                    <option
-                                        value="other"
-                                        selected={prefilledSubject === "other"}
-                                        >Sonstiges</option
-                                    >
+                                    <option value="support">Support</option>
+                                    <option value="press">Presse</option>
+                                    <option value="demo">Demo Anfrage</option>
+                                    <option value="other">Sonstiges</option>
                                 </select>
                             </div>
 
@@ -210,9 +159,7 @@ if (artistParam && reasonParam === "booking") {
                                     id="message"
                                     rows="8"
                                     class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent focus:ring-1 focus:ring-bio-accent outline-none transition-colors resize-none"
-                                    placeholder="Deine Nachricht..."
-                                    >{prefilledMessage}</textarea
-                                >
+                                    placeholder="Deine Nachricht..."></textarea>
                             </div>
 
                             <button type="submit" class="btn-primary"
@@ -225,3 +172,51 @@ if (artistParam && reasonParam === "booking") {
         </div>
     </section>
 </BaseLayout>
+
+<script>
+    // Client-side pre-fill logic
+    const url = new URL(window.location.href);
+    const subjectParam = url.searchParams.get("subject") || "";
+    const artistParam = url.searchParams.get("artist") || "";
+    const reasonParam = url.searchParams.get("reason") || "";
+    const refParam = url.searchParams.get("ref") || "";
+
+    const subjectSelect = document.getElementById(
+        "subject",
+    ) as HTMLSelectElement;
+    const messageTextarea = document.getElementById(
+        "message",
+    ) as HTMLTextAreaElement;
+
+    let prefilledMessage = "";
+    let prefilledSubject = subjectParam;
+
+    if (artistParam && reasonParam === "booking") {
+        prefilledMessage = `Hallo,\n\nich interessiere mich für eine Buchung von ${artistParam} für ein bevorstehendes Event.\n\nEvent-Details:\n- Event-Name: \n- Datum: \n- Venue: \n- Ort: \n- Erwartete Kapazität: \n\nBitte teilen Sie mir Verfügbarkeit und Konditionen mit.\n\nMit freundlichen Grüßen`;
+        prefilledSubject = "general";
+    } else if (reasonParam === "partnership") {
+        prefilledMessage = `Hallo,\n\nich bin an einer Partnerschaft mit BIO BEATS interessiert.\n\nUnsere Organisation:\n- Name: \n- Branche: \n- Art der Partnerschaft: \n\nIch freue mich auf den Austausch.\n\nMit freundlichen Grüßen`;
+        prefilledSubject = "partnership";
+    } else if (reasonParam === "festival-booking") {
+        const festivalName =
+            url.searchParams.get("festival") || "euer Festival";
+        prefilledMessage = `Hallo,\n\nich interessiere mich für BIO BEATS Künstler für ${festivalName}.\n\nEvent-Details:\n- Festival: ${festivalName}\n- Datum: \n- Bühnen: \n- Budget-Rahmen: \n- Gewünschte Künstler: \n\nBitte teilen Sie mir Verfügbarkeit und nächste Schritte mit.\n\nMit freundlichen Grüßen`;
+        prefilledSubject = "general";
+    } else if (reasonParam === "support") {
+        prefilledMessage = `Hallo,\n\nich benötige Hilfe bei folgendem Thema:\n\n[Bitte beschreiben Sie Ihr Anliegen hier]\n\nMit freundlichen Grüßen`;
+        prefilledSubject = "support";
+    } else if (reasonParam === "demo") {
+        prefilledMessage = `Hallo,\n\nich möchte gerne eine Demo der BIO BEATS Management Software anfragen.\n\nMeine Rolle: Manager/Agentur/Künstler\nAnzahl Künstler:\n\nMit freundlichen Grüßen`;
+        prefilledSubject = "demo";
+    } else if (refParam) {
+        prefilledMessage = `Hallo,\n\nich kontaktiere Sie bezüglich: ${refParam}\n\n`;
+    }
+
+    if (prefilledSubject && subjectSelect) {
+        subjectSelect.value = prefilledSubject;
+    }
+
+    if (prefilledMessage && messageTextarea) {
+        messageTextarea.value = prefilledMessage;
+    }
+</script>

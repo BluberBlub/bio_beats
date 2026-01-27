@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { CheckCircle, Mail, ArrowRight } from "lucide-react";
+
+const pageTitle = "E-Mail bestätigen — BIO BEATS";
+const pageDescription =
+    "Bestätige deine E-Mail-Adresse, um die Registrierung abzuschließen.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <section class="min-h-[80vh] flex items-center justify-center py-16">
+        <div class="container-narrow">
+            <div class="max-w-lg mx-auto text-center">
+                <div
+                    class="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center mb-8"
+                >
+                    <CheckCircle className="w-10 h-10 text-green-400" />
+                </div>
+
+                <h1 class="text-3xl font-bold text-bio-white mb-4">
+                    Bestätige deine E-Mail
+                </h1>
+
+                <p class="text-bio-gray-400 text-lg mb-8">
+                    Wir haben einen Bestätigungslink an deine E-Mail-Adresse
+                    gesendet. Klicke auf den Link, um dein Konto zu aktivieren.
+                </p>
+
+                <div class="card p-6 mb-8">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center flex-shrink-0"
+                        >
+                            <Mail className="w-6 h-6 text-bio-accent" />
+                        </div>
+                        <div class="text-left">
+                            <p class="text-bio-white font-medium">
+                                Keine E-Mail erhalten?
+                            </p>
+                            <p class="text-bio-gray-400 text-sm">
+                                Prüfe deinen Spam-Ordner oder fordere einen
+                                neuen Link an.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <button class="btn-secondary w-full">
+                        Bestätigungs-E-Mail erneut senden
+                    </button>
+
+                    <a
+                        href="/de/login"
+                        class="btn-ghost w-full inline-flex items-center justify-center gap-2"
+                    >
+                        Zum Login
+                        <ArrowRight className="w-4 h-4" />
+                    </a>
+                </div>
+
+                <p class="mt-8 text-sm text-bio-gray-500">
+                    Brauchst du Hilfe? <a
+                        href="/de/contact?reason=support"
+                        class="text-bio-accent hover:underline"
+                        >Kontakt Support</a
+                    >
+                </p>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

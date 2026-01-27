@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { actions } from "../../../data/navigation";
+import { getTranslations } from "../../../i18n";
+import { artists } from "../../../data/artists";
+import { ArrowRight, Calendar, MapPin, Users, Info } from "lucide-react";
+
+export function getStaticPaths() {
+    return artists.map((artist) => ({
+        params: { slug: artist.slug },
+        props: { artist },
+    }));
+}
+
+const { artist } = Astro.props;
+const t = getTranslations("de");
+
+const pageTitle = `Buche ${artist.name} — BIO BEATS`;
+const pageDescription = `Sende eine Buchungsanfrage für ${artist.name}.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Header -->
+    <section class="py-12 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow">
+            <div class="flex items-center gap-6 mb-8">
+                <img
+                    src={artist.image}
+                    alt={artist.name}
+                    class="w-20 h-20 rounded-full object-cover border-2 border-bio-accent"
+                />
+                <div>
+                    <h1 class="text-3xl font-bold text-bio-white mb-2">
+                        Buchung: {artist.name}
+                    </h1>
+                    <p class="text-bio-gray-400 flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {artist.location}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Form -->
+    <section class="section bg-bio-black">
+        <div class="container-narrow">
+            <div class="card p-8">
+                <div
+                    class="mb-8 p-4 bg-bio-accent/10 border border-bio-accent/20 rounded-lg flex items-start gap-3"
+                >
+                    <Info
+                        className="w-5 h-5 text-bio-accent flex-shrink-0 mt-0.5"
+                    />
+                    <p class="text-sm text-bio-gray-300">
+                        Du sendest eine unverbindliche Anfrage. Der Künstler
+                        oder sein Management wird sich mit Verfügbarkeit und
+                        Konditionen zurückmelden.
+                    </p>
+                </div>
+
+                <form class="space-y-6" action="/de/contact" method="GET">
+                    <input type="hidden" name="artist" value={artist.name} />
+                    <input type="hidden" name="reason" value="booking" />
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label
+                                for="eventDate"
+                                class="block text-sm font-medium text-bio-gray-300 mb-2"
+                            >
+                                Event Datum
+                            </label>
+                            <input
+                                type="date"
+                                id="eventDate"
+                                name="date"
+                                class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="venue"
+                                class="block text-sm font-medium text-bio-gray-300 mb-2"
+                            >
+                                Venue / Event Name
+                            </label>
+                            <input
+                                type="text"
+                                id="venue"
+                                name="venue"
+                                class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                                placeholder="Club xy oder Festival z"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            for="offer"
+                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                        >
+                            Budget / Angebot (EUR)
+                        </label>
+                        <input
+                            type="number"
+                            id="offer"
+                            name="budget"
+                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                            placeholder="z.B. 500"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            for="message"
+                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                        >
+                            Nachricht an den Künstler
+                        </label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="4"
+                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                            placeholder="Weitere Details zum Event, Set-Länge, etc."
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full">
+                        Anfrage senden
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

@@ -1,0 +1,161 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+    ArrowRight,
+    CheckCircle,
+    Calendar,
+    Users,
+    Globe,
+    Sparkles,
+} from "lucide-react";
+
+/**
+ * FESTIVALS PAGE (German)
+ */
+
+const pageTitle = "Festivals & Veranstalter — BIO BEATS";
+const pageDescription =
+    "Buche Künstler für dein Festival oder Event über das BIO BEATS Netzwerk.";
+
+const benefits = [
+    {
+        icon: "Calendar",
+        title: "Lineup Planung",
+        description:
+            "Erstelle dein Festival-Lineup mit Leichtigkeit. Durchsuche Künstler nach Genre, Verfügbarkeit und Reichweite.",
+    },
+    {
+        icon: "Users",
+        title: "Multi-Artist Booking",
+        description:
+            "Buche mehrere Künstler über eine Plattform. Koordiniere Zeitpläne und verwalte die Kommunikation zentral.",
+    },
+    {
+        icon: "Globe",
+        title: "Internationales Netzwerk",
+        description:
+            "Zugang zu Künstlern aus der ganzen Welt. Unser verifiziertes Netzwerk umspannt Kontinente und Genres.",
+    },
+    {
+        icon: "Sparkles",
+        title: "Neue Talente entdecken",
+        description:
+            "Finde aufstrebende Künstler, die perfekt zu deinem Event passen. Unsere Kuration hilft dir, neuen Sound zu entdecken.",
+    },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Hero -->
+    <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-wide">
+            <div class="max-w-3xl">
+                <span
+                    class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
+                >
+                    Für Festivals & Veranstalter
+                </span>
+                <h1 class="text-bio-white mb-6">
+                    Erstelle unvergessliche Lineups.
+                </h1>
+                <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
+                    Nutze unser globales Netzwerk verifizierter Künstler und
+                    optimiere deinen Booking-Prozess. Von Headlinern bis zu
+                    Newcomern.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a
+                        href="/de/join/booker"
+                        class="btn-primary inline-flex items-center gap-2"
+                    >
+                        Partner werden
+                        <ArrowRight className="w-4 h-4" />
+                    </a>
+                    <a href="/de/artists" class="btn-secondary">
+                        Künstler entdecken
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Grid -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">
+                    Warum Festivals BIO BEATS wählen
+                </h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    Effizientes Booking, verifizierte Talente und eine Plattform
+                    für Großveranstaltungen.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    benefits.map((benefit) => (
+                        <div class="card-hover">
+                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                                {benefit.icon === "Calendar" && (
+                                    <Calendar className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Users" && (
+                                    <Users className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Globe" && (
+                                    <Globe className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {benefit.icon === "Sparkles" && (
+                                    <Sparkles className="w-6 h-6 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
+                                {benefit.title}
+                            </h3>
+                            <p class="text-bio-gray-400">
+                                {benefit.description}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Festival Partnership -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-6">Werde Festival Partner</h2>
+            <p class="text-bio-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                Festival-Partner erhalten dedizierten Support, bevorzugten
+                Zugang zu Künstlern und maßgeschneiderte Lösungen für große
+                Bookings.
+            </p>
+            <div class="flex flex-col items-center gap-4">
+                <div
+                    class="flex flex-wrap justify-center gap-4 text-bio-gray-300"
+                >
+                    <div class="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-bio-accent" />
+                        <span>Dedizierter Account Manager</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-bio-accent" />
+                        <span>Massen-Booking Tools</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-bio-accent" />
+                        <span>Individuelle Integrationen</span>
+                    </div>
+                </div>
+                <a
+                    href="/de/contact?reason=festival-booking"
+                    class="btn-primary mt-4"
+                >
+                    Kontakt aufnehmen
+                </a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

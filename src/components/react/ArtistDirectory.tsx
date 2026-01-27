@@ -31,11 +31,62 @@ interface Label {
 interface Props {
     artists: Artist[];
     labels: Label[];
+    lang?: 'en' | 'de';
 }
 
 const ITEMS_PER_PAGE = 6;
 
-export default function ArtistDirectory({ artists, labels }: Props) {
+const directoryTranslations = {
+    en: {
+        artists: 'Artists',
+        labels: 'Labels',
+        searchArtists: 'Search artists...',
+        searchLabels: 'Search labels...',
+        filters: 'Filters',
+        type: 'Type',
+        allTypes: 'All Types',
+        dj: 'DJ',
+        live: 'Live Act',
+        hybrid: 'Hybrid',
+        genre: 'Genre',
+        allGenres: 'All Genres',
+        clearFilters: 'Clear all filters',
+        showing: 'Showing',
+        of: 'of',
+        verified: 'Verified',
+        noArtists: 'No artists found matching your criteria.',
+        noLabels: 'No labels found matching your criteria.',
+        loadMore: 'Load More',
+        artistCount: 'artists',
+        since: 'Since'
+    },
+    de: {
+        artists: 'Künstler',
+        labels: 'Labels',
+        searchArtists: 'Künstler suchen...',
+        searchLabels: 'Labels suchen...',
+        filters: 'Filter',
+        type: 'Typ',
+        allTypes: 'Alle Typen',
+        dj: 'DJ',
+        live: 'Live Act',
+        hybrid: 'Hybrid',
+        genre: 'Genre',
+        allGenres: 'Alle Genres',
+        clearFilters: 'Filter zurücksetzen',
+        showing: 'Zeige',
+        of: 'von',
+        verified: 'Verifiziert',
+        noArtists: 'Keine Künstler gefunden.',
+        noLabels: 'Keine Labels gefunden.',
+        loadMore: 'Mehr laden',
+        artistCount: 'Künstler',
+        since: 'Seit'
+    }
+};
+
+export default function ArtistDirectory({ artists, labels, lang = 'en' }: Props) {
+    const t = directoryTranslations[lang];
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState<string>('all');
     const [selectedGenre, setSelectedGenre] = useState<string>('all');
@@ -103,20 +154,20 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                 <button
                     onClick={() => { setActiveTab('artists'); setVisibleCount(ITEMS_PER_PAGE); }}
                     className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'artists'
-                            ? 'bg-[#ff0700] text-white'
-                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                        ? 'bg-[#ff0700] text-white'
+                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
                         }`}
                 >
-                    Artists ({filteredArtists.length})
+                    {t.artists} ({filteredArtists.length})
                 </button>
                 <button
                     onClick={() => { setActiveTab('labels'); setVisibleCount(ITEMS_PER_PAGE); }}
                     className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'labels'
-                            ? 'bg-[#ff0700] text-white'
-                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                        ? 'bg-[#ff0700] text-white'
+                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
                         }`}
                 >
-                    Labels ({filteredLabels.length})
+                    {t.labels} ({filteredLabels.length})
                 </button>
             </div>
 
@@ -127,7 +178,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#737373]" />
                     <input
                         type="text"
-                        placeholder={`Search ${activeTab}...`}
+                        placeholder={activeTab === 'artists' ? t.searchArtists : t.searchLabels}
                         value={searchQuery}
                         onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
                         className="w-full pl-12 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-[#737373] focus:border-[#ff0700] outline-none transition-colors"
@@ -146,12 +197,12 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                 <button
                     onClick={() => setShowFilters(!showFilters)}
                     className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${showFilters || hasActiveFilters
-                            ? 'bg-[#ff0700] text-white'
-                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white border border-[#404040]'
+                        ? 'bg-[#ff0700] text-white'
+                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white border border-[#404040]'
                         }`}
                 >
                     <Filter className="w-5 h-5" />
-                    Filters
+                    {t.filters}
                     {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-white" />}
                 </button>
             </div>
@@ -163,29 +214,29 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                         {/* Type Filter (Artists only) */}
                         {activeTab === 'artists' && (
                             <div>
-                                <label className="block text-sm font-medium text-[#a3a3a3] mb-2">Type</label>
+                                <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.type}</label>
                                 <select
                                     value={selectedType}
                                     onChange={(e) => { setSelectedType(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
                                     className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
                                 >
-                                    <option value="all">All Types</option>
-                                    <option value="dj">DJ</option>
-                                    <option value="live">Live Act</option>
-                                    <option value="hybrid">Hybrid</option>
+                                    <option value="all">{t.allTypes}</option>
+                                    <option value="dj">{t.dj}</option>
+                                    <option value="live">{t.live}</option>
+                                    <option value="hybrid">{t.hybrid}</option>
                                 </select>
                             </div>
                         )}
 
                         {/* Genre Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">Genre</label>
+                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.genre}</label>
                             <select
                                 value={selectedGenre}
                                 onChange={(e) => { setSelectedGenre(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
                                 className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
                             >
-                                <option value="all">All Genres</option>
+                                <option value="all">{t.allGenres}</option>
                                 {allGenres.map(genre => (
                                     <option key={genre} value={genre}>{genre}</option>
                                 ))}
@@ -199,7 +250,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                     onClick={clearFilters}
                                     className="text-[#ff0700] hover:underline text-sm"
                                 >
-                                    Clear all filters
+                                    {t.clearFilters}
                                 </button>
                             </div>
                         )}
@@ -209,7 +260,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
 
             {/* Results Count */}
             <p className="text-[#737373] text-sm mb-6">
-                Showing {activeTab === 'artists' ? visibleArtists.length : visibleLabels.length} of {activeTab === 'artists' ? filteredArtists.length : filteredLabels.length} {activeTab}
+                {t.showing} {activeTab === 'artists' ? visibleArtists.length : visibleLabels.length} {t.of} {activeTab === 'artists' ? filteredArtists.length : filteredLabels.length} {activeTab === 'artists' ? t.artists : t.labels}
             </p>
 
             {/* Artists Grid */}
@@ -219,7 +270,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                         {visibleArtists.map((artist) => (
                             <a
                                 key={artist.id}
-                                href={`/artists/${artist.slug}`}
+                                href={lang === 'de' ? `/de/artists/${artist.slug}` : `/artists/${artist.slug}`}
                                 className="group bg-[#171717] border border-[#262626] rounded-xl overflow-hidden hover:border-[#404040] transition-all"
                             >
                                 <div className="aspect-square relative overflow-hidden bg-[#262626]">
@@ -231,7 +282,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                     />
                                     {artist.isVerified && (
                                         <div className="absolute top-3 right-3 px-2 py-1 bg-[#ff0700]/90 rounded text-white text-xs font-medium">
-                                            Verified
+                                            {t.verified}
                                         </div>
                                     )}
                                     <div className="absolute bottom-3 left-3">
@@ -267,9 +318,9 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                     {/* Load More / No Results */}
                     {visibleArtists.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-[#a3a3a3] mb-4">No artists found matching your criteria.</p>
+                            <p className="text-[#a3a3a3] mb-4">{t.noArtists}</p>
                             <button onClick={clearFilters} className="text-[#ff0700] hover:underline">
-                                Clear filters
+                                {t.clearFilters}
                             </button>
                         </div>
                     ) : hasMoreArtists && (
@@ -278,7 +329,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                 onClick={loadMore}
                                 className="inline-flex items-center gap-2 px-8 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white font-medium hover:bg-[#404040] transition-colors"
                             >
-                                Load More Artists
+                                {t.loadMore} {t.artists}
                                 <ChevronDown className="w-4 h-4" />
                             </button>
                         </div>
@@ -304,14 +355,14 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                     />
                                     {label.isVerified && (
                                         <div className="absolute top-3 right-3 px-2 py-1 bg-[#ff0700]/90 rounded text-white text-xs font-medium">
-                                            Verified
+                                            {t.verified}
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-5">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Building2 className="w-4 h-4 text-[#ff0700]" />
-                                        <span className="text-xs text-[#737373] uppercase tracking-wider">Label</span>
+                                        <span className="text-xs text-[#737373] uppercase tracking-wider">{t.labels}</span>
                                     </div>
                                     <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#ff0700] transition-colors">
                                         {label.name}
@@ -329,8 +380,8 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                         ))}
                                     </div>
                                     <div className="flex items-center justify-between text-sm text-[#737373]">
-                                        <span>{label.artistCount} artists</span>
-                                        <span>Since {label.founded}</span>
+                                        <span>{label.artistCount} {t.artistCount}</span>
+                                        <span>{t.since} {label.founded}</span>
                                     </div>
                                 </div>
                             </div>
@@ -340,9 +391,9 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                     {/* Load More / No Results */}
                     {visibleLabels.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-[#a3a3a3] mb-4">No labels found matching your criteria.</p>
+                            <p className="text-[#a3a3a3] mb-4">{t.noLabels}</p>
                             <button onClick={clearFilters} className="text-[#ff0700] hover:underline">
-                                Clear filters
+                                {t.clearFilters}
                             </button>
                         </div>
                     ) : hasMoreLabels && (
@@ -351,7 +402,7 @@ export default function ArtistDirectory({ artists, labels }: Props) {
                                 onClick={loadMore}
                                 className="inline-flex items-center gap-2 px-8 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white font-medium hover:bg-[#404040] transition-colors"
                             >
-                                Load More Labels
+                                {t.loadMore} {t.labels}
                                 <ChevronDown className="w-4 h-4" />
                             </button>
                         </div>
