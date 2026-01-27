@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { artists, getArtistBySlug } from '../../data/artists';
+import { ArrowLeft, Calendar, Mail, Clock } from 'lucide-react';
+
+export function getStaticPaths() {
+  return artists.map((artist) => ({
+    params: { slug: artist.slug },
+    props: { artist },
+  }));
+}
+
+const { artist } = Astro.props;
+
+const pageTitle = `Book ${artist.name} — BIO BEATS`;
+const pageDescription = `Send a booking inquiry to ${artist.name} through BIO BEATS.`;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Back Link -->
+  <div class="bg-bio-black py-4">
+    <div class="container-wide">
+      <a href={`/artists/${artist.slug}`} class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors">
+        <ArrowLeft className="w-4 h-4" />
+        Back to {artist.name}
+      </a>
+    </div>
+  </div>
+
+  <section class="section bg-bio-black">
+    <div class="container-narrow">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Artist Info Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="card sticky top-24">
+            <div class="aspect-square rounded-lg overflow-hidden bg-bio-gray-800 mb-4">
+              <img src={artist.image} alt={artist.name} class="w-full h-full object-cover" />
+            </div>
+            <h2 class="text-xl font-semibold text-bio-white mb-2">{artist.name}</h2>
+            <p class="text-bio-gray-400 text-sm mb-4">{artist.location}</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              {artist.genres.map((genre) => (
+                <span class="badge text-xs">{genre}</span>
+              ))}
+            </div>
+            <div class="flex items-center gap-2 text-sm text-bio-gray-400">
+              <Clock className="w-4 h-4" />
+              <span>Usually responds within 48 hours</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="lg:col-span-2">
+          <h1 class="text-3xl font-bold text-bio-white mb-2">Book {artist.name}</h1>
+          <p class="text-bio-gray-400 mb-8">
+            Fill out the form below to send a booking inquiry. Please provide as much detail as possible about your event.
+          </p>
+
+          <form class="space-y-6">
+            <!-- Event Details -->
+            <div class="card">
+              <h3 class="text-lg font-semibold text-bio-white mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-bio-accent" />
+                Event Details
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <label for="event-name" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                    Event Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="event-name"
+                    required
+                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                    placeholder="e.g., Warehouse Opening Party"
+                  />
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="event-date" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Event Date *
+                    </label>
+                    <input
+                      type="date"
+                      id="event-date"
+                      required
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label for="event-time" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Set Time (approximate)
+                    </label>
+                    <input
+                      type="text"
+                      id="event-time"
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                      placeholder="e.g., 02:00 - 04:00"
+                    />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="venue" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Venue *
+                    </label>
+                    <input
+                      type="text"
+                      id="venue"
+                      required
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                      placeholder="Venue name"
+                    />
+                  </div>
+                  <div>
+                    <label for="location" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Location *
+                    </label>
+                    <input
+                      type="text"
+                      id="location"
+                      required
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                      placeholder="City, Country"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label for="capacity" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                    Expected Capacity
+                  </label>
+                  <select
+                    id="capacity"
+                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
+                  >
+                    <option value="">Select capacity</option>
+                    <option value="small">Under 200</option>
+                    <option value="medium">200 - 500</option>
+                    <option value="large">500 - 1000</option>
+                    <option value="xlarge">1000 - 5000</option>
+                    <option value="festival">5000+</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="card">
+              <h3 class="text-lg font-semibold text-bio-white mb-4 flex items-center gap-2">
+                <Mail className="w-5 h-5 text-bio-accent" />
+                Your Contact Information
+              </h3>
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                      placeholder="Full name"
+                    />
+                  </div>
+                  <div>
+                    <label for="organization" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                      Organization
+                    </label>
+                    <input
+                      type="text"
+                      id="organization"
+                      class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                      placeholder="Company or collective name"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                    placeholder="your@email.com"
+                  />
+                </div>
+                <div>
+                  <label for="message" class="block text-sm font-medium text-bio-gray-300 mb-2">
+                    Additional Information
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="4"
+                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none resize-none"
+                    placeholder="Tell us more about your event, budget range, or any special requirements..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary w-full">
+              Send Booking Inquiry
+            </button>
+
+            <p class="text-sm text-bio-gray-500 text-center">
+              By submitting this form, you agree to our <a href="/terms" class="text-bio-accent hover:underline">Terms of Service</a> and <a href="/privacy" class="text-bio-accent hover:underline">Privacy Policy</a>.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

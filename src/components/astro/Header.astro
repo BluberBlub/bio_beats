@@ -1,0 +1,73 @@
+---
+import { mainNavigation, secondaryNavigation } from "../../data/navigation";
+import { getLangFromUrl, getTranslations } from "../../i18n";
+import MobileNav from "../react/MobileNav";
+import LanguageSwitcher from "../react/LanguageSwitcher";
+
+const url = new URL(Astro.request.url);
+const lang = getLangFromUrl(url);
+const t = getTranslations(lang);
+const currentPath = url.pathname;
+---
+
+<header
+  class="fixed top-0 left-0 right-0 z-50 bg-bio-black/80 backdrop-blur-lg border-b border-bio-gray-800/50"
+>
+  <div class="container-wide">
+    <nav class="flex items-center justify-between h-16 md:h-20">
+      <!-- Logo -->
+      <a
+        href={lang === "de" ? "/de" : "/"}
+        class="flex items-center gap-3 group"
+      >
+        <img src="/logo.svg" alt="BIO BEATS" class="h-8 w-8" />
+        <span
+          class="text-xl md:text-2xl font-bold tracking-tight text-bio-white group-hover:text-bio-accent transition-colors"
+        >
+          BIO BEATS
+        </span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center gap-1">
+        {
+          mainNavigation.map((item) => (
+            <a
+              href={lang === "de" ? `/de${item.href}` : item.href}
+              class="px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white transition-colors rounded-lg hover:bg-bio-gray-800/50"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- Desktop Actions -->
+      <div class="hidden lg:flex items-center gap-3">
+        <LanguageSwitcher
+          client:load
+          currentLang={lang}
+          currentPath={currentPath}
+        />
+        <a
+          href={lang === "de" ? "/de/login" : "/login"}
+          class="btn-ghost text-sm"
+        >
+          {t.nav.login}
+        </a>
+        <a
+          href={lang === "de" ? "/de/join" : "/join"}
+          class="btn-primary text-sm"
+        >
+          {t.nav.join}
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <MobileNav client:load navigation={mainNavigation} />
+    </nav>
+  </div>
+</header>
+
+<!-- Spacer for fixed header -->
+<div class="h-16 md:h-20"></div>

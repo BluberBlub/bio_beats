@@ -1,0 +1,89 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  primaryCta?: {
+    label: string;
+    href: string;
+  };
+  secondaryCta?: {
+    label: string;
+    href: string;
+  };
+}
+
+const { title, subtitle, primaryCta, secondaryCta } = Astro.props;
+---
+
+<section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+  <!-- Background Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-b from-bio-gray-900/50 via-bio-black to-bio-black"></div>
+  
+  <!-- Animated Grid Pattern -->
+  <div class="absolute inset-0 opacity-20">
+    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.3) 1px, transparent 0); background-size: 40px 40px;"></div>
+  </div>
+
+  <!-- Glow Effect -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-bio-accent/10 rounded-full blur-[120px]"></div>
+
+  <div class="relative z-10 container-wide text-center py-20">
+    <!-- Small Label -->
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bio-gray-800/50 border border-bio-gray-700 mb-8">
+      <span class="w-2 h-2 rounded-full bg-bio-accent animate-pulse"></span>
+      <span class="text-sm text-bio-gray-300">The Future of Electronic Music Management</span>
+    </div>
+
+    <!-- Main Title -->
+    <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-bio-white mb-6 tracking-tight">
+      {title}
+    </h1>
+
+    <!-- Subtitle -->
+    {subtitle && (
+      <p class="text-xl md:text-2xl text-bio-gray-400 mb-12 max-w-3xl mx-auto">
+        {subtitle}
+      </p>
+    )}
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      {primaryCta && (
+        <a href={primaryCta.href} class="btn-primary text-lg px-8 py-4">
+          {primaryCta.label}
+        </a>
+      )}
+      {secondaryCta && (
+        <a href={secondaryCta.href} class="btn-secondary text-lg px-8 py-4">
+          {secondaryCta.label}
+        </a>
+      )}
+    </div>
+
+    <!-- Stats -->
+    <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-bio-white mb-2">500+</div>
+        <div class="text-sm text-bio-gray-500">Artists</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-bio-white mb-2">200+</div>
+        <div class="text-sm text-bio-gray-500">Venues</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-bio-white mb-2">50+</div>
+        <div class="text-sm text-bio-gray-500">Festivals</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl md:text-4xl font-bold text-bio-white mb-2">1000+</div>
+        <div class="text-sm text-bio-gray-500">Bookings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-bio-gray-500">
+    <span class="text-xs uppercase tracking-wider">Scroll</span>
+    <div class="w-px h-8 bg-gradient-to-b from-bio-gray-500 to-transparent"></div>
+  </div>
+</section>

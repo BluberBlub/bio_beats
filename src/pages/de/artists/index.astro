@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArtistDirectory from "../../components/react/ArtistDirectory";
+import { artists } from "../../data/artists";
+import { getTranslations } from "../../i18n";
+
+const t = getTranslations("de");
+
+const pageTitle = "Künstler-Verzeichnis — BIO BEATS";
+const pageDescription =
+    "Entdecke verifizierte Künstler der elektronischen Musik, die über BIO BEATS gebucht werden können.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Header -->
+    <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow text-center">
+            <h1 class="text-bio-white mb-4">Künstler-Verzeichnis</h1>
+            <p class="text-xl text-bio-gray-400">
+                Entdecke verifizierte Künstler der elektronischen Musik
+            </p>
+        </div>
+    </section>
+
+    <!-- Artists Directory -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <ArtistDirectory client:load artists={artists} lang="de" />
+        </div>
+    </section>
+</BaseLayout>

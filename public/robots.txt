@@ -1,0 +1,11 @@
+# BIO BEATS Platform
+
+User-agent: *
+Allow: /
+
+# Disallow admin/auth areas (for future use)
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://biobeats.io/sitemap-index.xml

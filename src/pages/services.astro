@@ -1,0 +1,201 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  ArrowRight,
+  CheckCircle,
+  Megaphone,
+  BarChart3,
+  Globe,
+  Palette,
+  Wrench,
+  Headphones,
+} from "lucide-react";
+
+const pageTitle = "Services — BIO BEATS";
+const pageDescription =
+  "Modular services to help artists grow: booking support, marketing, international expansion, and more.";
+
+const services = [
+  {
+    icon: "Megaphone",
+    title: "Booking Support",
+    description:
+      "Professional booking representation and coordination. We help you get more bookings and better opportunities.",
+    tier: "Premium",
+    features: [
+      "Booking outreach",
+      "Negotiation support",
+      "Calendar management",
+      "Contract review",
+    ],
+  },
+  {
+    icon: "Palette",
+    title: "Brand & Positioning",
+    description:
+      "Develop your artist brand and market positioning. Stand out in a crowded industry.",
+    tier: "Premium",
+    features: [
+      "Brand strategy",
+      "Visual identity",
+      "Bio writing",
+      "Press kit creation",
+    ],
+  },
+  {
+    icon: "Globe",
+    title: "International Expansion",
+    description:
+      "Expand your reach to new markets. Connect with bookers and venues worldwide.",
+    tier: "Enterprise",
+    features: [
+      "Market research",
+      "International contacts",
+      "Tour planning",
+      "Visa support info",
+    ],
+  },
+  {
+    icon: "BarChart3",
+    title: "Financial Reporting",
+    description:
+      "Track your earnings, analyze performance, and make data-driven decisions.",
+    tier: "Premium",
+    features: [
+      "Revenue tracking",
+      "Monthly reports",
+      "Tax-ready exports",
+      "Performance analytics",
+    ],
+  },
+  {
+    icon: "Headphones",
+    title: "Release & Marketing",
+    description:
+      "Support for your music releases. From promotion to playlist pitching.",
+    tier: "Premium",
+    features: [
+      "Release planning",
+      "Promo campaigns",
+      "Playlist pitching",
+      "Social media strategy",
+    ],
+  },
+  {
+    icon: "Wrench",
+    title: "Tax & Structure",
+    description:
+      "Connect with trusted partners for international tax optimization and business structure advice.",
+    tier: "Partner",
+    features: [
+      "Partner network",
+      "Structure consulting",
+      "International setup",
+      "Income optimization",
+    ],
+  },
+];
+
+const tierColors: Record<string, string> = {
+  Premium: "bg-bio-accent/20 text-bio-accent",
+  Enterprise: "bg-purple-500/20 text-purple-400",
+  Partner: "bg-amber-500/20 text-amber-400",
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Hero -->
+  <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
+        >
+          Modular Services
+        </span>
+        <h1 class="text-bio-white mb-6">Services that grow with you.</h1>
+        <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
+          Add the services you need, when you need them. From booking support to
+          international expansion, we've got you covered.
+        </p>
+        <a href="/join" class="btn-primary inline-flex items-center gap-2">
+          Explore Services
+          <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="section bg-bio-black">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          services.map((service) => (
+            <div class="card flex flex-col h-full">
+              <div class="flex items-start justify-between mb-4">
+                <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center">
+                  {service.icon === "Megaphone" && (
+                    <Megaphone className="w-6 h-6 text-bio-accent" />
+                  )}
+                  {service.icon === "Palette" && (
+                    <Palette className="w-6 h-6 text-bio-accent" />
+                  )}
+                  {service.icon === "Globe" && (
+                    <Globe className="w-6 h-6 text-bio-accent" />
+                  )}
+                  {service.icon === "BarChart3" && (
+                    <BarChart3 className="w-6 h-6 text-bio-accent" />
+                  )}
+                  {service.icon === "Headphones" && (
+                    <Headphones className="w-6 h-6 text-bio-accent" />
+                  )}
+                  {service.icon === "Wrench" && (
+                    <Wrench className="w-6 h-6 text-bio-accent" />
+                  )}
+                </div>
+                <span
+                  class={`px-3 py-1 rounded-full text-xs font-medium ${tierColors[service.tier]}`}
+                >
+                  {service.tier}
+                </span>
+              </div>
+              <h3 class="text-xl font-semibold text-bio-white mb-2">
+                {service.title}
+              </h3>
+              <p class="text-bio-gray-400 mb-4 flex-grow">
+                {service.description}
+              </p>
+              <ul class="space-y-2">
+                {service.features.map((feature) => (
+                  <li class="flex items-center gap-2 text-sm text-bio-gray-300">
+                    <CheckCircle className="w-4 h-4 text-bio-accent flex-shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-bio-gray-900">
+    <div class="container-narrow text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+        Need a custom solution?
+      </h2>
+      <p class="text-bio-gray-400 mb-8">
+        Get in touch to discuss enterprise packages and custom service bundles.
+      </p>
+      <a
+        href="/contact?ref=Enterprise%20Services%20Inquiry"
+        class="btn-primary"
+      >
+        Contact Us
+      </a>
+    </div>
+  </section>
+</BaseLayout>

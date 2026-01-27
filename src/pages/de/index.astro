@@ -1,0 +1,201 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../components/astro/Hero.astro";
+import ArtistCard from "../../components/astro/ArtistCard.astro";
+import { getFeaturedArtists } from "../../data/artists";
+import { roleOptions } from "../../data/navigation";
+import { ArrowRight, Zap, Shield, Globe, TrendingUp } from "lucide-react";
+import { getTranslations } from "../../i18n";
+
+const t = getTranslations("de");
+const featuredArtists = getFeaturedArtists();
+
+const features = [
+    {
+        icon: "Zap",
+        title: "Smart Booking",
+        description:
+            "Optimierter Buchungsprozess mit intelligenter Vermittlung zwischen Künstlern und Venues.",
+    },
+    {
+        icon: "Shield",
+        title: "Verifiziertes Netzwerk",
+        description:
+            "Geprüfte Profis für sichere und professionelle Zusammenarbeit.",
+    },
+    {
+        icon: "Globe",
+        title: "Globale Reichweite",
+        description:
+            "Verbinde dich mit Künstlern, Labels und Venues aus der ganzen Welt.",
+    },
+    {
+        icon: "TrendingUp",
+        title: "Karriere-Wachstum",
+        description: "Tools und Einblicke für eine nachhaltige Musikkarriere.",
+    },
+];
+
+const roleLabels: Record<string, string> = {
+    artist: "Künstler",
+    performer: "Performer",
+    creative: "Kreative",
+    manager: "Manager",
+    label: "Labels",
+    booker: "Booker",
+    provider: "Dienstleister",
+    guest: "Gast",
+};
+---
+
+<BaseLayout
+    title="BIO BEATS — Management & Booking Plattform für elektronische Kultur"
+>
+    <!-- Hero Section -->
+    <Hero
+        title="BIO BEATS"
+        subtitle="Die Management- und Booking-Plattform für elektronische Kultur. Weniger Chaos. Mehr Fokus. Mehr Bookings."
+        primaryCta={{ label: "Jetzt starten", href: "/de/join" }}
+        secondaryCta={{ label: "Mehr erfahren", href: "/de/about" }}
+    />
+
+    <!-- Features Section -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">Warum BIO BEATS?</h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    Wir bauen die Infrastruktur, die elektronische Musik
+                    verdient. Professionell, transparent und auf Wachstum
+                    ausgelegt.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                    features.map((feature) => (
+                        <div class="card-hover group">
+                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4 group-hover:bg-bio-accent/20 transition-colors">
+                                {feature.icon === "Zap" && (
+                                    <Zap className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {feature.icon === "Shield" && (
+                                    <Shield className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {feature.icon === "Globe" && (
+                                    <Globe className="w-6 h-6 text-bio-accent" />
+                                )}
+                                {feature.icon === "TrendingUp" && (
+                                    <TrendingUp className="w-6 h-6 text-bio-accent" />
+                                )}
+                            </div>
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
+                                {feature.title}
+                            </h3>
+                            <p class="text-bio-gray-400">
+                                {feature.description}
+                            </p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Artists Section -->
+    <section class="section bg-bio-gray-900">
+        <div class="container-wide">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-bio-white mb-2">Ausgewählte Künstler</h2>
+                    <p class="text-bio-gray-400">
+                        Entdecke talentierte Künstler für dein nächstes Event
+                    </p>
+                </div>
+                <a
+                    href="/de/artists"
+                    class="btn-ghost hidden md:inline-flex items-center gap-2"
+                >
+                    Alle Künstler
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {
+                    featuredArtists.map((artist) => (
+                        <ArtistCard artist={artist} lang="de" />
+                    ))
+                }
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a
+                    href="/de/artists"
+                    class="btn-secondary inline-flex items-center gap-2"
+                >
+                    Alle Künstler
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Selection CTA -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header">
+                <h2 class="text-bio-white mb-4">Wer bist du?</h2>
+                <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
+                    BIO BEATS ist für alle im elektronischen Musik-Ökosystem
+                    gebaut. Finde deine Rolle und starte durch.
+                </p>
+            </div>
+
+            <div
+                class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+            >
+                {
+                    roleOptions.slice(0, 4).map((role) => (
+                        <a
+                            href={`/de/join?role=${role.id}`}
+                            class="card-hover p-6 text-center group"
+                        >
+                            <h4 class="font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
+                                {roleLabels[role.id] || role.label}
+                            </h4>
+                        </a>
+                    ))
+                }
+            </div>
+
+            <div class="mt-8 text-center">
+                <a
+                    href="/de/join"
+                    class="btn-primary inline-flex items-center gap-2"
+                >
+                    Jetzt starten
+                    <ArrowRight className="w-4 h-4" />
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow text-center">
+            <h2 class="text-bio-white mb-4">Bereit beizutreten?</h2>
+            <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
+                Schließe dich hunderten von Künstlern, Bookern und
+                Branchenprofis an, die bereits ihre Karriere mit BIO BEATS
+                aufbauen.
+            </p>
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+                <a href="/de/join" class="btn-primary">Profil erstellen</a>
+                <a href="/de/faq" class="btn-ghost">FAQ lesen</a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

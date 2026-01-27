@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { festivals } from '../data/festivals';
+import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react';
+
+const pageTitle = 'Festival Guide — BIO BEATS';
+const pageDescription = 'Discover electronic music festivals worldwide with the BIO BEATS festival guide.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Header -->
+  <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <h1 class="text-bio-white mb-4">Festival Guide</h1>
+        <p class="text-xl text-bio-gray-400">
+          Discover electronic music festivals around the world. Find your next adventure and connect with the global music community.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Festivals Grid -->
+  <section class="section bg-bio-black">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {festivals.map((festival) => (
+          <a 
+            href={`/festivals/${festival.slug}`}
+            class="card-hover overflow-hidden group cursor-pointer"
+          >
+            <div class="aspect-video bg-bio-gray-800 relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-bio-black/80 to-transparent z-10"></div>
+              <img 
+                src={festival.image} 
+                alt={festival.name}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+              <div class="absolute bottom-3 left-3 z-20">
+                <span class="px-3 py-1 bg-bio-accent/90 rounded-full text-white text-xs font-medium">
+                  {festival.artistSlugs.length} BIO BEATS Artists
+                </span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold text-bio-white mb-3 group-hover:text-bio-accent transition-colors">
+                {festival.name}
+              </h3>
+              <div class="space-y-2 mb-4">
+                <div class="flex items-center gap-2 text-sm text-bio-gray-400">
+                  <MapPin className="w-4 h-4" />
+                  {festival.location}, {festival.country}
+                </div>
+                <div class="flex items-center gap-2 text-sm text-bio-gray-400">
+                  <Calendar className="w-4 h-4" />
+                  {festival.date}
+                </div>
+                <div class="flex items-center gap-2 text-sm text-bio-gray-400">
+                  <Users className="w-4 h-4" />
+                  {festival.capacity} capacity
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="badge">{festival.type}</span>
+                <span class="text-bio-accent text-sm flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  View Details
+                  <ArrowRight className="w-4 h-4" />
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Submit Festival CTA -->
+  <section class="py-16 bg-bio-gray-900">
+    <div class="container-narrow text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+        Is your festival missing?
+      </h2>
+      <p class="text-bio-gray-400 mb-8">
+        Submit your festival to be listed in our guide.
+      </p>
+      <a href="/contact" class="btn-primary">
+        Submit Festival
+      </a>
+    </div>
+  </section>
+</BaseLayout>

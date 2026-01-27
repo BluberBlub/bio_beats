@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AuthForm from "../../components/react/AuthForm";
+import { getTranslations } from "../../i18n";
+
+const t = getTranslations("de");
+
+const pageTitle = "Anmelden — BIO BEATS";
+const pageDescription = "Melde dich bei deinem BIO BEATS Konto an.";
+
+// Check for password reset success message
+const url = new URL(Astro.request.url);
+const passwordReset = url.searchParams.get("reset") === "success";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <section
+        class="section bg-gradient-to-b from-bio-gray-900 to-bio-black min-h-[calc(100vh-200px)] flex items-center"
+    >
+        <div class="container-narrow">
+            <div class="max-w-md mx-auto">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-bio-white mb-2">
+                        Willkommen zurück
+                    </h1>
+                    <p class="text-bio-gray-400">
+                        Melde dich bei deinem BIO BEATS Konto an
+                    </p>
+                </div>
+
+                {
+                    passwordReset && (
+                        <div class="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm text-center">
+                            Dein Passwort wurde erfolgreich zurückgesetzt. Du
+                            kannst dich jetzt anmelden.
+                        </div>
+                    )
+                }
+
+                <div class="card p-8">
+                    <AuthForm client:load mode="login" lang="de" />
+
+                    <div
+                        class="mt-6 pt-6 border-t border-bio-gray-800 text-center"
+                    >
+                        <p class="text-sm text-bio-gray-400">
+                            Noch kein Konto?{" "}
+                            <a
+                                href="/de/join"
+                                class="text-bio-accent hover:underline"
+                                >Jetzt erstellen</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

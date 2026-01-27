@@ -1,0 +1,131 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { roleOptions } from "../../data/navigation";
+import { ArrowLeft, CheckCircle } from "lucide-react";
+import AuthForm from "../../components/react/AuthForm";
+
+export function getStaticPaths() {
+  return roleOptions.map((role) => ({
+    params: { role: role.id },
+    props: { role },
+  }));
+}
+
+const { role } = Astro.props;
+
+const pageTitle = `Join as ${role.label} — BIO BEATS`;
+const pageDescription = `Create your ${role.label} account on BIO BEATS.`;
+
+const benefitsByRole: Record<string, string[]> = {
+  artist: [
+    "Professional artist profile visible to bookers worldwide",
+    "Smart booking hub with availability management",
+    "Financial reporting and revenue tracking",
+    "Access to modular services for career growth",
+  ],
+  performer: [
+    "Showcase your performance skills to event organizers",
+    "Connect with artists and festivals looking for performers",
+    "Build your portfolio with verified bookings",
+    "Network with the electronic music community",
+  ],
+  creative: [
+    "Display your visual work to artists and events",
+    "Get hired for VJ sets, designs, and creative projects",
+    "Collaborate with musicians and labels",
+    "Access creative briefs and project opportunities",
+  ],
+  manager: [
+    "Manage multiple artists from one dashboard",
+    "Centralized booking coordination",
+    "Analytics and performance reporting",
+    "Verified agency status for credibility",
+  ],
+  label: [
+    "Showcase your label roster",
+    "Connect with bookers seeking your artists",
+    "Coordinate releases and marketing",
+    "Build your label presence internationally",
+  ],
+  booker: [
+    "Access verified artist profiles",
+    "Streamlined booking inquiry system",
+    "Artist availability and fee transparency",
+    "Build relationships with quality talent",
+  ],
+  provider: [
+    "List your services to the music industry",
+    "Connect with artists, labels, and events",
+    "Expand your client base",
+    "Professional service provider profile",
+  ],
+  guest: [
+    "Discover new artists and events",
+    "Follow your favorite artists",
+    "Get notified about upcoming shows",
+    "Explore the electronic music community",
+  ],
+};
+
+const benefits = benefitsByRole[role.id] || [];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Back Link -->
+  <div class="bg-bio-black py-4">
+    <div class="container-narrow">
+      <a
+        href="/join"
+        class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to role selection
+      </a>
+    </div>
+  </div>
+
+  <section class="section bg-bio-black">
+    <div class="container-narrow">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Benefits -->
+        <div>
+          <span class="badge-accent mb-4">{role.label}</span>
+          <h1 class="text-3xl md:text-4xl font-bold text-bio-white mb-4">
+            Join BIO BEATS
+          </h1>
+          <p class="text-bio-gray-400 text-lg mb-8">
+            {role.description}. Create your account and become part of the
+            electronic music ecosystem.
+          </p>
+
+          <div class="space-y-4">
+            {
+              benefits.map((benefit) => (
+                <div class="flex items-start gap-3">
+                  <CheckCircle className="w-5 h-5 text-bio-accent flex-shrink-0 mt-0.5" />
+                  <span class="text-bio-gray-300">{benefit}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="card p-8">
+          <h2 class="text-xl font-semibold text-bio-white mb-6">
+            Create your account
+          </h2>
+
+          <AuthForm client:load mode="register" role={role.id} />
+
+          <div class="mt-6 pt-6 border-t border-bio-gray-800 text-center">
+            <p class="text-sm text-bio-gray-400">
+              Already have an account?{" "}
+              <a href="/login" class="text-bio-accent hover:underline">Login</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

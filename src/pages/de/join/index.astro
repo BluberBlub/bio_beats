@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ArrowRight, CheckCircle } from "lucide-react";
+import { roleOptions } from "../../data/navigation";
+import { getTranslations } from "../../i18n";
+
+const t = getTranslations("de");
+
+const pageTitle = "Beitreten — BIO BEATS";
+const pageDescription =
+    "Erstelle dein BIO BEATS Profil und werde Teil der elektronischen Musik-Community.";
+
+const roleLabels: Record<string, { label: string; description: string }> = {
+    artist: {
+        label: "Künstler / DJ",
+        description: "Produzenten, DJs und Live-Acts",
+    },
+    performer: {
+        label: "Performer",
+        description: "Visual Artists, Tänzer, VJs",
+    },
+    creative: {
+        label: "Kreative",
+        description: "Designer, Fotografen, Videografen",
+    },
+    manager: { label: "Manager", description: "Artist Manager und Agenten" },
+    label: { label: "Labels", description: "Plattenfirmen und Imprints" },
+    booker: { label: "Booker", description: "Venue- und Event-Booker" },
+    provider: { label: "Dienstleister", description: "Technik, Sound, Licht" },
+    guest: { label: "Gast", description: "Fans und Musikliebhaber" },
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow text-center">
+            <h1 class="text-bio-white mb-4">Werde Teil von BIO BEATS</h1>
+            <p class="text-xl text-bio-gray-400">
+                Wähle deine Rolle und starte durch.
+            </p>
+        </div>
+    </section>
+
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {
+                    roleOptions.map((role) => (
+                        <a
+                            href={`/de/join/${role.id}`}
+                            class="card-hover p-6 group"
+                        >
+                            <h3 class="text-lg font-semibold text-bio-white group-hover:text-bio-accent transition-colors mb-2">
+                                {roleLabels[role.id]?.label || role.label}
+                            </h3>
+                            <p class="text-sm text-bio-gray-400">
+                                {roleLabels[role.id]?.description || ""}
+                            </p>
+                            <div class="mt-4 flex items-center gap-2 text-sm text-bio-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                                Auswählen
+                                <ArrowRight className="w-4 h-4" />
+                            </div>
+                        </a>
+                    ))
+                }
+            </div>
+
+            <div class="mt-12 text-center">
+                <p class="text-bio-gray-400 mb-4">
+                    Bereits ein Konto?{" "}
+                    <a href="/de/login" class="text-bio-accent hover:underline"
+                        >Anmelden</a
+                    >
+                </p>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

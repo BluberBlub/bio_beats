@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQSection from '../components/react/FAQSection';
+import { faqItems } from '../data/faq';
+
+const pageTitle = 'FAQ — BIO BEATS';
+const pageDescription = 'Frequently asked questions about BIO BEATS platform.';
+
+// Prepare FAQ data for React component
+const faqData = faqItems.map(item => ({
+  question: item.question,
+  answer: item.answer,
+  category: item.category,
+}));
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Header -->
+  <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-narrow">
+      <h1 class="text-bio-white mb-4 text-center">Frequently Asked Questions</h1>
+      <p class="text-xl text-bio-gray-400 text-center max-w-2xl mx-auto">
+        Find answers to common questions about BIO BEATS, our services, and how to get started.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section bg-bio-black">
+    <div class="container-narrow">
+      <FAQSection client:visible items={faqData} />
+    </div>
+  </section>
+
+  <!-- Still have questions -->
+  <section class="py-16 bg-bio-gray-900">
+    <div class="container-narrow text-center">
+      <h2 class="text-2xl font-bold text-bio-white mb-4">Still have questions?</h2>
+      <p class="text-bio-gray-400 mb-8">
+        Can't find what you're looking for? Get in touch with our team.
+      </p>
+      <a href="/contact" class="btn-primary">
+        Contact Us
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ArrowRight, Palette, Video, PenTool, Camera, Sparkles } from 'lucide-react';
+
+const pageTitle = 'Producers & Creatives — BIO BEATS';
+const pageDescription = 'Visual artists, VJs, designers, and creative professionals in electronic music.';
+
+const creativeRoles = [
+  {
+    icon: 'Video',
+    title: 'VJs & Visual Artists',
+    description: 'Create immersive visual experiences that transform dance floors into multisensory journeys.',
+    skills: ['Real-time visuals', 'Projection mapping', 'LED programming', 'Motion graphics']
+  },
+  {
+    icon: 'PenTool',
+    title: 'Graphic Designers',
+    description: 'Shape the visual identity of artists, labels, and events through compelling design.',
+    skills: ['Brand identity', 'Cover artwork', 'Merchandise', 'Social media assets']
+  },
+  {
+    icon: 'Camera',
+    title: 'Photographers & Videographers',
+    description: 'Document the culture and tell stories through powerful imagery and video.',
+    skills: ['Event photography', 'Artist portraits', 'Music videos', 'Documentary']
+  },
+  {
+    icon: 'Sparkles',
+    title: 'Stage & Set Designers',
+    description: 'Create physical environments that enhance the musical experience.',
+    skills: ['Stage design', 'Installation art', 'Lighting design', 'Scenic elements']
+  }
+];
+
+const featuredCreatives = [
+  { name: 'VisualMind', role: 'VJ / Visual Artist', location: 'Berlin' },
+  { name: 'Studio Noir', role: 'Design Studio', location: 'Amsterdam' },
+  { name: 'LensCollective', role: 'Photography', location: 'London' },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Hero -->
+  <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <span class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6">
+          Producers & Creatives
+        </span>
+        <h1 class="text-bio-white mb-6">
+          The artists behind the artists.
+        </h1>
+        <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
+          Electronic music is more than sound. It's visual, spatial, and experiential. BIO BEATS connects the creative professionals who bring this culture to life.
+        </p>
+        <a href="/join?role=creative" class="btn-primary inline-flex items-center gap-2">
+          Join as Creative
+          <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Creative Roles -->
+  <section class="section bg-bio-black">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {creativeRoles.map((role) => (
+          <div class="card-hover">
+            <div class="flex items-start gap-6">
+              <div class="w-14 h-14 rounded-lg bg-bio-accent/10 flex items-center justify-center flex-shrink-0">
+                {role.icon === 'Video' && <Video className="w-7 h-7 text-bio-accent" />}
+                {role.icon === 'PenTool' && <PenTool className="w-7 h-7 text-bio-accent" />}
+                {role.icon === 'Camera' && <Camera className="w-7 h-7 text-bio-accent" />}
+                {role.icon === 'Sparkles' && <Sparkles className="w-7 h-7 text-bio-accent" />}
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-bio-white mb-2">{role.title}</h3>
+                <p class="text-bio-gray-400 mb-4">{role.description}</p>
+                <div class="flex flex-wrap gap-2">
+                  {role.skills.map((skill) => (
+                    <span class="badge text-xs">{skill}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Creatives -->
+  <section class="section bg-bio-gray-900">
+    <div class="container-wide">
+      <div class="section-header">
+        <h2 class="text-bio-white mb-4">Featured Creatives</h2>
+        <p class="text-bio-gray-400 text-lg">Discover talented creative professionals in the community</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {featuredCreatives.map((creative) => (
+          <div class="card text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-bio-gray-800 flex items-center justify-center mb-4">
+              <Palette className="w-8 h-8 text-bio-accent" />
+            </div>
+            <h3 class="text-lg font-semibold text-bio-white mb-1">{creative.name}</h3>
+            <p class="text-bio-accent text-sm mb-1">{creative.role}</p>
+            <p class="text-bio-gray-500 text-sm">{creative.location}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-bio-black">
+    <div class="container-narrow text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+        Your creativity matters.
+      </h2>
+      <p class="text-bio-gray-400 mb-8">
+        Join BIO BEATS and connect with artists, labels, and events looking for creative talent.
+      </p>
+      <a href="/join?role=creative" class="btn-primary">
+        Create Your Creative Profile
+      </a>
+    </div>
+  </section>
+</BaseLayout>
