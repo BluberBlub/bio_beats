@@ -1,0 +1,14 @@
+---
+import Layout from "../../../layouts/AdminLayout.astro";
+import FestivalTable from "../../../components/react/admin/FestivalTable";
+---
+
+<Layout title="Festival Management">
+    <div class="mb-6">
+        <p class="text-bio-gray-400">
+            Add new festivals, manage details, and update lineups.
+        </p>
+    </div>
+
+    <FestivalTable client:load />
+</Layout>

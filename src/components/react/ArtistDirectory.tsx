@@ -85,8 +85,13 @@ const directoryTranslations = {
     }
 };
 
-export default function ArtistDirectory({ artists, labels, lang = 'en' }: Props) {
+export default function ArtistDirectory({ artists = [], labels = [], lang = 'en' }: Props) {
     const t = directoryTranslations[lang];
+
+    // Ensure we have valid arrays
+    const safeArtists = Array.isArray(artists) ? artists : [];
+    const safeLabels = Array.isArray(labels) ? labels : [];
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState<string>('all');
     const [selectedGenre, setSelectedGenre] = useState<string>('all');
@@ -97,37 +102,37 @@ export default function ArtistDirectory({ artists, labels, lang = 'en' }: Props)
     // Get all unique genres
     const allGenres = useMemo(() => {
         const genres = new Set<string>();
-        artists.forEach(a => a.genres.forEach(g => genres.add(g)));
-        labels.forEach(l => l.genres.forEach(g => genres.add(g)));
+        safeArtists.forEach(a => a.genres?.forEach(g => genres.add(g)));
+        safeLabels.forEach(l => l.genres?.forEach(g => genres.add(g)));
         return Array.from(genres).sort();
-    }, [artists, labels]);
+    }, [safeArtists, safeLabels]);
 
     // Filter artists
     const filteredArtists = useMemo(() => {
-        return artists.filter(artist => {
-            const matchesSearch = artist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                artist.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                artist.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
+        return safeArtists.filter(artist => {
+            const matchesSearch = artist.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                artist.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                artist.genres?.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
 
             const matchesType = selectedType === 'all' || artist.type === selectedType;
-            const matchesGenre = selectedGenre === 'all' || artist.genres.includes(selectedGenre);
+            const matchesGenre = selectedGenre === 'all' || artist.genres?.includes(selectedGenre);
 
             return matchesSearch && matchesType && matchesGenre;
         });
-    }, [artists, searchQuery, selectedType, selectedGenre]);
+    }, [safeArtists, searchQuery, selectedType, selectedGenre]);
 
     // Filter labels
     const filteredLabels = useMemo(() => {
-        return labels.filter(label => {
-            const matchesSearch = label.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                label.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                label.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
+        return safeLabels.filter(label => {
+            const matchesSearch = label.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                label.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                label.genres?.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
 
-            const matchesGenre = selectedGenre === 'all' || label.genres.includes(selectedGenre);
+            const matchesGenre = selectedGenre === 'all' || label.genres?.includes(selectedGenre);
 
             return matchesSearch && matchesGenre;
         });
-    }, [labels, searchQuery, selectedGenre]);
+    }, [safeLabels, searchQuery, selectedGenre]);
 
     const visibleArtists = filteredArtists.slice(0, visibleCount);
     const visibleLabels = filteredLabels.slice(0, visibleCount);

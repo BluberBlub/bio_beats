@@ -1,0 +1,14 @@
+---
+import Layout from "../../../layouts/AdminLayout.astro";
+import UserTable from "../../../components/react/admin/UserTable";
+---
+
+<Layout title="User Management">
+    <div class="mb-6">
+        <p class="text-bio-gray-400">
+            Manage user access, roles, and verification status.
+        </p>
+    </div>
+
+    <UserTable client:load />
+</Layout>

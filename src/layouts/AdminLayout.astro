@@ -1,0 +1,105 @@
+---
+import "../styles/global.css";
+import {
+    LayoutDashboard,
+    Users,
+    Music,
+    Settings,
+    LogOut,
+    Menu,
+    X,
+} from "lucide-react";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{title} | BIO BEATS Admin</title>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    </head>
+    <body class="bg-bio-black text-bio-white min-h-screen flex">
+        <!-- Sidebar -->
+        <aside
+            class="w-64 bg-bio-gray-900 border-r border-bio-gray-800 hidden md:flex flex-col fixed h-full inset-y-0 z-50"
+        >
+            <div class="p-6 border-b border-bio-gray-800">
+                <a href="/admin/dashboard" class="flex items-center gap-3">
+                    <img src="/logo.svg" alt="BIO BEATS" class="w-8 h-8" />
+                    <span class="font-bold text-xl tracking-tight">Admin</span>
+                </a>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-1">
+                <a
+                    href="/admin/dashboard"
+                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                >
+                    <LayoutDashboard className="w-5 h-5" />
+                    Dashboard
+                </a>
+                <a
+                    href="/admin/users"
+                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                >
+                    <Users className="w-5 h-5" />
+                    Users
+                </a>
+                <a
+                    href="/admin/festivals"
+                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                >
+                    <Music className="w-5 h-5" />
+                    Festivals
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-bio-gray-800">
+                <button
+                    id="logout-btn"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 min-h-screen flex flex-col">
+            <!-- Mobile Header -->
+            <header
+                class="md:hidden h-16 bg-bio-gray-900 border-b border-bio-gray-800 flex items-center justify-between px-4"
+            >
+                <a href="/admin/dashboard" class="font-bold">BIO BEATS Admin</a>
+                <button class="p-2">
+                    <Menu className="w-6 h-6" />
+                </button>
+            </header>
+
+            <div class="p-6 md:p-10 flex-1 overflow-y-auto">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-white">{title}</h1>
+                </header>
+                <slot />
+            </div>
+        </main>
+
+        <script>
+            import { logout } from "../stores/userStore";
+
+            document
+                .getElementById("logout-btn")
+                ?.addEventListener("click", () => {
+                    logout();
+                });
+        </script>
+    </body>
+</html>

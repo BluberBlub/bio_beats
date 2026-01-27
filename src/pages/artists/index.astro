@@ -1,13 +1,14 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArtistDirectory from '../../components/react/ArtistDirectory';
-import { artists, labels } from '../../data/artists';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArtistDirectory from "../../components/react/ArtistDirectory";
+import { artists, labels } from "../../data/artists";
 
-const pageTitle = 'Artists & Labels — BIO BEATS';
-const pageDescription = 'Discover verified electronic music artists, DJs, live acts, and labels on BIO BEATS.';
+const pageTitle = "Artists & Labels — BIO BEATS";
+const pageDescription =
+  "Discover verified electronic music artists, DJs, live acts, and labels on BIO BEATS.";
 
 // Prepare data for React component
-const artistsData = artists.map(a => ({
+const artistsData = artists.map((a) => ({
   id: a.id,
   name: a.name,
   slug: a.slug,
@@ -21,7 +22,7 @@ const artistsData = artists.map(a => ({
   availability: a.availability,
 }));
 
-const labelsData = labels.map(l => ({
+const labelsData = labels.map((l) => ({
   id: l.id,
   name: l.name,
   slug: l.slug,
@@ -42,7 +43,8 @@ const labelsData = labels.map(l => ({
       <div class="max-w-3xl">
         <h1 class="text-bio-white mb-4">Artists & Labels</h1>
         <p class="text-xl text-bio-gray-400">
-          Discover verified electronic music artists, DJs, live acts, and labels. Find the perfect talent for your next event.
+          Discover verified electronic music artists, DJs, live acts, and
+          labels. Find the perfect talent for your next event.
         </p>
       </div>
     </div>
@@ -51,11 +53,7 @@ const labelsData = labels.map(l => ({
   <!-- Directory -->
   <section class="section bg-bio-black">
     <div class="container-wide">
-      <ArtistDirectory 
-        client:visible 
-        artists={artistsData} 
-        labels={labelsData} 
-      />
+      <ArtistDirectory client:load artists={artistsData} labels={labelsData} />
     </div>
   </section>
 </BaseLayout>

@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,6 +26,11 @@ export default defineConfig({
     },
   },
 
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
+
   integrations: [
     react(),
     sitemap({
@@ -40,11 +46,8 @@ export default defineConfig({
     },
   },
 
-  // Prefetch links on hover
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'hover',
-  },
+  // Prefetch links on hover - DISABLED temporarily to debug visibility issue
+  prefetch: false,
 
   // Compress output
   compressHTML: true,
