@@ -39,7 +39,17 @@ const translations = {
         createAccount: 'Create Account',
         login: 'Login',
         hidePassword: 'Hide password',
-        showPassword: 'Show password'
+        showPassword: 'Show password',
+        loginSuccess: 'Login successful!',
+        selectCountry: 'Select Country',
+        germany: 'Germany',
+        austria: 'Austria',
+        switzerland: 'Switzerland',
+        us: 'United States',
+        uk: 'United Kingdom',
+        netherlands: 'Netherlands',
+        france: 'France',
+        other: 'Other'
     },
     de: {
         emailRequired: 'E-Mail ist erforderlich',
@@ -71,7 +81,17 @@ const translations = {
         createAccount: 'Konto erstellen',
         login: 'Anmelden',
         hidePassword: 'Passwort verbergen',
-        showPassword: 'Passwort anzeigen'
+        showPassword: 'Passwort anzeigen',
+        loginSuccess: 'Login erfolgreich!',
+        selectCountry: 'Land auswählen',
+        germany: 'Deutschland',
+        austria: 'Österreich',
+        switzerland: 'Schweiz',
+        us: 'Vereinigte Staaten',
+        uk: 'Vereinigtes Königreich',
+        netherlands: 'Niederlande',
+        france: 'Frankreich',
+        other: 'Anderes Land'
     }
 };
 
@@ -157,22 +177,62 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
 
         setLoading(true);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // Demo: always succeed
-        setSuccess(true);
-        setLoading(false);
-
-        // Redirect after success
-        setTimeout(() => {
-            const baseUrl = lang === 'de' ? '/de' : '';
+        try {
             if (mode === 'register') {
-                window.location.href = `${baseUrl}/verify-email`;
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        password: formData.password, // In real app, sent over HTTPS
+                        role: role || 'guest',
+                        country: formData.location
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed');
+                }
+
+                setSuccess(true);
+
+                // Redirect after success
+                setTimeout(() => {
+                    const baseUrl = lang === 'de' ? '/de' : '';
+                    window.location.href = `${baseUrl}/verify-email`;
+                }, 1500);
+
             } else {
-                window.location.href = `${baseUrl}/`;
+                // Login Flow (Mock for now, normally would hit /api/auth/login)
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                // Set user in store (persistence handled by store subscription)
+                const { setUser } = await import('../../stores/userStore');
+                setUser({
+                    id: 'mock-user-id',
+                    email: formData.email,
+                    role: 'user', // Default role for login
+                    full_name: 'Demo User',
+                    is_verified: true,
+                    created_at: new Date().toISOString()
+                });
+
+                setSuccess(true);
+
+                setTimeout(() => {
+                    const baseUrl = lang === 'de' ? '/de' : '';
+                    window.location.href = `${baseUrl}/`;
+                }, 1000);
             }
-        }, 1000);
+        } catch (err: any) {
+            setError(err.message || 'An error occurred');
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (success) {
@@ -182,7 +242,7 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
                     <CheckCircle className="w-8 h-8 text-green-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">
-                    {t.accountCreated}
+                    {mode === 'register' ? t.accountCreated : t.loginSuccess}
                 </h3>
                 <p className="text-gray-400">
                     {mode === 'register' ? t.redirectingEmail : t.redirecting}
@@ -287,15 +347,33 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
                     <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-2">
                         {t.location}
                     </label>
-                    <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
-                        placeholder={t.cityCountry}
-                    />
+                    <div className="relative">
+                        <select
+                            id="location"
+                            name="location"
+                            value={formData.location}
+                            onChange={(e) => {
+                                const { name, value } = e.target;
+                                setFormData(prev => ({ ...prev, [name]: value }));
+                            }}
+                            className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors appearance-none"
+                        >
+                            <option value="">{t.selectCountry}</option>
+                            <option value="Germany">{t.germany}</option>
+                            <option value="Austria">{t.austria}</option>
+                            <option value="Switzerland">{t.switzerland}</option>
+                            <option value="United States">{t.us}</option>
+                            <option value="United Kingdom">{t.uk}</option>
+                            <option value="Netherlands">{t.netherlands}</option>
+                            <option value="France">{t.france}</option>
+                            <option value="Other">{t.other}</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             )}
 

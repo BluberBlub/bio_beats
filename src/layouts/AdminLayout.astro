@@ -59,6 +59,13 @@ const isActive = (path: string) => currentPath.includes(path);
                     Users
                 </a>
                 <a
+                    href="/admin/bookings"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/bookings") ? "bg-bio-accent text-white" : "text-bio-gray-400 hover:text-white hover:bg-bio-gray-800"}`}
+                >
+                    <Calendar className="w-5 h-5" />
+                    Bookings
+                </a>
+                <a
                     href="/admin/artists"
                     class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/artists") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
                 >
@@ -78,6 +85,13 @@ const isActive = (path: string) => currentPath.includes(path);
                 >
                     <Calendar className="w-5 h-5" />
                     Calendar
+                </a>
+                <a
+                    href="/admin/profile"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/profile") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
+                >
+                    <Settings className="w-5 h-5" />
+                    Settings
                 </a>
             </nav>
 

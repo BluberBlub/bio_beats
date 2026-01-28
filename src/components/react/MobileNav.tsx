@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useStore } from '@nanostores/react';
+import { userStore, logout } from '../../stores/userStore';
 import type { NavItem } from '../../types/types';
 
 interface MobileNavProps {
@@ -8,6 +10,7 @@ interface MobileNavProps {
 }
 
 export default function MobileNav({ navigation }: MobileNavProps) {
+    const $user = useStore(userStore);
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -81,20 +84,67 @@ export default function MobileNav({ navigation }: MobileNavProps) {
 
                                 {/* Action Buttons */}
                                 <div className="p-6 border-t border-bio-gray-800 space-y-3">
-                                    <a
-                                        href="/join"
-                                        onClick={() => setIsOpen(false)}
-                                        className="btn-primary w-full text-center"
-                                    >
-                                        Join BIO BEATS
-                                    </a>
-                                    <a
-                                        href="/login"
-                                        onClick={() => setIsOpen(false)}
-                                        className="btn-secondary w-full text-center"
-                                    >
-                                        Login
-                                    </a>
+                                    {$user ? (
+                                        <>
+                                            <div className="flex items-center gap-3 px-2 py-2 mb-4">
+                                                <div className="w-10 h-10 rounded-full bg-bio-accent flex items-center justify-center text-white font-bold">
+                                                    {$user.full_name?.charAt(0) || 'U'}
+                                                </div>
+                                                <div>
+                                                    <p className="text-white font-medium">{$user.full_name}</p>
+                                                    <p className="text-sm text-gray-400 truncate max-w-[180px]">{$user.email}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Admin Dashboard Link if admin */}
+                                            {$user.role === 'admin' && (
+                                                <a
+                                                    href="/admin/dashboard"
+                                                    onClick={() => setIsOpen(false)}
+                                                    className="flex items-center gap-2 w-full px-4 py-3 bg-bio-gray-800 text-white rounded-lg hover:bg-bio-gray-700 transition-colors"
+                                                >
+                                                    <LayoutDashboard className="w-5 h-5" />
+                                                    Admin Dashboard
+                                                </a>
+                                            )}
+
+                                            <a
+                                                href="/profile"
+                                                onClick={() => setIsOpen(false)}
+                                                className="btn-secondary w-full text-center flex items-center justify-center gap-2"
+                                            >
+                                                <User className="w-4 h-4" />
+                                                My Profile
+                                            </a>
+                                            <button
+                                                onClick={() => {
+                                                    logout();
+                                                    setIsOpen(false);
+                                                }}
+                                                className="btn-ghost w-full text-center text-red-500 hover:text-red-400 hover:bg-red-500/10 flex items-center justify-center gap-2"
+                                            >
+                                                <LogOut className="w-4 h-4" />
+                                                Logout
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <a
+                                                href="/join"
+                                                onClick={() => setIsOpen(false)}
+                                                className="btn-primary w-full text-center"
+                                            >
+                                                Join BIO BEATS
+                                            </a>
+                                            <a
+                                                href="/login"
+                                                onClick={() => setIsOpen(false)}
+                                                className="btn-secondary w-full text-center"
+                                            >
+                                                Login
+                                            </a>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

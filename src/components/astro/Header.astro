@@ -2,6 +2,7 @@
 import { mainNavigation } from "../../data/navigation";
 import MobileNav from "../react/MobileNav";
 import LanguageSwitcher from "../react/LanguageSwitcher";
+import HeaderAuth from "../react/HeaderAuth";
 import { getLangFromUrl } from "../../i18n";
 
 const url = new URL(Astro.request.url);
@@ -47,18 +48,7 @@ const lang = getLangFromUrl(url);
           currentLang={lang}
           currentPath={url.pathname}
         />
-        <a
-          href={lang === "de" ? "/de/login" : "/login"}
-          class="btn-ghost text-sm"
-        >
-          {lang === "de" ? "Anmelden" : "Login"}
-        </a>
-        <a
-          href={lang === "de" ? "/de/join" : "/join"}
-          class="btn-primary text-sm"
-        >
-          {lang === "de" ? "Beitreten" : "Join"}
-        </a>
+        <HeaderAuth client:only="react" currentLang={lang} />
       </div>
 
       <!-- Mobile Menu Button -->

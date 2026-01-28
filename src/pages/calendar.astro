@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EventCalendar from "../components/react/EventCalendar";
+
+const pageTitle = "Festival Calendar — BIO BEATS";
+const pageDescription =
+    "Explore upcoming electronic music festivals around the world. Filter by date and find your next rave destination.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <section class="min-h-screen py-24">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h1
+                    class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-bio-white to-bio-gray-400 mb-6"
+                >
+                    Festival Calendar
+                </h1>
+                <p class="text-xl text-bio-gray-400 max-w-2xl mx-auto">
+                    Plan your festival season with our interactive calendar.
+                </p>
+            </div>
+
+            <div class="max-w-6xl mx-auto">
+                <EventCalendar client:only="react" lang="en" />
+            </div>
+        </div>
+    </section>
+</BaseLayout>

@@ -1,0 +1,8 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import UserProfileSettings from "../../components/react/UserProfileSettings";
+---
+
+<AdminLayout title="Profile Settings">
+    <UserProfileSettings client:only="react" />
+</AdminLayout>

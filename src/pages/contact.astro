@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
+import ContactForm from "../components/react/ContactForm";
 
 const pageTitle = "Contact — BIO BEATS";
 const pageDescription = "Get in touch with the BIO BEATS team.";
@@ -106,92 +107,22 @@ if (artistParam && reasonParam === "booking") {
             <h2 class="text-xl font-semibold text-bio-white mb-6">
               Send us a message
             </h2>
-            <form class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    for="name"
-                    class="block text-sm font-medium text-bio-gray-300 mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent focus:ring-1 focus:ring-bio-accent outline-none transition-colors"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="email"
-                    class="block text-sm font-medium text-bio-gray-300 mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent focus:ring-1 focus:ring-bio-accent outline-none transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label
-                  for="subject"
-                  class="block text-sm font-medium text-bio-gray-300 mb-2"
-                >
-                  Subject
-                </label>
-                <select
-                  id="subject"
-                  class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
-                >
-                  <option value="" selected={!prefilledSubject}
-                    >Select a topic</option
-                  >
-                  <option
-                    value="general"
-                    selected={prefilledSubject === "general"}
-                    >General Inquiry</option
-                  >
-                  <option
-                    value="partnership"
-                    selected={prefilledSubject === "partnership"}
-                    >Partnership</option
-                  >
-                  <option
-                    value="support"
-                    selected={prefilledSubject === "support"}>Support</option
-                  >
-                  <option value="press" selected={prefilledSubject === "press"}
-                    >Press</option
-                  >
-                  <option value="other" selected={prefilledSubject === "other"}
-                    >Other</option
-                  >
-                </select>
-              </div>
-
-              <div>
-                <label
-                  for="message"
-                  class="block text-sm font-medium text-bio-gray-300 mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows="8"
-                  class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent focus:ring-1 focus:ring-bio-accent outline-none transition-colors resize-none"
-                  placeholder="Your message...">{prefilledMessage}</textarea
-                >
-              </div>
-
-              <button type="submit" class="btn-primary"> Send Message </button>
-            </form>
+            <h2 class="text-xl font-semibold text-bio-white mb-6">
+              Send us a message
+            </h2>
+            <ContactForm
+              client:load
+              initialReason={reasonParam === "festival"
+                ? "submit_festival"
+                : reasonParam}
+              initialSubject={prefilledSubject}
+              initialMessage={prefilledMessage}
+              initialContext={{
+                artist: artistParam,
+                ref: refParam,
+                festivalName: url.searchParams.get("festival") || "",
+              }}
+            />
           </div>
         </div>
       </div>
