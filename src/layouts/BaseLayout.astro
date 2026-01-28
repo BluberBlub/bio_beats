@@ -79,6 +79,38 @@ import Footer from "../components/astro/Footer.astro";
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="msapplication-TileColor" content="#ff0700" />
 
+    <!-- JSON-LD Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "BIO BEATS",
+        url: "https://biobeats.io",
+        logo: "https://biobeats.io/logo.svg",
+        description:
+          "Management and booking platform for electronic music culture",
+        sameAs: [
+          "https://instagram.com/biobeats",
+          "https://twitter.com/biobeats",
+        ],
+      })}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "BIO BEATS",
+        url: "https://biobeats.io",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://biobeats.io/artists?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      })}
+    />
+
     <title>{title}</title>
 
     <!-- Critical CSS Inline -->

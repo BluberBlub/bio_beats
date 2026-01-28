@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { setUser, mockAdminUser } from '../../../stores/userStore';
 
 export default function AdminLogin() {
     const [loading, setLoading] = useState(false);
@@ -19,7 +18,14 @@ export default function AdminLogin() {
         // Validate against provided credentials
         if (username === 'Administrator' && password === 'Start001$') {
             setTimeout(() => {
-                setUser(mockAdminUser);
+                // Store auth in both localStorage and cookie
+                localStorage.setItem('bio-admin-auth', 'true');
+                localStorage.setItem('bio-admin-user', JSON.stringify({
+                    id: 'admin-1',
+                    email: 'admin@biobeats.io',
+                    role: 'admin',
+                    name: 'Administrator'
+                }));
                 document.cookie = "bio-auth=true; path=/; max-age=3600";
                 window.location.href = '/admin/dashboard';
             }, 1000);

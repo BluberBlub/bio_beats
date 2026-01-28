@@ -1,0 +1,13 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import CalendarView from "../../../components/react/admin/CalendarView";
+---
+
+<AdminLayout title="Calendar — Admin">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-white mb-2">Event Calendar</h1>
+        <p class="text-bio-gray-400">View and manage festival dates</p>
+    </div>
+
+    <CalendarView client:only="react" />
+</AdminLayout>

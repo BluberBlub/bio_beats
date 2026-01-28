@@ -4,6 +4,8 @@ import {
     LayoutDashboard,
     Users,
     Music,
+    Calendar,
+    Mic2,
     Settings,
     LogOut,
     Menu,
@@ -15,6 +17,10 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+// Helper to check if link is active
+const isActive = (path: string) => currentPath.includes(path);
 ---
 
 <!doctype html>
@@ -40,24 +46,38 @@ const { title } = Astro.props;
             <nav class="flex-1 p-4 space-y-1">
                 <a
                     href="/admin/dashboard"
-                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/dashboard") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
                 >
                     <LayoutDashboard className="w-5 h-5" />
                     Dashboard
                 </a>
                 <a
                     href="/admin/users"
-                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/users") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
                 >
                     <Users className="w-5 h-5" />
                     Users
                 </a>
                 <a
+                    href="/admin/artists"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/artists") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
+                >
+                    <Mic2 className="w-5 h-5" />
+                    Artists
+                </a>
+                <a
                     href="/admin/festivals"
-                    class="flex items-center gap-3 px-4 py-3 text-bio-gray-300 hover:text-white hover:bg-bio-gray-800 rounded-lg transition-colors"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/festivals") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
                 >
                     <Music className="w-5 h-5" />
                     Festivals
+                </a>
+                <a
+                    href="/admin/calendar"
+                    class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive("/admin/calendar") ? "text-white bg-bio-accent" : "text-bio-gray-300 hover:text-white hover:bg-bio-gray-800"}`}
+                >
+                    <Calendar className="w-5 h-5" />
+                    Calendar
                 </a>
             </nav>
 

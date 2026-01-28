@@ -32,7 +32,7 @@ const lang = getLangFromUrl(url);
           mainNavigation.map((item) => (
             <a
               href={lang === "de" ? `/de${item.href}` : item.href}
-              class="px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white transition-colors rounded-lg hover:bg-bio-gray-800/50"
+              class="px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white transition-colors rounded-lg hover:bg-bio-gray-800/50 whitespace-nowrap"
             >
               {item.label}
             </a>
@@ -43,7 +43,7 @@ const lang = getLangFromUrl(url);
       <!-- Desktop Actions -->
       <div class="hidden lg:flex items-center gap-3">
         <LanguageSwitcher
-          client:load
+          client:only="react"
           currentLang={lang}
           currentPath={url.pathname}
         />
@@ -62,7 +62,7 @@ const lang = getLangFromUrl(url);
       </div>
 
       <!-- Mobile Menu Button -->
-      <MobileNav client:load navigation={mainNavigation} />
+      <MobileNav client:only="react" navigation={mainNavigation} />
     </nav>
   </div>
 </header>

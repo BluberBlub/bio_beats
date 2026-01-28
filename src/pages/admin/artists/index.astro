@@ -1,0 +1,15 @@
+---
+import AdminLayout from "../../../layouts/AdminLayout.astro";
+import ArtistTable from "../../../components/react/admin/ArtistTable";
+---
+
+<AdminLayout title="Artists — Admin">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-white mb-2">Artist Management</h1>
+        <p class="text-bio-gray-400">
+            Manage artists, verify profiles, and sync with frontend
+        </p>
+    </div>
+
+    <ArtistTable client:only="react" />
+</AdminLayout>

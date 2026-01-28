@@ -54,7 +54,7 @@ const labelsData = labels.map((l) => ({
     <section class="section bg-bio-black">
         <div class="container-wide">
             <ArtistDirectory
-                client:load
+                client:only="react"
                 artists={artistsData}
                 labels={labelsData}
                 lang="de"

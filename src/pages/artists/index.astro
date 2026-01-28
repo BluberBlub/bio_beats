@@ -53,7 +53,11 @@ const labelsData = labels.map((l) => ({
   <!-- Directory -->
   <section class="section bg-bio-black">
     <div class="container-wide">
-      <ArtistDirectory client:load artists={artistsData} labels={labelsData} />
+      <ArtistDirectory
+        client:only="react"
+        artists={artistsData}
+        labels={labelsData}
+      />
     </div>
   </section>
 </BaseLayout>

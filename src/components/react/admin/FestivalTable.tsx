@@ -69,13 +69,16 @@ export default function FestivalTable() {
             location: formData.get('location') as string,
             country: formData.get('country') as string,
             date: formData.get('date') as string,
+            dateEnd: (formData.get('dateEnd') as string) || undefined,
             capacity: formData.get('capacity') as string,
             type: formData.get('type') as string,
             website: formData.get('website') as string,
             description: formData.get('description') as string,
             slug: (formData.get('name') as string).toLowerCase().replace(/ /g, '-'),
             image: imagePreview || editingFestival?.image || '/festivals/default.png',
-            artistSlugs: [],
+            artistSlugs: editingFestival?.artistSlugs || [],
+            stages: (formData.get('stages') as string)?.split(',').map(s => s.trim()).filter(Boolean) || [],
+            highlights: (formData.get('highlights') as string)?.split(',').map(s => s.trim()).filter(Boolean) || [],
         };
 
         if (editingFestival) {
@@ -360,10 +363,41 @@ export default function FestivalTable() {
                                 <label className="block text-sm font-medium text-bio-gray-300 mb-1">Description</label>
                                 <textarea
                                     name="description"
-                                    rows={4}
+                                    rows={3}
                                     defaultValue={editingFestival?.description}
                                     className="w-full px-4 py-2 bg-bio-black border border-bio-gray-700 rounded-lg text-white focus:border-bio-accent outline-none"
                                 ></textarea>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-bio-gray-300 mb-1">End Date (optional)</label>
+                                    <input
+                                        name="dateEnd"
+                                        defaultValue={editingFestival?.dateEnd}
+                                        placeholder="e.g. June 28, 2026"
+                                        className="w-full px-4 py-2 bg-bio-black border border-bio-gray-700 rounded-lg text-white focus:border-bio-accent outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-bio-gray-300 mb-1">Stages (comma-separated)</label>
+                                    <input
+                                        name="stages"
+                                        defaultValue={editingFestival?.stages?.join(', ')}
+                                        placeholder="e.g. Main Stage, Tent, Outdoor"
+                                        className="w-full px-4 py-2 bg-bio-black border border-bio-gray-700 rounded-lg text-white focus:border-bio-accent outline-none"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-bio-gray-300 mb-1">Highlights (comma-separated)</label>
+                                <input
+                                    name="highlights"
+                                    defaultValue={editingFestival?.highlights?.join(', ')}
+                                    placeholder="e.g. Art installations, Food court, Camping"
+                                    className="w-full px-4 py-2 bg-bio-black border border-bio-gray-700 rounded-lg text-white focus:border-bio-accent outline-none"
+                                />
                             </div>
 
                             <div className="flex gap-3 pt-4 border-t border-bio-gray-800">
