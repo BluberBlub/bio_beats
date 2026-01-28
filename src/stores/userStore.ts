@@ -26,6 +26,14 @@ export function setUser(user: UserProfile | null) {
     }
 }
 
+export function updateUser(updates: Partial<UserProfile>) {
+    const currentUser = userStore.get();
+    if (currentUser) {
+        const newUser = { ...currentUser, ...updates };
+        setUser(newUser);
+    }
+}
+
 export function logout() {
     userStore.set(null);
     if (typeof window !== 'undefined') {

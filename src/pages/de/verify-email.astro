@@ -46,7 +46,7 @@ const pageDescription =
                 </div>
 
                 <div class="space-y-4">
-                    <button class="btn-secondary w-full">
+                    <button id="resend-btn" class="btn-secondary w-full">
                         Bestätigungs-E-Mail erneut senden
                     </button>
 
@@ -70,3 +70,47 @@ const pageDescription =
         </div>
     </section>
 </BaseLayout>
+
+<script>
+    const resendBtn = document.getElementById("resend-btn");
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get("email");
+
+    if (resendBtn) {
+        resendBtn.addEventListener("click", async () => {
+            if (!email) {
+                alert("Keine Email-Adresse gefunden. Bitte erneut einloggen.");
+                return;
+            }
+
+            const originalText = resendBtn.innerText;
+            resendBtn.innerText = "Sende...";
+            resendBtn.setAttribute("disabled", "true");
+            resendBtn.classList.add("opacity-50", "cursor-not-allowed");
+
+            try {
+                const response = await fetch("/api/auth/resend-verification", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
+
+                if (response.ok) {
+                    resendBtn.innerText = "Email gesendet!";
+                } else {
+                    resendBtn.innerText = "Fehler!";
+                    console.error("Failed to resend");
+                }
+            } catch (err) {
+                console.error(err);
+                resendBtn.innerText = "Fehler!";
+            }
+
+            setTimeout(() => {
+                resendBtn.innerText = originalText;
+                resendBtn.removeAttribute("disabled");
+                resendBtn.classList.remove("opacity-50", "cursor-not-allowed");
+            }, 3000);
+        });
+    }
+</script>

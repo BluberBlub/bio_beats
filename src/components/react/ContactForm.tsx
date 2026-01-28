@@ -52,11 +52,34 @@ export default function ContactForm({
         e.preventDefault();
         setLoading(true);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    subject: reason,
+                    message: formData.message,
+                    festivalName: formData.festivalName,
+                    festivalDate: formData.festivalDate,
+                    // Pass other fields as needed
+                }),
+            });
 
-        setSuccess(true);
-        setLoading(false);
+            if (response.ok) {
+                setSuccess(true);
+            } else {
+                alert('Something went wrong. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Error submitting form');
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (success) {

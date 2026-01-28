@@ -62,7 +62,7 @@ export default function HeaderAuth({ currentLang }: Props) {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-[#171717] border border-[#262626] rounded-xl shadow-xl py-2 animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute right-0 top-full mt-2 w-56 bg-[#171717] border border-[#262626] rounded-xl shadow-xl py-2 z-[100]">
                     <div className="px-4 py-3 border-b border-[#262626]">
                         <p className="text-sm font-medium text-white break-words">{$user.full_name}</p>
                         <p className="text-xs text-gray-400 truncate">{$user.email}</p>

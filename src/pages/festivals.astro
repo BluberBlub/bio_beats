@@ -8,6 +8,22 @@ import {
   Globe,
   Sparkles,
 } from "lucide-react";
+import FestivalDirectory from "../components/react/FestivalDirectory";
+import { festivals } from "../data/festivals";
+
+// Prepare data for React component
+const festivalsData = festivals.map((f) => ({
+  id: f.id,
+  name: f.name,
+  slug: f.slug,
+  location: f.location,
+  country: f.country,
+  date: f.date,
+  type: f.type,
+  image: f.image,
+  capacity: f.capacity,
+  artistSlugs: f.artistSlugs,
+}));
 
 const pageTitle = "Festivals & Organizers — BIO BEATS";
 const pageDescription =
@@ -70,8 +86,19 @@ const benefits = [
     </div>
   </section>
 
-  <!-- Benefits Grid -->
+  <!-- Festival Directory / Grid (Restored) -->
   <section class="section bg-bio-black">
+    <div class="container-wide">
+      <div class="section-header mb-12">
+        <h2 class="text-bio-white">Featured Festivals</h2>
+        <p class="text-bio-gray-400">Explore our partner festivals.</p>
+      </div>
+      <FestivalDirectory client:load festivals={festivalsData} />
+    </div>
+  </section>
+
+  <!-- Benefits Grid -->
+  <section class="section bg-bio-gray-900 border-t border-white/5">
     <div class="container-wide">
       <div class="section-header">
         <h2 class="text-bio-white mb-4">Why festivals choose BIO BEATS</h2>

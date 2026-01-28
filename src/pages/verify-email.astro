@@ -71,24 +71,44 @@ const pageDescription = "Verify your email to complete registration.";
 
 <script>
     const resendBtn = document.getElementById("resend-btn");
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get("email");
+
     if (resendBtn) {
-        resendBtn.addEventListener("click", () => {
+        resendBtn.addEventListener("click", async () => {
+            if (!email) {
+                alert("No email address found. Please login again.");
+                return;
+            }
+
             const originalText = resendBtn.innerText;
             resendBtn.innerText = "Sending...";
             resendBtn.setAttribute("disabled", "true");
             resendBtn.classList.add("opacity-50", "cursor-not-allowed");
 
+            try {
+                const response = await fetch("/api/auth/resend-verification", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
+
+                if (response.ok) {
+                    resendBtn.innerText = "Email Sent!";
+                } else {
+                    resendBtn.innerText = "Error!";
+                    console.error("Failed to resend");
+                }
+            } catch (err) {
+                console.error(err);
+                resendBtn.innerText = "Error!";
+            }
+
             setTimeout(() => {
-                resendBtn.innerText = "Email Sent!";
-                setTimeout(() => {
-                    resendBtn.innerText = originalText;
-                    resendBtn.removeAttribute("disabled");
-                    resendBtn.classList.remove(
-                        "opacity-50",
-                        "cursor-not-allowed",
-                    );
-                }, 3000);
-            }, 1500);
+                resendBtn.innerText = originalText;
+                resendBtn.removeAttribute("disabled");
+                resendBtn.classList.remove("opacity-50", "cursor-not-allowed");
+            }, 3000);
         });
     }
 </script>

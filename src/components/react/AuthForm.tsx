@@ -202,7 +202,7 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
                 // Redirect after success
                 setTimeout(() => {
                     const baseUrl = lang === 'de' ? '/de' : '';
-                    window.location.href = `${baseUrl}/verify-email`;
+                    window.location.href = `${baseUrl}/verify-email?email=${encodeURIComponent(formData.email)}`;
                 }, 1500);
 
             } else {
