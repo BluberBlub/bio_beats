@@ -12,7 +12,6 @@ export default function UserProfileSettings() {
     const [successMessage, setSuccessMessage] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Local state for forms
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -22,7 +21,41 @@ export default function UserProfileSettings() {
         confirmPassword: '',
         emailNotifications: true,
         pushNotifications: false,
-        marketingEmails: false
+        marketingEmails: false,
+        artistAlerts: true, // New: Notifications for favorite artists
+        // General Socials
+        socials: {
+            instagram: '',
+            twitter: '',
+            linkedin: '',
+            website: ''
+        },
+        // Role specific data containers (initialized empty, populated from userStore)
+        artistProfile: {
+            alias: '',
+            type: 'dj',
+            location: '',
+            genres: '',
+            bpmMin: '',
+            bpmMax: '',
+            instagram: '',
+            soundcloud: '',
+            spotify: '',
+            website: ''
+        },
+        bookerProfile: {
+            organization: '',
+            type: 'club',
+            location: '',
+            capacity: '',
+            website: ''
+        },
+        industryProfile: {
+            organization: '',
+            website: '',
+            contactEmail: '',
+            demoDropUrl: ''
+        }
     });
 
     // Load initial data from user store on mount and updates
@@ -32,6 +65,39 @@ export default function UserProfileSettings() {
                 ...prev,
                 fullName: $user.full_name || '',
                 email: $user.email || '',
+                artistAlerts: true, // Default true for now, would come from DB
+                socials: {
+                    instagram: $user.socials?.instagram || '',
+                    twitter: $user.socials?.twitter || '',
+                    linkedin: $user.socials?.linkedin || '',
+                    website: $user.socials?.website || '',
+                },
+                // Populate role data if available
+                artistProfile: {
+                    alias: $user.artist_profile?.alias || '',
+                    type: $user.artist_profile?.type || 'dj',
+                    location: $user.artist_profile?.location || '',
+                    genres: $user.artist_profile?.genres?.join(', ') || '',
+                    bpmMin: $user.artist_profile?.bpm_range?.min?.toString() || '',
+                    bpmMax: $user.artist_profile?.bpm_range?.max?.toString() || '',
+                    instagram: $user.artist_profile?.socials?.instagram || '',
+                    soundcloud: $user.artist_profile?.socials?.soundcloud || '',
+                    spotify: $user.artist_profile?.socials?.spotify || '',
+                    website: $user.artist_profile?.socials?.website || '',
+                },
+                bookerProfile: {
+                    organization: $user.booker_profile?.organization || '',
+                    type: $user.booker_profile?.type || 'club',
+                    location: $user.booker_profile?.location || '',
+                    capacity: $user.booker_profile?.capacity?.toString() || '',
+                    website: $user.booker_profile?.website || ''
+                },
+                industryProfile: {
+                    organization: $user.industry_profile?.organization || '',
+                    website: $user.industry_profile?.website || '',
+                    contactEmail: $user.industry_profile?.contact_email || '',
+                    demoDropUrl: $user.industry_profile?.demo_drop_url || ''
+                }
             }));
         }
     }, [$user]);
@@ -42,15 +108,91 @@ export default function UserProfileSettings() {
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 800));
 
-        // Update global store
-        updateUser({
+        // Prepare updates based on role
+        const updates: any = {
             full_name: formData.fullName,
             email: formData.email,
-        });
+            socials: formData.socials,
+            // In a real app, preferences like 'artistAlerts' would be stored too
+        };
+
+        if ($user?.role === 'artist' || $user?.role === 'creative' || $user?.role === 'performer') {
+            updates.artist_profile = {
+                alias: formData.artistProfile.alias,
+                type: formData.artistProfile.type,
+                location: formData.artistProfile.location,
+                bio: formData.bio, // Using main bio field
+                genres: formData.artistProfile.genres.split(',').map(g => g.trim()).filter(Boolean),
+                bpm_range: {
+                    min: parseInt(formData.artistProfile.bpmMin) || 0,
+                    max: parseInt(formData.artistProfile.bpmMax) || 0
+                },
+                socials: {
+                    instagram: formData.artistProfile.instagram,
+                    soundcloud: formData.artistProfile.soundcloud,
+                    spotify: formData.artistProfile.spotify,
+                    website: formData.artistProfile.website
+                }
+            };
+        } else if ($user?.role === 'booker') {
+            updates.booker_profile = {
+                organization: formData.bookerProfile.organization,
+                type: formData.bookerProfile.type,
+                location: formData.bookerProfile.location,
+                capacity: parseInt(formData.bookerProfile.capacity) || 0,
+                website: formData.bookerProfile.website
+            };
+        } else if (['label', 'manager', 'provider'].includes($user?.role || '')) {
+            updates.industry_profile = {
+                organization: formData.industryProfile.organization,
+                website: formData.industryProfile.website,
+                contact_email: formData.industryProfile.contactEmail,
+                demo_drop_url: formData.industryProfile.demoDropUrl
+            };
+        }
+
+        // Update global store
+        updateUser(updates);
 
         setLoading(false);
         setSuccessMessage('Einstellungen erfolgreich gespeichert.');
         setTimeout(() => setSuccessMessage(''), 3000);
+    };
+
+    // ... (rest of code)
+
+    // Helper for Favorites (Mock display)
+    const renderFavorites = () => {
+        const hasFavorites = $user?.favorite_artists && $user.favorite_artists.length > 0;
+
+        return (
+            <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
+                <h2 className="text-xl font-bold text-white mb-4">Favorisierte Künstler</h2>
+                <div className="space-y-4">
+                    <p className="text-gray-400 text-sm">
+                        Sie erhalten Benachrichtigungen, wenn diese Künstler neue Events ankündigen.
+                    </p>
+
+                    {hasFavorites ? (
+                        <div className="flex flex-wrap gap-2">
+                            {$user.favorite_artists?.map(slug => (
+                                <div key={slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-bio-gray-800 text-sm text-gray-300 border border-bio-gray-700">
+                                    <span>{slug}</span> {/* In real app: fetch name */}
+                                    <button className="text-gray-500 hover:text-red-400 transition-colors">
+                                        <Trash2 className="w-3 h-3" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="p-4 bg-bio-gray-800/30 rounded-lg text-center border border-dashed border-bio-gray-700">
+                            <p className="text-gray-500 text-sm">Noch keine Favoriten.</p>
+                            <a href="/artists" className="text-bio-accent text-sm hover:underline mt-2 inline-block">Künstler entdecken</a>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
 
     const resizeImage = (file: File): Promise<Blob> => {
@@ -200,66 +342,318 @@ export default function UserProfileSettings() {
 
                     {/* Profile Tab */}
                     {activeTab === 'profile' && (
-                        <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
-                            <div className="flex items-center gap-6 pb-6 border-b border-[#262626]">
-                                <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                                    <div className="w-24 h-24 rounded-full bg-[#262626] flex items-center justify-center text-gray-400 text-3xl font-bold overflow-hidden border-2 border-[#262626] group-hover:border-bio-accent transition-colors">
-                                        {$user.avatar_url ? (
-                                            <img src={$user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            $user.full_name?.charAt(0) || 'U'
-                                        )}
+                        <>
+                            <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
+                                <div className="flex items-center gap-6 pb-6 border-b border-[#262626]">
+                                    <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                                        <div className="w-24 h-24 rounded-full bg-[#262626] flex items-center justify-center text-gray-400 text-3xl font-bold overflow-hidden border-2 border-[#262626] group-hover:border-bio-accent transition-colors">
+                                            {$user.avatar_url ? (
+                                                <img src={$user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                                            ) : (
+                                                $user.full_name?.charAt(0) || 'U'
+                                            )}
+                                        </div>
+                                        <button className="absolute bottom-0 right-0 p-2 bg-bio-accent rounded-full text-white hover:bg-red-600 transition-colors">
+                                            <Camera className="w-4 h-4" />
+                                        </button>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={handleImageUpload}
+                                        />
                                     </div>
-                                    <button className="absolute bottom-0 right-0 p-2 bg-bio-accent rounded-full text-white hover:bg-red-600 transition-colors">
-                                        <Camera className="w-4 h-4" />
-                                    </button>
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        className="hidden"
-                                        accept="image/*"
-                                        onChange={handleImageUpload}
-                                    />
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white">Profilbild</h3>
+                                        <p className="text-gray-400 text-sm mt-1">
+                                            Klicken zum Ändern.<br />
+                                            JPG, GIF oder PNG. Max. 1MB.
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">Profilbild</h3>
-                                    <p className="text-gray-400 text-sm mt-1">
-                                        Klicken zum Ändern.<br />
-                                        JPG, GIF oder PNG. Max. 1MB.
-                                    </p>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">Voller Name</label>
+                                        <input
+                                            type="text"
+                                            value={formData.fullName}
+                                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">Email Adresse</label>
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                        />
+                                    </div>
+                                    <div className="col-span-1 md:col-span-2 space-y-2">
+                                        <label className="text-sm font-medium text-gray-300">Bio</label>
+                                        <textarea
+                                            rows={4}
+                                            value={formData.bio}
+                                            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent resize-none"
+                                        />
+                                    </div>
+
+                                    {/* --- ARTIST / CREATIVE FORM --- */}
+                                    {($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer') && (
+                                        <>
+                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
+                                                <h3 className="text-lg font-bold text-white mb-4">Artist Details</h3>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Künstlername / Alias</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.artistProfile.alias}
+                                                    onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, alias: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    placeholder="Stage Name"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Typ</label>
+                                                <select
+                                                    value={formData.artistProfile.type}
+                                                    onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, type: e.target.value as any } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                >
+                                                    <option value="dj">DJ</option>
+                                                    <option value="live">Live Act</option>
+                                                    <option value="hybrid">Hybrid</option>
+                                                    <option value="visual">Visual Artist</option>
+                                                    <option value="performer">Performer</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Homebase / Location</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.artistProfile.location}
+                                                    onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, location: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    placeholder="Berlin, Germany"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Genres (kommagetrennt)</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.artistProfile.genres}
+                                                    onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, genres: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    placeholder="Techno, House, Ambient"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">BPM Range (Min - Max)</label>
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={formData.artistProfile.bpmMin}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, bpmMin: e.target.value } })}
+                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="120"
+                                                    />
+                                                    <input
+                                                        type="number"
+                                                        value={formData.artistProfile.bpmMax}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, bpmMax: e.target.value } })}
+                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="140"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="col-span-1 md:col-span-2 pt-4">
+                                                <h4 className="text-md font-semibold text-gray-300 mb-3">Social Media</h4>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <input
+                                                        type="text"
+                                                        value={formData.artistProfile.instagram}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, instagram: e.target.value } })}
+                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="Instagram URL"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={formData.artistProfile.soundcloud}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, soundcloud: e.target.value } })}
+                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="SoundCloud URL"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={formData.artistProfile.spotify}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, spotify: e.target.value } })}
+                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="Spotify URL"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={formData.artistProfile.website}
+                                                        onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, website: e.target.value } })}
+                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="Website / RA URL"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* --- BOOKER FORM --- */}
+                                    {($user.role === 'booker') && (
+                                        <>
+                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
+                                                <h3 className="text-lg font-bold text-white mb-4">Booker / Venue Info</h3>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Organisation / Venue Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.bookerProfile.organization}
+                                                    onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, organization: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Typ</label>
+                                                <select
+                                                    value={formData.bookerProfile.type}
+                                                    onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, type: e.target.value as any } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                >
+                                                    <option value="club">Club</option>
+                                                    <option value="festival">Festival</option>
+                                                    <option value="promoter">Promoter</option>
+                                                    <option value="agency">Agency</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Location / City</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.bookerProfile.location}
+                                                    onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, location: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Kapazität (Pax)</label>
+                                                <input
+                                                    type="number"
+                                                    value={formData.bookerProfile.capacity}
+                                                    onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, capacity: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="col-span-1 md:col-span-2 space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Website</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.bookerProfile.website}
+                                                    onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, website: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* --- INDUSTRY / LABEL FORM --- */}
+                                    {(['label', 'manager', 'provider'].includes($user.role || '')) && (
+                                        <>
+                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
+                                                <h3 className="text-lg font-bold text-white mb-4">Business Info</h3>
+                                            </div>
+                                            <div className="col-span-1 md:col-span-2 space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Firma / Label Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.industryProfile.organization}
+                                                    onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, organization: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Offizielle Website</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.industryProfile.website}
+                                                    onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, website: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Kontakt Email</label>
+                                                <input
+                                                    type="email"
+                                                    value={formData.industryProfile.contactEmail}
+                                                    onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, contactEmail: e.target.value } })}
+                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            {$user.role === 'label' && (
+                                                <div className="col-span-1 md:col-span-2 space-y-2">
+                                                    <label className="text-sm font-medium text-gray-300">Demo Drop URL</label>
+                                                    <input
+                                                        type="text"
+                                                        value={formData.industryProfile.demoDropUrl}
+                                                        onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, demoDropUrl: e.target.value } })}
+                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        placeholder="https://..."
+                                                    />
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+
+                                    {/* --- GENERAL SOCIALS (ALL USERS) --- */}
+                                    <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
+                                        <h3 className="text-lg font-bold text-white mb-4">Meine Links</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <input
+                                                type="text"
+                                                value={formData.socials.instagram}
+                                                onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, instagram: e.target.value } })}
+                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                placeholder="Instagram URL"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={formData.socials.twitter}
+                                                onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, twitter: e.target.value } })}
+                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                placeholder="X / Twitter URL"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={formData.socials.linkedin}
+                                                onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, linkedin: e.target.value } })}
+                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                placeholder="LinkedIn URL"
+                                            />
+                                            <input
+                                                type="text"
+                                                value={formData.socials.website}
+                                                onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, website: e.target.value } })}
+                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                placeholder="Andere Website"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-300">Voller Name</label>
-                                    <input
-                                        type="text"
-                                        value={formData.fullName}
-                                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-300">Email Adresse</label>
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
-                                    />
-                                </div>
-                                <div className="col-span-1 md:col-span-2 space-y-2">
-                                    <label className="text-sm font-medium text-gray-300">Bio</label>
-                                    <textarea
-                                        rows={4}
-                                        value={formData.bio}
-                                        onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent resize-none"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            {/* Favorites Section (Any User may have favorites) */}
+                            {renderFavorites()}
+                        </>
                     )}
 
                     {/* Security Tab */}
@@ -324,7 +718,8 @@ export default function UserProfileSettings() {
                                 {[
                                     { id: 'emailNotifications', label: 'Email Benachrichtigungen', desc: 'Erhalten Sie Emails über Updates und Aktivitäten.' },
                                     { id: 'pushNotifications', label: 'Push Benachrichtigungen', desc: 'Erhalten Sie Push-Nachrichten auf Ihrem Gerät.' },
-                                    { id: 'marketingEmails', label: 'Marketing Emails', desc: 'Erhalten Sie Emails über neue Features und Angebote.' }
+                                    { id: 'marketingEmails', label: 'Marketing Emails', desc: 'Erhalten Sie Emails über neue Features und Angebote.' },
+                                    { id: 'artistAlerts', label: 'Künstler Updates (Favoriten)', desc: 'Benachrichtigung bei neuen Gigs deiner Favoriten.' }
                                 ].map((item) => (
                                     <div key={item.id} className="flex items-center justify-between p-4 bg-black/50 rounded-lg border border-[#262626]">
                                         <div>
@@ -334,7 +729,7 @@ export default function UserProfileSettings() {
                                         <label className="relative inline-flex items-center cursor-pointer">
                                             <input
                                                 type="checkbox"
-                                                checked={formData[item.id as keyof typeof formData] as boolean}
+                                                checked={formData[item.id as keyof typeof formData] as boolean} // Use simple boolean cast or fix typing if strict
                                                 onChange={(e) => setFormData({ ...formData, [item.id]: e.target.checked })}
                                                 className="sr-only peer"
                                             />
