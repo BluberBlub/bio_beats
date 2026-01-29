@@ -11,7 +11,11 @@ mkdir server
 # This removes any files in /client that are NOT in dist/client
 synchronize remote -delete -permissions=644 -criteria=size -filemask="| .htaccess" dist\client ./client
 
-# 2. Synchronize Server DIRECTORY (Mirroring)
+# 1. Synchronize Client DIRECTORY (Mirroring)
+# This removes any files in /client that are NOT in dist/client
+synchronize remote -delete -permissions=644 -criteria=size -filemask="| .htaccess" dist\client ./client
+
+# 3. Synchronize Server DIRECTORY (Mirroring)
 # This removes any files in /server that are NOT in dist/server
 synchronize remote -delete -permissions=644 -criteria=size dist\server ./server
 

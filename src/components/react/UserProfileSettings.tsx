@@ -99,28 +99,39 @@ export default function UserProfileSettings() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Check file size (10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Die Datei ist zu groß. Bitte maximal 10MB hochladen.');
+            return;
+        }
+
         setLoading(true);
         try {
-            let fileToUpload: File | Blob = file;
-
-            // If file is larger than 500KB, resize it
-            if (file.size > 500 * 1024) {
-                try {
-                    const resizedBlob = await resizeImage(file);
-                    fileToUpload = resizedBlob;
-                } catch (resizeError) {
-                    console.warn('Image resizing failed, trying original', resizeError);
-                }
-            }
-
             const formData = new FormData();
-            formData.append('file', fileToUpload);
+            formData.append('file', file);
 
-            const res = await fetch('/api/upload-avatar', {
+            // Conditional Endpoint:
+            // DEV (Localhost): Use Node.js API '/api/upload-avatar'
+            // PROD (Server): Use PHP script '/upload-avatar.php'
+            const uploadUrl = import.meta.env.DEV ? '/api/upload-avatar' : '/upload-avatar.php';
+
+            const res = await fetch(uploadUrl, {
                 method: 'POST',
                 body: formData
             });
-            const data = await res.json();
+
+            let data;
+            try {
+                data = await res.json();
+            } catch (e) {
+                console.error("JSON Parse error:", e);
+                // If the response isn't JSON, it might be a PHP error or 404
+                throw new Error(
+                    import.meta.env.DEV
+                        ? 'Fehler bei der lokalen API. Server logs prüfen.'
+                        : 'Server antwortete mit ungültigem Format. PHP Skript vorhanden?'
+                );
+            }
 
             if (data.success && data.url) {
                 // Update local User Store
@@ -130,9 +141,9 @@ export default function UserProfileSettings() {
             } else {
                 throw new Error(data.error || 'Upload failed');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            alert('Fehler beim Upload des Profilbildes.');
+            alert(`Fehler beim Upload: ${err.message || 'Unbekannter Fehler'}`);
         } finally {
             setLoading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';

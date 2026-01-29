@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@nanostores/react';
@@ -26,30 +27,28 @@ export default function MobileNav({ navigation }: MobileNavProps) {
             </button>
 
             {/* Mobile Menu Overlay */}
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="fixed inset-0 bg-bio-black/90 backdrop-blur-sm z-40 lg:hidden"
-                            onClick={() => setIsOpen(false)}
-                        />
-
+            {isOpen && createPortal(
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed top-0 left-0 w-full h-[100dvh] bg-[#0a0a0a]/95 backdrop-blur-md z-[9998] lg:hidden"
+                        onClick={() => setIsOpen(false)}
+                    >
                         {/* Menu Panel */}
                         <motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed top-0 right-0 bottom-0 w-80 max-w-[80vw] bg-bio-gray-900 border-l border-bio-gray-800 z-50 lg:hidden"
+                            className="fixed top-0 right-0 h-[100dvh] w-80 max-w-[80vw] bg-bio-gray-900 border-l border-bio-gray-800 z-[9999] lg:hidden overflow-y-auto"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="flex flex-col h-full">
+                            <div className="flex flex-col min-h-full">
                                 {/* Header */}
-                                <div className="flex items-center justify-between p-6 border-b border-bio-gray-800">
+                                <div className="flex items-center justify-between p-6 border-b border-bio-gray-800 shrink-0">
                                     <span className="text-xl font-bold text-bio-white">Menu</span>
                                     <button
                                         onClick={() => setIsOpen(false)}
@@ -61,7 +60,7 @@ export default function MobileNav({ navigation }: MobileNavProps) {
                                 </div>
 
                                 {/* Navigation Links */}
-                                <nav className="flex-1 overflow-y-auto p-6">
+                                <nav className="flex-1 p-6">
                                     <ul className="space-y-2">
                                         {navigation.map((item, index) => (
                                             <motion.li
@@ -83,7 +82,7 @@ export default function MobileNav({ navigation }: MobileNavProps) {
                                 </nav>
 
                                 {/* Action Buttons */}
-                                <div className="p-6 border-t border-bio-gray-800 space-y-3">
+                                <div className="p-6 border-t border-bio-gray-800 space-y-3 shrink-0">
                                     {$user ? (
                                         <>
                                             <div className="flex items-center gap-3 px-2 py-2 mb-4">
@@ -148,9 +147,10 @@ export default function MobileNav({ navigation }: MobileNavProps) {
                                 </div>
                             </div>
                         </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                    </motion.div>
+                </AnimatePresence>,
+                document.body
+            )}
         </>
     );
 }
