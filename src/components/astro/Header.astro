@@ -30,14 +30,26 @@ const lang = getLangFromUrl(url);
       <!-- Desktop Navigation -->
       <div class="hidden lg:flex items-center gap-1">
         {
-          mainNavigation.map((item) => (
-            <a
-              href={lang === "de" ? `/de${item.href}` : item.href}
-              class="px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white transition-colors rounded-lg hover:bg-bio-gray-800/50 whitespace-nowrap"
-            >
-              {item.label}
-            </a>
-          ))
+          mainNavigation.map((item) => {
+            const href = lang === "de" ? `/de${item.href}` : item.href;
+            const isActive =
+              item.href === "/"
+                ? url.pathname === href
+                : url.pathname.startsWith(href);
+            return (
+              <a
+                href={href}
+                class:list={[
+                  "px-4 py-2 text-sm transition-colors rounded-lg hover:bg-bio-gray-800/50 whitespace-nowrap",
+                  isActive
+                    ? "text-bio-accent font-medium"
+                    : "text-bio-gray-300 hover:text-bio-white",
+                ]}
+              >
+                {item.label}
+              </a>
+            );
+          })
         }
       </div>
 
@@ -52,7 +64,11 @@ const lang = getLangFromUrl(url);
       </div>
 
       <!-- Mobile Menu Button -->
-      <MobileNav client:only="react" navigation={mainNavigation} />
+      <MobileNav
+        client:only="react"
+        navigation={mainNavigation}
+        currentPath={url.pathname}
+      />
     </nav>
   </div>
 </header>

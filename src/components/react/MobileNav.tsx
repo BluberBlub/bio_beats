@@ -8,9 +8,10 @@ import type { NavItem } from '../../types/types';
 
 interface MobileNavProps {
     navigation: NavItem[];
+    currentPath?: string;
 }
 
-export default function MobileNav({ navigation }: MobileNavProps) {
+export default function MobileNav({ navigation, currentPath = '' }: MobileNavProps) {
     const $user = useStore(userStore);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -72,7 +73,10 @@ export default function MobileNav({ navigation }: MobileNavProps) {
                                                 <a
                                                     href={item.href}
                                                     onClick={() => setIsOpen(false)}
-                                                    className="block py-3 px-4 text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50 rounded-lg transition-colors"
+                                                    className={`block py-3 px-4 rounded-lg transition-colors ${(item.href === '/' ? currentPath === item.href : currentPath.startsWith(item.href))
+                                                            ? 'text-bio-accent bg-bio-gray-800/80 font-medium'
+                                                            : 'text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50'
+                                                        }`}
                                                 >
                                                     {item.label}
                                                 </a>

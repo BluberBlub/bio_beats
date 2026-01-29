@@ -1,20 +1,13 @@
-# IONOS default settings often disable directory listing
-# and expect index.html
+
+# TEST MODE: RULES RESTORED (Safe Mode)
+# Options -Indexes <-- THIS WAS THE CAUSE OF 500 ERROR
+
 DirectoryIndex index.html
-
-# Prevent listing of directories without index file
-Options -Indexes
-
-# Custom 404 page
 ErrorDocument 404 /404.html
-
-<IfModule mod_mime.c>
-  AddType image/svg+xml .svg
-  AddType application/manifest+json .webmanifest
-</IfModule>
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
   
   # 0. KEY FIX (v2 Safe Mode): 
   # If request starts with /client/, Stop rewriting and serve file.
@@ -26,6 +19,7 @@ ErrorDocument 404 /404.html
   RewriteRule ^fonts/(.*)$ /client/fonts/$1 [L]
   RewriteRule ^assets/(.*)$ /client/assets/$1 [L]
   RewriteRule ^artists/(.*)\.png$ /client/artists/$1.png [L]
+  RewriteRule ^uploads/(.*)$ /client/uploads/$1 [L]
   RewriteRule ^site\.webmanifest$ /client/site.webmanifest [L]
   RewriteRule ^sitemap(.*)\.xml$ /client/sitemap$1.xml [L]
   RewriteRule ^robots\.txt$ /client/robots.txt [L]
@@ -36,16 +30,12 @@ ErrorDocument 404 /404.html
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^favicon\.(svg|ico)$ /client/favicon.$1 [L]
 
-  # 2. Page Routing (HTML)
-  # If request points to a directory in /client that has an index.html, serve it.
-  RewriteCond %{DOCUMENT_ROOT}/client/%{REQUEST_URI}/index.html -f
-  RewriteRule ^(.*)$ /client/$1/index.html [L]
+  # 2. Page Routing (Simplified - No File Checks)
   
-  # If request points to a direct HTML file in /client
-  RewriteCond %{DOCUMENT_ROOT}/client/%{REQUEST_URI}.html -f
-  RewriteRule ^(.*)$ /client/$1.html [L]
-  
-  # Fallback: if it works in /client directly
-  RewriteCond %{DOCUMENT_ROOT}/client/%{REQUEST_URI} -f
-  RewriteRule ^(.*)$ /client/$1 [L]
+  # Standard pages (extensionless) -> /client/page/index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^([^.]+)$ /client/$1/index.html [L]
+
+  # Homepage fallback (if not handled by DirectoryIndex)
+  RewriteRule ^$ /index.html [L]
 </IfModule>

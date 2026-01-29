@@ -111,6 +111,7 @@ try {
         if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
             jsonResponse(false, 'Failed to save file.', 500);
         }
+        chmod($targetPath, 0644);
     }
 
 } catch (Exception $e) {
@@ -118,6 +119,7 @@ try {
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
         jsonResponse(false, 'Failed to save file.', 500);
     }
+    chmod($targetPath, 0644);
 }
 
 // 8. Return Success URL
