@@ -1,0 +1,12 @@
+option batch continue
+option confirm off
+open sftp://su373050:2k26Schnitzel1!@access-5019484682.webspace-host.com/ -hostkey=*
+cd /bio_beats/
+
+# Force remove everything recursively
+rm *
+
+# Upload fresh build
+option batch abort
+put -resume -preservetime -permissions=644 dist\* ./
+exit

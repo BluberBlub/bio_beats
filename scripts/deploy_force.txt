@@ -1,0 +1,22 @@
+option batch continue
+option confirm off
+open sftp://su373050:2k26Schnitzel1!@access-5019484682.webspace-host.com/ -hostkey=*
+cd /bio_beats/
+
+# 1. Force Root Update
+# Delete existing index to ensure fresh upload
+rm index.html
+rm .htaccess
+
+# Upload Root Files (Force overwrite, no resume)
+put dist\client\index.html ./index.html
+put dist\client\.htaccess ./.htaccess
+
+# 2. Synchronize Client DIRECTORY (Mirroring)
+# Removed -criteria=size to allow timestamp check (safer for content changes)
+synchronize remote -delete -permissions=644 dist\client ./client
+
+# 3. Synchronize Server DIRECTORY (Mirroring)
+synchronize remote -delete -permissions=644 dist\server ./server
+
+exit

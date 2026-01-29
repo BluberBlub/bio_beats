@@ -1,18 +1,19 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = 'Impressum — BIO BEATS';
-const pageDescription = 'Legal information and impressum for BIO BEATS.';
+const pageTitle = "Impressum — BIO BEATS";
+const pageDescription = "Legal information and impressum for BIO BEATS.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <section class="section bg-bio-black">
     <div class="container-narrow">
       <h1 class="text-bio-white mb-8">Impressum</h1>
-      
+
       <div class="prose prose-invert max-w-none text-bio-gray-300">
         <h2 class="text-bio-white">Information according to § 5 TMG</h2>
-        
+
         <p>
           BIO BEATS GmbH<br />
           Musterstraße 123<br />
@@ -21,9 +22,7 @@ const pageDescription = 'Legal information and impressum for BIO BEATS.';
         </p>
 
         <h3 class="text-bio-white">Represented by</h3>
-        <p>
-          Managing Director: [Name]
-        </p>
+        <p>Managing Director: [Name]</p>
 
         <h3 class="text-bio-white">Contact</h3>
         <p>
@@ -33,16 +32,17 @@ const pageDescription = 'Legal information and impressum for BIO BEATS.';
 
         <h3 class="text-bio-white">Registration</h3>
         <p>
-          Registered in the Commercial Register of the District Court of Berlin-Charlottenburg<br />
+          Registered in the Commercial Register of the District Court of
+          Berlin-Charlottenburg<br />
           Registration Number: HRB [Number]
         </p>
 
         <h3 class="text-bio-white">VAT ID</h3>
-        <p>
-          VAT identification number according to § 27a UStG: DE[Number]
-        </p>
+        <p>VAT identification number according to § 27a UStG: DE[Number]</p>
 
-        <h3 class="text-bio-white">Responsible for content according to § 55 Abs. 2 RStV</h3>
+        <h3 class="text-bio-white">
+          Responsible for content according to § 55 Abs. 2 RStV
+        </h3>
         <p>
           [Name]<br />
           Musterstraße 123<br />
@@ -52,8 +52,10 @@ const pageDescription = 'Legal information and impressum for BIO BEATS.';
 
         <h3 class="text-bio-white">Dispute Resolution</h3>
         <p>
-          The European Commission provides a platform for online dispute resolution (OS): https://ec.europa.eu/consumers/odr<br />
-          We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.
+          The European Commission provides a platform for online dispute
+          resolution (OS): https://ec.europa.eu/consumers/odr<br />
+          We are not willing or obliged to participate in dispute resolution proceedings
+          before a consumer arbitration board.
         </p>
       </div>
     </div>

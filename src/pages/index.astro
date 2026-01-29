@@ -1,44 +1,51 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/astro/Hero.astro';
-import ArtistCard from '../components/astro/ArtistCard.astro';
-import { getFeaturedArtists } from '../data/artists';
-import { roleOptions } from '../data/navigation';
-import { ArrowRight, Zap, Shield, Globe, TrendingUp } from 'lucide-react';
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/astro/Hero.astro";
+import ArtistCard from "../components/astro/ArtistCard.astro";
+import { getFeaturedArtists } from "../data/artists";
+import { roleOptions } from "../data/navigation";
+import { ArrowRight, Zap, Shield, Globe, TrendingUp } from "lucide-react";
 
 const featuredArtists = getFeaturedArtists();
 
 const features = [
   {
-    icon: 'Zap',
-    title: 'Smart Booking',
-    description: 'Streamlined booking process with intelligent matching between artists and venues.'
+    icon: "Zap",
+    title: "Smart Booking",
+    description:
+      "Streamlined booking process with intelligent matching between artists and venues.",
   },
   {
-    icon: 'Shield',
-    title: 'Verified Network',
-    description: 'Trusted, verified professionals for secure and professional collaborations.'
+    icon: "Shield",
+    title: "Verified Network",
+    description:
+      "Trusted, verified professionals for secure and professional collaborations.",
   },
   {
-    icon: 'Globe',
-    title: 'Global Reach',
-    description: 'Connect with artists, labels, and venues from around the world.'
+    icon: "Globe",
+    title: "Global Reach",
+    description:
+      "Connect with artists, labels, and venues from around the world.",
   },
   {
-    icon: 'TrendingUp',
-    title: 'Career Growth',
-    description: 'Tools and insights to help you build a sustainable music career.'
-  }
+    icon: "TrendingUp",
+    title: "Career Growth",
+    description:
+      "Tools and insights to help you build a sustainable music career.",
+  },
 ];
 ---
 
-<BaseLayout title="BIO BEATS — Management & Booking Platform for Electronic Culture">
+<BaseLayout
+  title="BIO BEATS — Management & Booking Platform for Electronic Culture"
+>
   <!-- Hero Section -->
-  <Hero 
+  <Hero
     title="BIO BEATS"
     subtitle="The management and booking platform for electronic culture. Less chaos. More focus. More bookings."
-    primaryCta={{ label: 'Get Started', href: '/join' }}
-    secondaryCta={{ label: 'Learn More', href: '/about' }}
+    primaryCta={{ label: "Get Started", href: "/join" }}
+    secondaryCta={{ label: "Learn More", href: "/about" }}
   />
 
   <!-- Features Section -->
@@ -47,23 +54,36 @@ const features = [
       <div class="section-header">
         <h2 class="text-bio-white mb-4">Why BIO BEATS?</h2>
         <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
-          We're building the infrastructure that electronic music deserves. Professional, transparent, and designed for growth.
+          We're building the infrastructure that electronic music deserves.
+          Professional, transparent, and designed for growth.
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature) => (
-          <div class="card-hover group">
-            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4 group-hover:bg-bio-accent/20 transition-colors">
-              {feature.icon === 'Zap' && <Zap className="w-6 h-6 text-bio-accent" />}
-              {feature.icon === 'Shield' && <Shield className="w-6 h-6 text-bio-accent" />}
-              {feature.icon === 'Globe' && <Globe className="w-6 h-6 text-bio-accent" />}
-              {feature.icon === 'TrendingUp' && <TrendingUp className="w-6 h-6 text-bio-accent" />}
+        {
+          features.map((feature) => (
+            <div class="card-hover group">
+              <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4 group-hover:bg-bio-accent/20 transition-colors">
+                {feature.icon === "Zap" && (
+                  <Zap className="w-6 h-6 text-bio-accent" />
+                )}
+                {feature.icon === "Shield" && (
+                  <Shield className="w-6 h-6 text-bio-accent" />
+                )}
+                {feature.icon === "Globe" && (
+                  <Globe className="w-6 h-6 text-bio-accent" />
+                )}
+                {feature.icon === "TrendingUp" && (
+                  <TrendingUp className="w-6 h-6 text-bio-accent" />
+                )}
+              </div>
+              <h3 class="text-xl font-semibold text-bio-white mb-2">
+                {feature.title}
+              </h3>
+              <p class="text-bio-gray-400">{feature.description}</p>
             </div>
-            <h3 class="text-xl font-semibold text-bio-white mb-2">{feature.title}</h3>
-            <p class="text-bio-gray-400">{feature.description}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -74,18 +94,21 @@ const features = [
       <div class="flex items-end justify-between mb-12">
         <div>
           <h2 class="text-bio-white mb-2">Featured Artists</h2>
-          <p class="text-bio-gray-400">Discover talented artists ready for your next event</p>
+          <p class="text-bio-gray-400">
+            Discover talented artists ready for your next event
+          </p>
         </div>
-        <a href="/artists" class="btn-ghost hidden md:inline-flex items-center gap-2">
+        <a
+          href="/artists"
+          class="btn-ghost hidden md:inline-flex items-center gap-2"
+        >
           View All Artists
           <ArrowRight className="w-4 h-4" />
         </a>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredArtists.map((artist) => (
-          <ArtistCard artist={artist} />
-        ))}
+        {featuredArtists.map((artist) => <ArtistCard artist={artist} />)}
       </div>
 
       <div class="mt-8 text-center md:hidden">
@@ -103,21 +126,24 @@ const features = [
       <div class="section-header">
         <h2 class="text-bio-white mb-4">Who are you?</h2>
         <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
-          BIO BEATS is built for everyone in the electronic music ecosystem. Find your role and get started.
+          BIO BEATS is built for everyone in the electronic music ecosystem.
+          Find your role and get started.
         </p>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        {roleOptions.slice(0, 4).map((role) => (
-          <a
-            href={`/join?role=${role.id}`}
-            class="card-hover p-6 text-center group"
-          >
-            <h4 class="font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
-              {role.label}
-            </h4>
-          </a>
-        ))}
+        {
+          roleOptions.slice(0, 4).map((role) => (
+            <a
+              href={`/join?role=${role.id}`}
+              class="card-hover p-6 text-center group"
+            >
+              <h4 class="font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
+                {role.label}
+              </h4>
+            </a>
+          ))
+        }
       </div>
 
       <div class="mt-8 text-center">
@@ -134,7 +160,8 @@ const features = [
     <div class="container-narrow text-center">
       <h2 class="text-bio-white mb-4">Ready to join the platform?</h2>
       <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
-        Join hundreds of artists, bookers, and industry professionals who are already building their careers with BIO BEATS.
+        Join hundreds of artists, bookers, and industry professionals who are
+        already building their careers with BIO BEATS.
       </p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="/join" class="btn-primary">Create Your Profile</a>

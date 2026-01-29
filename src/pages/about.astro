@@ -1,31 +1,44 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { ArrowRight, CheckCircle, Users, Calendar, Shield, TrendingUp } from 'lucide-react';
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  ArrowRight,
+  CheckCircle,
+  Users,
+  Calendar,
+  Shield,
+  TrendingUp,
+} from "lucide-react";
 
-const pageTitle = 'About BIO BEATS — Management & Booking Platform';
-const pageDescription = 'Learn about BIO BEATS, the management and booking platform for electronic music culture.';
+const pageTitle = "About BIO BEATS — Management & Booking Platform";
+const pageDescription =
+  "Learn about BIO BEATS, the management and booking platform for electronic music culture.";
 
 const values = [
   {
-    icon: 'Users',
-    title: 'Community First',
-    description: 'Built by and for the electronic music community. We understand the industry because we are part of it.'
+    icon: "Users",
+    title: "Community First",
+    description:
+      "Built by and for the electronic music community. We understand the industry because we are part of it.",
   },
   {
-    icon: 'Shield',
-    title: 'Trust & Transparency',
-    description: 'Verified profiles, clear processes, and honest communication. No hidden fees, no surprises.'
+    icon: "Shield",
+    title: "Trust & Transparency",
+    description:
+      "Verified profiles, clear processes, and honest communication. No hidden fees, no surprises.",
   },
   {
-    icon: 'TrendingUp',
-    title: 'Sustainable Careers',
-    description: 'We focus on long-term success, not quick wins. Building infrastructure for lasting careers.'
+    icon: "TrendingUp",
+    title: "Sustainable Careers",
+    description:
+      "We focus on long-term success, not quick wins. Building infrastructure for lasting careers.",
   },
   {
-    icon: 'Calendar',
-    title: 'Professional Infrastructure',
-    description: 'From bookings to finances, we provide the tools professionals need to focus on their art.'
-  }
+    icon: "Calendar",
+    title: "Professional Infrastructure",
+    description:
+      "From bookings to finances, we provide the tools professionals need to focus on their art.",
+  },
 ];
 ---
 
@@ -38,7 +51,9 @@ const values = [
           We're building the infrastructure electronic music deserves.
         </h1>
         <p class="text-xl text-bio-gray-400 leading-relaxed">
-          BIO BEATS is more than a booking platform. It's a professional ecosystem designed to reduce chaos, create clarity, and enable sustainable careers in electronic music.
+          BIO BEATS is more than a booking platform. It's a professional
+          ecosystem designed to reduce chaos, create clarity, and enable
+          sustainable careers in electronic music.
         </p>
       </div>
     </div>
@@ -49,13 +64,22 @@ const values = [
     <div class="container-wide">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
-          <span class="text-bio-accent text-sm font-semibold uppercase tracking-wider">Our Mission</span>
-          <h2 class="text-bio-white mt-4 mb-6">Less chaos. More focus. More bookings.</h2>
+          <span
+            class="text-bio-accent text-sm font-semibold uppercase tracking-wider"
+            >Our Mission</span
+          >
+          <h2 class="text-bio-white mt-4 mb-6">
+            Less chaos. More focus. More bookings.
+          </h2>
           <p class="text-bio-gray-400 text-lg leading-relaxed mb-6">
-            The electronic music industry is fragmented. Artists struggle with bookings, bookers struggle to find reliable acts, and everyone wastes time on bureaucracy instead of creating.
+            The electronic music industry is fragmented. Artists struggle with
+            bookings, bookers struggle to find reliable acts, and everyone
+            wastes time on bureaucracy instead of creating.
           </p>
           <p class="text-bio-gray-400 text-lg leading-relaxed mb-8">
-            We're changing that. BIO BEATS connects artists, labels, bookers, festivals, and service providers in one structured, professional ecosystem.
+            We're changing that. BIO BEATS connects artists, labels, bookers,
+            festivals, and service providers in one structured, professional
+            ecosystem.
           </p>
           <div class="space-y-3">
             <div class="flex items-center gap-3 text-bio-gray-300">
@@ -77,12 +101,21 @@ const values = [
           </div>
         </div>
         <div class="relative">
-          <div class="aspect-square rounded-2xl bg-bio-gray-800 overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-bio-accent/20 to-transparent"></div>
+          <div
+            class="aspect-square rounded-2xl bg-bio-gray-800 overflow-hidden"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-bio-accent/20 to-transparent"
+            >
+            </div>
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="text-center">
-                <div class="text-6xl font-bold text-bio-white mb-2">B.E.A.T.S.</div>
-                <div class="text-bio-gray-400">Bringing Electronic Artists To Success</div>
+                <div class="text-6xl font-bold text-bio-white mb-2">
+                  B.E.A.T.S.
+                </div>
+                <div class="text-bio-gray-400">
+                  Bringing Electronic Artists To Success
+                </div>
               </div>
             </div>
           </div>
@@ -102,18 +135,30 @@ const values = [
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {values.map((value) => (
-          <div class="card">
-            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
-              {value.icon === 'Users' && <Users className="w-6 h-6 text-bio-accent" />}
-              {value.icon === 'Shield' && <Shield className="w-6 h-6 text-bio-accent" />}
-              {value.icon === 'TrendingUp' && <TrendingUp className="w-6 h-6 text-bio-accent" />}
-              {value.icon === 'Calendar' && <Calendar className="w-6 h-6 text-bio-accent" />}
+        {
+          values.map((value) => (
+            <div class="card">
+              <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                {value.icon === "Users" && (
+                  <Users className="w-6 h-6 text-bio-accent" />
+                )}
+                {value.icon === "Shield" && (
+                  <Shield className="w-6 h-6 text-bio-accent" />
+                )}
+                {value.icon === "TrendingUp" && (
+                  <TrendingUp className="w-6 h-6 text-bio-accent" />
+                )}
+                {value.icon === "Calendar" && (
+                  <Calendar className="w-6 h-6 text-bio-accent" />
+                )}
+              </div>
+              <h3 class="text-xl font-semibold text-bio-white mb-2">
+                {value.title}
+              </h3>
+              <p class="text-bio-gray-400">{value.description}</p>
             </div>
-            <h3 class="text-xl font-semibold text-bio-white mb-2">{value.title}</h3>
-            <p class="text-bio-gray-400">{value.description}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -123,7 +168,8 @@ const values = [
     <div class="container-narrow text-center">
       <h2 class="text-bio-white mb-4">Ready to join us?</h2>
       <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
-        Be part of the future of electronic music management. Join BIO BEATS today.
+        Be part of the future of electronic music management. Join BIO BEATS
+        today.
       </p>
       <a href="/join" class="btn-primary inline-flex items-center gap-2">
         Get Started

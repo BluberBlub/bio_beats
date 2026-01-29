@@ -1,0 +1,8 @@
+option batch abort
+option confirm off
+open sftp://su373050:2k26Schnitzel1!@access-5019484682.webspace-host.com/ -hostkey=*
+cd /bio_beats/
+
+# Synchronize: Make remote match local 'dist', deleting remote files not in 'dist'
+synchronize remote -delete -permissions=644 -criteria=size dist ./
+exit

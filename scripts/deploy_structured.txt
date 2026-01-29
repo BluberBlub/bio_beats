@@ -1,0 +1,20 @@
+option batch continue
+option confirm off
+open sftp://su373050:2k26Schnitzel1!@access-5019484682.webspace-host.com/ -hostkey=*
+cd /bio_beats/
+
+# Create subdirectories if they don't exist
+mkdir client
+mkdir server
+
+# Upload Client Assets to /client subdirectory
+put -resume -preservetime -permissions=644 dist\client\* ./client/
+
+# Upload Server Code to /server subdirectory
+put -resume -preservetime -permissions=644 dist\server\* ./server/
+
+# Upload Index and Config to Root
+put -resume -preservetime -permissions=644 dist\client\index.html ./index.html
+put -resume -preservetime -permissions=644 dist\client\.htaccess ./.htaccess
+
+exit

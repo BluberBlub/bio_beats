@@ -1,26 +1,32 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = 'Privacy Policy — BIO BEATS';
-const pageDescription = 'Privacy policy for BIO BEATS platform.';
+const pageTitle = "Privacy Policy — BIO BEATS";
+const pageDescription = "Privacy policy for BIO BEATS platform.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <section class="section bg-bio-black">
     <div class="container-narrow">
       <h1 class="text-bio-white mb-8">Privacy Policy</h1>
-      
+
       <div class="prose prose-invert max-w-none text-bio-gray-300">
         <p class="text-bio-gray-400">Last updated: January 2026</p>
 
         <h2 class="text-bio-white">1. Introduction</h2>
         <p>
-          BIO BEATS ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.
+          BIO BEATS ("we", "our", or "us") is committed to protecting your
+          privacy. This Privacy Policy explains how we collect, use, disclose,
+          and safeguard your information when you use our platform.
         </p>
 
         <h2 class="text-bio-white">2. Information We Collect</h2>
         <h3 class="text-bio-white">Personal Information</h3>
-        <p>We may collect personal information that you voluntarily provide, including:</p>
+        <p>
+          We may collect personal information that you voluntarily provide,
+          including:
+        </p>
         <ul>
           <li>Name and contact information</li>
           <li>Account credentials</li>
@@ -30,7 +36,10 @@ const pageDescription = 'Privacy policy for BIO BEATS platform.';
         </ul>
 
         <h3 class="text-bio-white">Automatically Collected Information</h3>
-        <p>We automatically collect certain information when you visit our platform:</p>
+        <p>
+          We automatically collect certain information when you visit our
+          platform:
+        </p>
         <ul>
           <li>Device and browser information</li>
           <li>IP address</li>
@@ -50,7 +59,9 @@ const pageDescription = 'Privacy policy for BIO BEATS platform.';
 
         <h2 class="text-bio-white">4. Information Sharing</h2>
         <p>
-          We do not sell your personal information. We may share information with service providers who assist in operating our platform, when required by law, or with your consent.
+          We do not sell your personal information. We may share information
+          with service providers who assist in operating our platform, when
+          required by law, or with your consent.
         </p>
 
         <h2 class="text-bio-white">5. Your Rights</h2>
@@ -65,12 +76,15 @@ const pageDescription = 'Privacy policy for BIO BEATS platform.';
 
         <h2 class="text-bio-white">6. Data Security</h2>
         <p>
-          We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.
+          We implement appropriate technical and organizational measures to
+          protect your personal information against unauthorized access,
+          alteration, disclosure, or destruction.
         </p>
 
         <h2 class="text-bio-white">7. Contact Us</h2>
         <p>
-          If you have questions about this Privacy Policy, please contact us at:<br />
+          If you have questions about this Privacy Policy, please contact us at:<br
+          />
           Email: privacy@biobeats.io
         </p>
       </div>

@@ -1,42 +1,55 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { ArrowRight, CheckCircle, Search, Shield, Clock, Users } from 'lucide-react';
+export const prerender = true;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  ArrowRight,
+  CheckCircle,
+  Search,
+  Shield,
+  Clock,
+  Users,
+} from "lucide-react";
 
-const pageTitle = 'For Bookers — BIO BEATS';
-const pageDescription = 'Find and book verified electronic music artists for your events, festivals, and venues.';
+const pageTitle = "For Bookers — BIO BEATS";
+const pageDescription =
+  "Find and book verified electronic music artists for your events, festivals, and venues.";
 
 const benefits = [
   {
-    icon: 'Search',
-    title: 'Discover Artists',
-    description: 'Browse a curated directory of verified artists, DJs, and live acts. Filter by genre, BPM, location, and availability.'
+    icon: "Search",
+    title: "Discover Artists",
+    description:
+      "Browse a curated directory of verified artists, DJs, and live acts. Filter by genre, BPM, location, and availability.",
   },
   {
-    icon: 'Shield',
-    title: 'Verified Profiles',
-    description: 'Every artist profile is verified for authenticity. Know exactly who you\'re booking with clear information and media.'
+    icon: "Shield",
+    title: "Verified Profiles",
+    description:
+      "Every artist profile is verified for authenticity. Know exactly who you're booking with clear information and media.",
   },
   {
-    icon: 'Clock',
-    title: 'Streamlined Process',
-    description: 'Send booking inquiries, negotiate terms, and manage the entire process in one place. No more email chaos.'
+    icon: "Clock",
+    title: "Streamlined Process",
+    description:
+      "Send booking inquiries, negotiate terms, and manage the entire process in one place. No more email chaos.",
   },
   {
-    icon: 'Users',
-    title: 'Build Relationships',
-    description: 'Keep track of your bookings, build your network, and develop lasting relationships with artists.'
-  }
+    icon: "Users",
+    title: "Build Relationships",
+    description:
+      "Keep track of your bookings, build your network, and develop lasting relationships with artists.",
+  },
 ];
 
 const features = [
-  'Access to verified artist profiles',
-  'Direct booking inquiry system',
-  'Artist availability calendar',
-  'Fee range transparency',
-  'Contract management tools',
-  'Booking history and analytics',
-  'Wishlist and favorites',
-  'Priority support'
+  "Access to verified artist profiles",
+  "Direct booking inquiry system",
+  "Artist availability calendar",
+  "Fee range transparency",
+  "Contract management tools",
+  "Booking history and analytics",
+  "Wishlist and favorites",
+  "Priority support",
 ];
 ---
 
@@ -45,23 +58,28 @@ const features = [
   <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
     <div class="container-wide">
       <div class="max-w-3xl">
-        <span class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6">
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
+        >
           For Bookers
         </span>
         <h1 class="text-bio-white mb-6">
           Find and book the best electronic music talent.
         </h1>
         <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
-          Access a curated network of verified artists, streamline your booking process, and build lasting relationships with the electronic music community.
+          Access a curated network of verified artists, streamline your booking
+          process, and build lasting relationships with the electronic music
+          community.
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
-          <a href="/join?role=booker" class="btn-primary inline-flex items-center gap-2">
+          <a
+            href="/join?role=booker"
+            class="btn-primary inline-flex items-center gap-2"
+          >
             Start Booking
             <ArrowRight className="w-4 h-4" />
           </a>
-          <a href="/artists" class="btn-secondary">
-            Browse Artists
-          </a>
+          <a href="/artists" class="btn-secondary"> Browse Artists </a>
         </div>
       </div>
     </div>
@@ -71,18 +89,30 @@ const features = [
   <section class="section bg-bio-black">
     <div class="container-wide">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {benefits.map((benefit) => (
-          <div class="card-hover">
-            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
-              {benefit.icon === 'Search' && <Search className="w-6 h-6 text-bio-accent" />}
-              {benefit.icon === 'Shield' && <Shield className="w-6 h-6 text-bio-accent" />}
-              {benefit.icon === 'Clock' && <Clock className="w-6 h-6 text-bio-accent" />}
-              {benefit.icon === 'Users' && <Users className="w-6 h-6 text-bio-accent" />}
+        {
+          benefits.map((benefit) => (
+            <div class="card-hover">
+              <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                {benefit.icon === "Search" && (
+                  <Search className="w-6 h-6 text-bio-accent" />
+                )}
+                {benefit.icon === "Shield" && (
+                  <Shield className="w-6 h-6 text-bio-accent" />
+                )}
+                {benefit.icon === "Clock" && (
+                  <Clock className="w-6 h-6 text-bio-accent" />
+                )}
+                {benefit.icon === "Users" && (
+                  <Users className="w-6 h-6 text-bio-accent" />
+                )}
+              </div>
+              <h3 class="text-xl font-semibold text-bio-white mb-2">
+                {benefit.title}
+              </h3>
+              <p class="text-bio-gray-400">{benefit.description}</p>
             </div>
-            <h3 class="text-xl font-semibold text-bio-white mb-2">{benefit.title}</h3>
-            <p class="text-bio-gray-400">{benefit.description}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -92,23 +122,31 @@ const features = [
     <div class="container-wide">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
-          <h2 class="text-bio-white mb-6">Everything you need to book artists</h2>
+          <h2 class="text-bio-white mb-6">
+            Everything you need to book artists
+          </h2>
           <p class="text-bio-gray-400 text-lg mb-8">
-            BIO BEATS provides all the tools bookers need to find, evaluate, and book electronic music talent efficiently.
+            BIO BEATS provides all the tools bookers need to find, evaluate, and
+            book electronic music talent efficiently.
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {features.map((feature) => (
-              <div class="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-bio-accent flex-shrink-0" />
-                <span class="text-bio-gray-300">{feature}</span>
-              </div>
-            ))}
+            {
+              features.map((feature) => (
+                <div class="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-bio-accent flex-shrink-0" />
+                  <span class="text-bio-gray-300">{feature}</span>
+                </div>
+              ))
+            }
           </div>
         </div>
         <div class="card p-8">
-          <h3 class="text-xl font-semibold text-bio-white mb-4">Get Verified as a Booker</h3>
+          <h3 class="text-xl font-semibold text-bio-white mb-4">
+            Get Verified as a Booker
+          </h3>
           <p class="text-bio-gray-400 mb-6">
-            Verified bookers get priority access to exclusive artist pools, faster responses, and enhanced platform features.
+            Verified bookers get priority access to exclusive artist pools,
+            faster responses, and enhanced platform features.
           </p>
           <a href="/join?role=booker" class="btn-primary w-full text-center">
             Apply for Verification
@@ -123,7 +161,8 @@ const features = [
     <div class="container-narrow text-center">
       <h2 class="text-bio-white mb-4">Ready to find your next headliner?</h2>
       <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
-        Join BIO BEATS and get access to the best electronic music artists for your events.
+        Join BIO BEATS and get access to the best electronic music artists for
+        your events.
       </p>
       <a href="/join?role=booker" class="btn-primary">
         Create Booker Account
