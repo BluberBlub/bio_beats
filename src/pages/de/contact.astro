@@ -1,10 +1,151 @@
 ---
+export const prerender = true;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
+import ContactForm from "../../components/react/ContactForm";
 
 const pageTitle = "Kontakt — BIO BEATS";
 const pageDescription = "Nimm Kontakt mit dem BIO BEATS Team auf.";
+
+// Read URL parameters for context-aware pre-filling
+const url = new URL(Astro.request.url);
+const subjectParam = url.searchParams.get("subject") || "";
+const artistParam = url.searchParams.get("artist") || "";
+const reasonParam = url.searchParams.get("reason") || "";
+const refParam = url.searchParams.get("ref") || "";
+
+// Build pre-filled message based on context
+let prefilledMessage = "";
+let prefilledSubject = subjectParam;
+
+if (artistParam && reasonParam === "booking") {
+    prefilledMessage = `Hallo,\n\nich interessiere mich für eine Buchung von ${artistParam} für ein bevorstehendes Event.\n\nEvent-Details:\n- Event-Name: \n- Datum: \n- Venue: \n- Ort: \n- Erwartete Kapazität: \n\nBitte teilen Sie mir Verfügbarkeit und Konditionen mit.\n\nMit freundlichen Grüßen`;
+    prefilledSubject = "general";
+} else if (reasonParam === "partnership") {
+    prefilledMessage = `Hallo,\n\nich bin an einer Partnerschaft mit BIO BEATS interessiert.\n\nUnsere Organisation:\n- Name: \n- Branche: \n- Art der Partnerschaft: \n\nIch freue mich auf den Austausch.\n\nMit freundlichen Grüßen`;
+    prefilledSubject = "partnership";
+} else if (reasonParam === "label") {
+    prefilledMessage = `Hallo,\n\nich vertrete ein Label und würde gerne über Kooperationsmöglichkeiten mit BIO BEATS sprechen.\n\nLabel-Info:\n- Name: \n- Ort: \n- Künstler: \n\nMit freundlichen Grüßen`;
+    prefilledSubject = "partnership";
+} else if (reasonParam === "festival") {
+    prefilledMessage = `Hallo,\n\nich organisiere ein Festival und möchte mich über Künstlerbuchungen via BIO BEATS informieren.\n\nFestival-Details:\n- Name: \n- Datum: \n- Ort: \n- Erwartete Besucherzahl: \n\nMit freundlichen Grüßen`;
+    prefilledSubject = "general";
+} else if (reasonParam === "festival-booking") {
+    const festivalName = url.searchParams.get("festival") || "euer Festival";
+    prefilledMessage = `Hallo,\n\nich interessiere mich für BIO BEATS Künstler für ${festivalName}.\n\nEvent-Details:\n- Festival: ${festivalName}\n- Datum: \n- Bühnen: \n- Budget-Rahmen: \n- Gewünschte Künstler: \n\nBitte teilen Sie mir Verfügbarkeit und nächste Schritte mit.\n\nMit freundlichen Grüßen`;
+    prefilledSubject = "general";
+} else if (reasonParam === "support") {
+    prefilledMessage = `Hallo,\n\nich benötige Hilfe bei folgendem Thema:\n\n[Bitte beschreiben Sie Ihr Anliegen hier]\n\nMit freundlichen Grüßen`;
+    prefilledSubject = "support";
+} else if (refParam) {
+    prefilledMessage = `Hallo,\n\nich kontaktiere Sie bezüglich: ${refParam}\n\n`;
+}
 ---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <!-- Header -->
+    <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+        <div class="container-narrow text-center">
+            <h1 class="text-bio-white mb-4">Kontakt</h1>
+            <p class="text-xl text-bio-gray-400">
+                Hast du eine Frage oder möchtest mit uns zusammenarbeiten? Wir
+                freuen uns auf deine Nachricht.
+            </p>
+        </div>
+    </section>
+
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Contact Info -->
+                <div class="lg:col-span-1 space-y-8">
+                    <div class="card">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-bio-accent/10 flex items-center justify-center flex-shrink-0"
+                            >
+                                <Mail className="w-5 h-5 text-bio-accent" />
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-bio-white mb-1">
+                                    E-Mail
+                                </h3>
+                                <p class="text-bio-gray-400">
+                                    hello@biobeats.io
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-bio-accent/10 flex items-center justify-center flex-shrink-0"
+                            >
+                                <MapPin className="w-5 h-5 text-bio-accent" />
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-bio-white mb-1">
+                                    Standort
+                                </h3>
+                                <p class="text-bio-gray-400">
+                                    Berlin, Deutschland
+                                </p>
+                                <p class="text-bio-gray-500 text-sm">
+                                    Weltweit tätig
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-bio-accent/10 flex items-center justify-center flex-shrink-0"
+                            >
+                                <MessageSquare
+                                    className="w-5 h-5 text-bio-accent"
+                                />
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-bio-white mb-1">
+                                    Antwortzeit
+                                </h3>
+                                <p class="text-bio-gray-400">
+                                    Innerhalb von 24–48 Stunden
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-2">
+                    <div class="card p-8">
+                        <h2 class="text-xl font-semibold text-bio-white mb-6">
+                            Sende uns eine Nachricht
+                        </h2>
+                        <ContactForm
+                            client:load
+                            initialReason={reasonParam === "festival"
+                                ? "submit_festival"
+                                : reasonParam}
+                            initialSubject={prefilledSubject}
+                            initialMessage={prefilledMessage}
+                            initialContext={{
+                                artist: artistParam,
+                                ref: refParam,
+                                festivalName:
+                                    url.searchParams.get("festival") || "",
+                            }}
+                            lang="de"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
 
 <BaseLayout title={pageTitle} description={pageDescription}>
     <!-- Header -->

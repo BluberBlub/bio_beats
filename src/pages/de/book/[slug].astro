@@ -2,10 +2,8 @@
 export const prerender = true;
 
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { actions } from "../../../data/navigation";
-import { getTranslations } from "../../../i18n";
 import { artists } from "../../../data/artists";
-import { ArrowRight, Calendar, MapPin, Users, Info } from "lucide-react";
+import { ArrowLeft, Calendar, Mail, Clock } from "lucide-react";
 
 export function getStaticPaths() {
     return artists.map((artist) => ({
@@ -15,126 +13,282 @@ export function getStaticPaths() {
 }
 
 const { artist } = Astro.props;
-const t = getTranslations("de");
 
 const pageTitle = `Buche ${artist.name} — BIO BEATS`;
-const pageDescription = `Sende eine Buchungsanfrage für ${artist.name}.`;
+const pageDescription = `Sende eine Buchungsanfrage für ${artist.name} über BIO BEATS.`;
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-    <!-- Header -->
-    <section class="py-12 bg-gradient-to-b from-bio-gray-900 to-bio-black">
-        <div class="container-narrow">
-            <div class="flex items-center gap-6 mb-8">
-                <img
-                    src={artist.image}
-                    alt={artist.name}
-                    class="w-20 h-20 rounded-full object-cover border-2 border-bio-accent"
-                />
-                <div>
-                    <h1 class="text-3xl font-bold text-bio-white mb-2">
-                        Buchung: {artist.name}
-                    </h1>
-                    <p class="text-bio-gray-400 flex items-center gap-2">
-                        <MapPin className="w-4 h-4" />
-                        {artist.location}
-                    </p>
-                </div>
-            </div>
+    <!-- Back Link -->
+    <div class="bg-bio-black py-4">
+        <div class="container-wide">
+            <a
+                href={`/de/artists/${artist.slug}`}
+                class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4" />
+                Zurück zu {artist.name}
+            </a>
         </div>
-    </section>
+    </div>
 
-    <!-- Booking Form -->
     <section class="section bg-bio-black">
         <div class="container-narrow">
-            <div class="card p-8">
-                <div
-                    class="mb-8 p-4 bg-bio-accent/10 border border-bio-accent/20 rounded-lg flex items-start gap-3"
-                >
-                    <Info
-                        className="w-5 h-5 text-bio-accent flex-shrink-0 mt-0.5"
-                    />
-                    <p class="text-sm text-bio-gray-300">
-                        Du sendest eine unverbindliche Anfrage. Der Künstler
-                        oder sein Management wird sich mit Verfügbarkeit und
-                        Konditionen zurückmelden.
-                    </p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Artist Info Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="card sticky top-24">
+                        <div
+                            class="aspect-square rounded-lg overflow-hidden bg-bio-gray-800 mb-4"
+                        >
+                            <img
+                                src={artist.image}
+                                alt={artist.name}
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <h2 class="text-xl font-semibold text-bio-white mb-2">
+                            {artist.name}
+                        </h2>
+                        <p class="text-bio-gray-400 text-sm mb-4">
+                            {artist.location}
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {
+                                artist.genres.map((genre) => (
+                                    <span class="badge text-xs">{genre}</span>
+                                ))
+                            }
+                        </div>
+                        <div
+                            class="flex items-center gap-2 text-sm text-bio-gray-400"
+                        >
+                            <Clock className="w-4 h-4" />
+                            <span>Antwortet meist innerhalb von 48 Std.</span>
+                        </div>
+                    </div>
                 </div>
 
-                <form class="space-y-6" action="/de/contact" method="GET">
-                    <input type="hidden" name="artist" value={artist.name} />
-                    <input type="hidden" name="reason" value="booking" />
+                <!-- Booking Form -->
+                <div class="lg:col-span-2">
+                    <h1 class="text-3xl font-bold text-bio-white mb-2">
+                        Buche {artist.name}
+                    </h1>
+                    <p class="text-bio-gray-400 mb-8">
+                        Fülle das Formular aus, um eine Buchungsanfrage zu
+                        senden. Bitte gib so viele Details wie möglich zu deinem
+                        Event an.
+                    </p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label
-                                for="eventDate"
-                                class="block text-sm font-medium text-bio-gray-300 mb-2"
+                    <form class="space-y-6">
+                        <!-- Event Details -->
+                        <div class="card">
+                            <h3
+                                class="text-lg font-semibold text-bio-white mb-4 flex items-center gap-2"
                             >
-                                Event Datum
-                            </label>
-                            <input
-                                type="date"
-                                id="eventDate"
-                                name="date"
-                                class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
-                                required
-                            />
+                                <Calendar className="w-5 h-5 text-bio-accent" />
+                                Event Details
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label
+                                        for="event-name"
+                                        class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                    >
+                                        Event Name *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="event-name"
+                                        required
+                                        class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                        placeholder="z.B. Warehouse Opening Party"
+                                    />
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            for="event-date"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Datum *
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="event-date"
+                                            required
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            for="event-time"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Set-Zeit (ungefähr)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="event-time"
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                            placeholder="z.B. 02:00 - 04:00"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            for="venue"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Venue *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="venue"
+                                            required
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                            placeholder="Name der Location"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            for="location"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Ort *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="location"
+                                            required
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                            placeholder="Stadt, Land"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        for="capacity"
+                                        class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                    >
+                                        Erwartete Kapazität
+                                    </label>
+                                    <select
+                                        id="capacity"
+                                        class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
+                                    >
+                                        <option value=""
+                                            >Kapazität wählen</option
+                                        >
+                                        <option value="small">Unter 200</option>
+                                        <option value="medium">200 - 500</option
+                                        >
+                                        <option value="large">500 - 1000</option
+                                        >
+                                        <option value="xlarge"
+                                            >1000 - 5000</option
+                                        >
+                                        <option value="festival">5000+</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label
-                                for="venue"
-                                class="block text-sm font-medium text-bio-gray-300 mb-2"
+
+                        <!-- Contact Info -->
+                        <div class="card">
+                            <h3
+                                class="text-lg font-semibold text-bio-white mb-4 flex items-center gap-2"
                             >
-                                Venue / Event Name
-                            </label>
-                            <input
-                                type="text"
-                                id="venue"
-                                name="venue"
-                                class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
-                                placeholder="Club xy oder Festival z"
-                                required
-                            />
+                                <Mail className="w-5 h-5 text-bio-accent" />
+                                Deine Kontaktdaten
+                            </h3>
+                            <div class="space-y-4">
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            for="name"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Dein Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            required
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                            placeholder="Vollständiger Name"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            for="organization"
+                                            class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                        >
+                                            Organisation
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="organization"
+                                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                            placeholder="Firma oder Kollektiv"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        for="email"
+                                        class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                    >
+                                        E-Mail *
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        required
+                                        class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+                                        placeholder="deine@email.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        for="message"
+                                        class="block text-sm font-medium text-bio-gray-300 mb-2"
+                                    >
+                                        Zusätzliche Informationen
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        rows="4"
+                                        class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none resize-none"
+                                        placeholder="Erzähl uns mehr über dein Event, Budget-Vorstellungen oder besondere Anforderungen..."
+                                    ></textarea>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label
-                            for="offer"
-                            class="block text-sm font-medium text-bio-gray-300 mb-2"
-                        >
-                            Budget / Angebot (EUR)
-                        </label>
-                        <input
-                            type="number"
-                            id="offer"
-                            name="budget"
-                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
-                            placeholder="z.B. 500"
-                        />
-                    </div>
+                        <button type="submit" class="btn-primary w-full">
+                            Buchungsanfrage senden
+                        </button>
 
-                    <div>
-                        <label
-                            for="message"
-                            class="block text-sm font-medium text-bio-gray-300 mb-2"
-                        >
-                            Nachricht an den Künstler
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            rows="4"
-                            class="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none"
-                            placeholder="Weitere Details zum Event, Set-Länge, etc."
-                        ></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-primary w-full">
-                        Anfrage senden
-                    </button>
-                </form>
+                        <p class="text-sm text-bio-gray-500 text-center">
+                            Mit dem Absenden stimmst du unseren <a
+                                href="/de/terms"
+                                class="text-bio-accent hover:underline">AGB</a
+                            > und der <a
+                                href="/de/privacy"
+                                class="text-bio-accent hover:underline"
+                                >Datenschutzerklärung</a
+                            > zu.
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </section>

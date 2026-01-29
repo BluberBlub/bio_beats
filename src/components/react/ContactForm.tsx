@@ -10,13 +10,15 @@ interface ContactFormProps {
         ref?: string;
         artist?: string;
     };
+    lang?: 'en' | 'de';
 }
 
 export default function ContactForm({
     initialReason = '',
     initialSubject = '',
     initialMessage = '',
-    initialContext = {}
+    initialContext = {},
+    lang = 'en'
 }: ContactFormProps) {
     const [reason, setReason] = useState(initialReason);
     const [formData, setFormData] = useState({
@@ -37,6 +39,76 @@ export default function ContactForm({
 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+
+    // Translations
+    const t = {
+        en: {
+            name: 'Name',
+            namePlaceholder: 'Your name',
+            email: 'Email',
+            emailPlaceholder: 'your@email.com',
+            topic: 'Topic',
+            selectTopic: 'Select a topic',
+            message: 'Message',
+            messagePlaceholder: 'Your message...',
+            send: 'Send Message',
+            sending: 'Sending...',
+            sent: 'Message Sent!',
+            sentDesc: "Thanks for reaching out. We'll get back to you within 24-48 hours.",
+            sendAnother: 'Send another message',
+            festivalDetails: 'Festival Details',
+            festivalName: 'Festival Name',
+            date: 'Date(s)',
+            location: 'Location',
+            genre: 'Primary Genre(s)',
+            website: 'Website',
+            capacity: 'Expected Capacity',
+            submitFestival: 'Submit Festival',
+            topics: {
+                general: 'General Inquiry',
+                partnership: 'Partnership',
+                booking: 'Artist Booking',
+                submit_festival: 'Submit / List a Festival',
+                support: 'Support',
+                press: 'Press',
+                other: 'Other'
+            }
+        },
+        de: {
+            name: 'Name',
+            namePlaceholder: 'Dein Name',
+            email: 'E-Mail',
+            emailPlaceholder: 'deine@email.com',
+            topic: 'Thema',
+            selectTopic: 'Thema wählen',
+            message: 'Nachricht',
+            messagePlaceholder: 'Deine Nachricht...',
+            send: 'Nachricht senden',
+            sending: 'Sende...',
+            sent: 'Nachricht gesendet!',
+            sentDesc: 'Danke für deine Nachricht. Wir melden uns innerhalb von 24-48 Stunden.',
+            sendAnother: 'Weitere Nachricht senden',
+            festivalDetails: 'Festival Details',
+            festivalName: 'Festival Name',
+            date: 'Datum',
+            location: 'Ort',
+            genre: 'Genre(s)',
+            website: 'Webseite',
+            capacity: 'Erwartete Kapazität',
+            submitFestival: 'Festival einreichen',
+            topics: {
+                general: 'Allgemeine Anfrage',
+                partnership: 'Partnerschaft',
+                booking: 'Künstler-Buchung',
+                submit_festival: 'Festival einreichen / listen',
+                support: 'Support',
+                press: 'Presse',
+                other: 'Sonstiges'
+            }
+        }
+    };
+
+    const strings = t[lang];
 
     // Update reason if prop changes (e.g. navigation)
     useEffect(() => {
@@ -88,9 +160,9 @@ export default function ContactForm({
                 <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center mb-6">
                     <Send className="w-10 h-10 text-green-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
+                <h3 className="text-2xl font-bold text-white mb-2">{strings.sent}</h3>
                 <p className="text-gray-400 mb-8">
-                    Thanks for reaching out. We'll get back to you within 24-48 hours.
+                    {strings.sentDesc}
                 </p>
                 <button
                     onClick={() => {
@@ -99,7 +171,7 @@ export default function ContactForm({
                     }}
                     className="btn-secondary"
                 >
-                    Send another message
+                    {strings.sendAnother}
                 </button>
             </div>
         );
@@ -112,7 +184,7 @@ export default function ContactForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                        Name
+                        {strings.name}
                     </label>
                     <input
                         type="text"
@@ -122,12 +194,12 @@ export default function ContactForm({
                         value={formData.name}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
-                        placeholder="Your name"
+                        placeholder={strings.namePlaceholder}
                     />
                 </div>
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                        Email
+                        {strings.email}
                     </label>
                     <input
                         type="email"
@@ -137,14 +209,14 @@ export default function ContactForm({
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
-                        placeholder="your@email.com"
+                        placeholder={strings.emailPlaceholder}
                     />
                 </div>
             </div>
 
             <div>
                 <label htmlFor="reason" className="block text-sm font-medium text-gray-300 mb-2">
-                    Topic
+                    {strings.topic}
                 </label>
                 <select
                     id="reason"
@@ -152,14 +224,14 @@ export default function ContactForm({
                     onChange={(e) => setReason(e.target.value)}
                     className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
                 >
-                    <option value="">Select a topic</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="booking">Artist Booking</option>
-                    <option value="submit_festival">Submit / List a Festival</option>
-                    <option value="support">Support</option>
-                    <option value="press">Press</option>
-                    <option value="other">Other</option>
+                    <option value="">{strings.selectTopic}</option>
+                    <option value="general">{strings.topics.general}</option>
+                    <option value="partnership">{strings.topics.partnership}</option>
+                    <option value="booking">{strings.topics.booking}</option>
+                    <option value="submit_festival">{strings.topics.submit_festival}</option>
+                    <option value="support">{strings.topics.support}</option>
+                    <option value="press">{strings.topics.press}</option>
+                    <option value="other">{strings.topics.other}</option>
                 </select>
             </div>
 
@@ -168,13 +240,13 @@ export default function ContactForm({
                 <div className="p-6 bg-[#1a1a1a] border border-[#333] rounded-xl space-y-6 animate-in fade-in slide-in-from-top-4">
                     <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                         <Calendar className="w-5 h-5 text-[#ff0700]" />
-                        Festival Details
+                        {strings.festivalDetails}
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="festivalName" className="block text-sm font-medium text-gray-300 mb-2">
-                                Festival Name
+                                {strings.festivalName}
                             </label>
                             <input
                                 type="text"
@@ -188,7 +260,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalDate" className="block text-sm font-medium text-gray-300 mb-2">
-                                Date(s)
+                                {strings.date}
                             </label>
                             <input
                                 type="text"
@@ -202,7 +274,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalLocation" className="block text-sm font-medium text-gray-300 mb-2">
-                                Location
+                                {strings.location}
                             </label>
                             <div className="relative">
                                 <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
@@ -219,7 +291,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalGenre" className="block text-sm font-medium text-gray-300 mb-2">
-                                Primary Genre(s)
+                                {strings.genre}
                             </label>
                             <div className="relative">
                                 <Music className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
@@ -236,7 +308,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalWebsite" className="block text-sm font-medium text-gray-300 mb-2">
-                                Website
+                                {strings.website}
                             </label>
                             <div className="relative">
                                 <Globe className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
@@ -253,7 +325,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalCapacity" className="block text-sm font-medium text-gray-300 mb-2">
-                                Expected Capacity
+                                {strings.capacity}
                             </label>
                             <div className="relative">
                                 <Users className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
@@ -274,7 +346,7 @@ export default function ContactForm({
 
             <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                    Message
+                    {strings.message}
                 </label>
                 <textarea
                     id="message"
@@ -284,7 +356,7 @@ export default function ContactForm({
                     value={formData.message}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors resize-none"
-                    placeholder="Your message..."
+                    placeholder={strings.messagePlaceholder}
                 />
             </div>
 
@@ -296,11 +368,11 @@ export default function ContactForm({
                 {loading ? (
                     <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Sending...
+                        {strings.sending}
                     </>
                 ) : (
                     <>
-                        {isFestivalSubmission ? 'Submit Festival' : 'Send Message'}
+                        {isFestivalSubmission ? strings.submitFestival : strings.send}
                         <Send className="w-4 h-4" />
                     </>
                 )}

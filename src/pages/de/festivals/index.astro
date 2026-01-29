@@ -8,10 +8,29 @@ import {
     Globe,
     Sparkles,
 } from "lucide-react";
+import FestivalDirectory from "../../../components/react/FestivalDirectory";
+import { festivals } from "../../../data/festivals";
+
+export const prerender = true;
 
 /**
  * FESTIVALS PAGE (German)
  */
+
+// Prepare data for React component
+const festivalsData = festivals.map((f) => ({
+    id: f.id,
+    name: f.name,
+    slug: f.slug,
+    location: f.location,
+    country: f.country,
+    date: f.date,
+    type: f.type,
+    image: f.image,
+    capacity: f.capacity,
+    artistSlugs: f.artistSlugs,
+    coordinates: f.coordinates,
+}));
 
 const pageTitle = "Festivals & Veranstalter — BIO BEATS";
 const pageDescription =
@@ -76,6 +95,23 @@ const benefits = [
                     </a>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Festival Directory / Grid -->
+    <section class="section bg-bio-black">
+        <div class="container-wide">
+            <div class="section-header mb-12">
+                <h2 class="text-bio-white">Ausgewählte Festivals</h2>
+                <p class="text-bio-gray-400">
+                    Entdecke unsere Partner-Festivals.
+                </p>
+            </div>
+            <FestivalDirectory
+                client:load
+                festivals={festivalsData}
+                lang="de"
+            />
         </div>
     </section>
 

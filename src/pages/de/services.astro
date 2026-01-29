@@ -1,43 +1,107 @@
 ---
+export const prerender = true;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
     ArrowRight,
-    Lightbulb,
-    Settings,
-    HeartHandshake,
+    Megaphone,
+    BarChart3,
     Globe,
+    Palette,
+    Wrench,
+    Headphones,
+    CheckCircle,
 } from "lucide-react";
 
 const pageTitle = "Services — BIO BEATS";
 const pageDescription =
-    "Modulare Services für Künstler, Labels und Booker auf BIO BEATS.";
+    "Modulare Services für Künstler: Booking-Support, Marketing, internationale Expansion und mehr.";
 
 const services = [
     {
-        icon: "Lightbulb",
-        title: "Brand Consulting",
+        icon: "Megaphone",
+        title: "Booking Support",
         description:
-            "Entwickle deine Künstlermarke mit professioneller Beratung zu Positionierung, Messaging und visuellem Auftritt.",
+            "Professionelle Vertretung und Koordination. Wir helfen dir, mehr Bookings und bessere Möglichkeiten zu bekommen.",
+        tier: "Premium",
+        features: [
+            "Booking-Outreach",
+            "Verhandlungsunterstützung",
+            "Kalender-Management",
+            "Vertragsprüfung",
+        ],
     },
     {
-        icon: "Settings",
-        title: "Booking Management",
+        icon: "Palette",
+        title: "Marke & Positionierung",
         description:
-            "Lass unser Team deine Bookings managen – von Anfragen über Verhandlungen bis zur Vertragsabwicklung.",
-    },
-    {
-        icon: "HeartHandshake",
-        title: "Label Services",
-        description:
-            "Distribution, Promotion und Rechteverwaltung für Labels jeder Größe.",
+            "Entwickle deine Künstlermarke und Marktpositionierung. Hebe dich in einer vollen Branche ab.",
+        tier: "Premium",
+        features: [
+            "Markenstrategie",
+            "Visuelle Identität",
+            "Biografie-Erstellung",
+            "Pressemappe (EPK)",
+        ],
     },
     {
         icon: "Globe",
-        title: "International Expansion",
+        title: "Internationale Expansion",
         description:
-            "Unterstützung bei der Erschließung neuer Märkte und dem Aufbau internationaler Netzwerke.",
+            "Erweitere deine Reichweite auf neue Märkte. Verbinde dich mit Bookern und Venues weltweit.",
+        tier: "Enterprise",
+        features: [
+            "Marktforschung",
+            "Internationale Kontakte",
+            "Tour-Planung",
+            "Visa-Infos",
+        ],
+    },
+    {
+        icon: "BarChart3",
+        title: "Finanz-Reporting",
+        description:
+            "Verfolge deine Einnahmen, analysiere die Performance und triff datenbasierte Entscheidungen.",
+        tier: "Premium",
+        features: [
+            "Umsatzverfolgung",
+            "Monatliche Berichte",
+            "Steuerfertige Exporte",
+            "Performance-Analyse",
+        ],
+    },
+    {
+        icon: "Headphones",
+        title: "Release & Marketing",
+        description:
+            "Unterstützung für deine Musik-Veröffentlichungen. Von Promotion bis Playlist-Pitching.",
+        tier: "Premium",
+        features: [
+            "Release-Planung",
+            "Promo-Kampagnen",
+            "Playlist-Pitching",
+            "Social Media Strategie",
+        ],
+    },
+    {
+        icon: "Wrench",
+        title: "Steuern & Struktur",
+        description:
+            "Verbinde dich mit vertrauenswürdigen Partnern für internationale Steueroptimierung und Geschäftsstruktur.",
+        tier: "Partner",
+        features: [
+            "Partner-Netzwerk",
+            "Struktur-Beratung",
+            "Internationales Setup",
+            "Einkommensoptimierung",
+        ],
     },
 ];
+
+const tierColors: Record<string, string> = {
+    Premium: "bg-bio-accent/20 text-bio-accent",
+    Enterprise: "bg-purple-500/20 text-purple-400",
+    Partner: "bg-amber-500/20 text-amber-400",
+};
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -45,19 +109,24 @@ const services = [
     <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
         <div class="container-wide">
             <div class="max-w-3xl">
-                <span class="badge-accent mb-4">Services</span>
+                <span
+                    class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
+                >
+                    Modulare Services
+                </span>
                 <h1 class="text-bio-white mb-6">
-                    Modulare Services für dein Wachstum.
+                    Services, die mit dir wachsen.
                 </h1>
-                <p class="text-xl text-bio-gray-400 mb-8">
-                    Wähle die Services, die du brauchst – von Brand Consulting
-                    bis Booking Management.
+                <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
+                    Füge die Services hinzu, die du brauchst, wenn du sie
+                    brauchst. Vom Booking-Support bis zur internationalen
+                    Expansion – wir haben alles für dich.
                 </p>
                 <a
-                    href="/de/contact?ref=Enterprise%20Services%20Inquiry"
+                    href="/de/join"
                     class="btn-primary inline-flex items-center gap-2"
                 >
-                    Kontakt aufnehmen
+                    Services entdecken
                     <ArrowRight className="w-4 h-4" />
                 </a>
             </div>
@@ -67,30 +136,51 @@ const services = [
     <!-- Services Grid -->
     <section class="section bg-bio-black">
         <div class="container-wide">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {
                     services.map((service) => (
-                        <div class="card p-8">
-                            <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
-                                {service.icon === "Lightbulb" && (
-                                    <Lightbulb className="w-6 h-6 text-bio-accent" />
-                                )}
-                                {service.icon === "Settings" && (
-                                    <Settings className="w-6 h-6 text-bio-accent" />
-                                )}
-                                {service.icon === "HeartHandshake" && (
-                                    <HeartHandshake className="w-6 h-6 text-bio-accent" />
-                                )}
-                                {service.icon === "Globe" && (
-                                    <Globe className="w-6 h-6 text-bio-accent" />
-                                )}
+                        <div class="card flex flex-col h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center">
+                                    {service.icon === "Megaphone" && (
+                                        <Megaphone className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                    {service.icon === "Palette" && (
+                                        <Palette className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                    {service.icon === "Globe" && (
+                                        <Globe className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                    {service.icon === "BarChart3" && (
+                                        <BarChart3 className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                    {service.icon === "Headphones" && (
+                                        <Headphones className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                    {service.icon === "Wrench" && (
+                                        <Wrench className="w-6 h-6 text-bio-accent" />
+                                    )}
+                                </div>
+                                <span
+                                    class={`px-3 py-1 rounded-full text-xs font-medium ${tierColors[service.tier]}`}
+                                >
+                                    {service.tier}
+                                </span>
                             </div>
-                            <h3 class="text-xl font-semibold text-bio-white mb-3">
+                            <h3 class="text-xl font-semibold text-bio-white mb-2">
                                 {service.title}
                             </h3>
-                            <p class="text-bio-gray-400">
+                            <p class="text-bio-gray-400 mb-4 flex-grow">
                                 {service.description}
                             </p>
+                            <ul class="space-y-2">
+                                {service.features.map((feature) => (
+                                    <li class="flex items-center gap-2 text-sm text-bio-gray-300">
+                                        <CheckCircle className="w-4 h-4 text-bio-accent flex-shrink-0" />
+                                        {feature}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     ))
                 }
@@ -99,15 +189,21 @@ const services = [
     </section>
 
     <!-- CTA -->
-    <section class="section bg-bio-gray-900">
+    <section class="py-16 bg-bio-gray-900">
         <div class="container-narrow text-center">
-            <h2 class="text-bio-white mb-4">
-                Interessiert an unseren Services?
+            <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+                Brauchst du eine individuelle Lösung?
             </h2>
-            <p class="text-bio-gray-400 text-lg mb-8">
-                Kontaktiere uns für ein unverbindliches Gespräch.
+            <p class="text-bio-gray-400 mb-8">
+                Kontaktiere uns, um über Enterprise-Pakete und individuelle
+                Service-Bundles zu sprechen.
             </p>
-            <a href="/de/contact" class="btn-primary">Kontakt aufnehmen</a>
+            <a
+                href="/de/contact?ref=Enterprise%20Services%20Inquiry"
+                class="btn-primary"
+            >
+                Kontakt aufnehmen
+            </a>
         </div>
     </section>
 </BaseLayout>

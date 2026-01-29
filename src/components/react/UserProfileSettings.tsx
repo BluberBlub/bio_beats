@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { User, Bell, Camera, Save, Loader2, Check, Shield, Lock, Trash2, AlertTriangle } from 'lucide-react';
+import { User, Bell, Camera, Save, Loader2, Check, Shield, Lock, Trash2, AlertTriangle, Calendar } from 'lucide-react';
+import EventCalendar from './EventCalendar';
 import { userStore, updateUser } from '../../stores/userStore';
 import { useStore } from '@nanostores/react';
 
-type Tab = 'profile' | 'security' | 'notifications';
+type Tab = 'profile' | 'security' | 'notifications' | 'calendar';
 
 export default function UserProfileSettings() {
     const $user = useStore(userStore);
@@ -292,13 +293,14 @@ export default function UserProfileSettings() {
         }
     };
 
-    const tabs = [
+    if (!$user) return null;
+
+    const tabs: { id: Tab, label: string, icon: any }[] = [
         { id: 'profile', label: 'Profil', icon: User },
+        ...($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer' ? [{ id: 'calendar' as Tab, label: 'Kalender', icon: Calendar }] : []),
         { id: 'security', label: 'Sicherheit', icon: Lock },
         { id: 'notifications', label: 'Benachrichtigungen', icon: Bell },
     ];
-
-    if (!$user) return null;
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -707,6 +709,17 @@ export default function UserProfileSettings() {
                                     Account löschen
                                 </button>
                             </div>
+                        </div>
+                    )}
+
+    // Calendar Tab
+                    {activeTab === 'calendar' && (
+                        <div className="bg-[#171717] rounded-xl border border-[#262626] p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-xl font-bold text-white">Mein Kalender</h2>
+                                <p className="text-sm text-gray-400">Verwalte deine Gigs und Festival-Auftritte.</p>
+                            </div>
+                            <EventCalendar viewMode="artist" artistId={$user.id} lang="de" />
                         </div>
                     )}
 
