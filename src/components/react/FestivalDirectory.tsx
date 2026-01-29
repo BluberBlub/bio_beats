@@ -135,18 +135,18 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
             <div className="flex flex-col md:flex-row gap-4 mb-8">
                 {/* Search */}
                 <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#737373]" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bio-gray-500" />
                     <input
                         type="text"
                         placeholder={t.search}
                         value={searchQuery}
                         onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                        className="w-full pl-12 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-[#737373] focus:border-[#ff0700] outline-none transition-colors"
+                        className="w-full pl-12 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                     />
                     {searchQuery && (
                         <button
                             onClick={() => setSearchQuery('')}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#737373] hover:text-white"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-bio-gray-500 hover:text-bio-white"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -157,14 +157,14 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                 <button
                     onClick={() => setShowFilters(!showFilters)}
                     className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${showFilters || hasActiveFilters
-                        ? 'bg-[#ff0700] text-white'
-                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                        ? 'bg-bio-accent text-white'
+                        : 'bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white'
                         }`}
                 >
                     <Filter className="w-5 h-5" />
                     {t.filters}
                     {hasActiveFilters && (
-                        <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                        <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs text-white">
                             {[searchQuery, selectedCountry !== 'all', selectedType !== 'all'].filter(Boolean).length}
                         </span>
                     )}
@@ -173,55 +173,55 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
 
             {/* Filter Panel */}
             {showFilters && (
-                <div className="bg-[#171717] border border-[#262626] rounded-xl p-6 mb-8">
+                <div className="bg-bio-gray-900 border border-bio-gray-800 rounded-xl p-6 mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Country Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">
+                            <label className="block text-sm font-medium text-bio-gray-400 mb-2">
                                 {t.country}
                             </label>
                             <div className="relative">
                                 <select
                                     value={selectedCountry}
                                     onChange={(e) => { setSelectedCountry(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                                    className="w-full appearance-none px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full appearance-none px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none transition-colors"
                                 >
                                     <option value="all">{t.allCountries}</option>
                                     {availableCountries.map(country => (
                                         <option key={country} value={country}>{country}</option>
                                     ))}
                                 </select>
-                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" />
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bio-gray-500 pointer-events-none" />
                             </div>
                         </div>
 
                         {/* Type Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">
+                            <label className="block text-sm font-medium text-bio-gray-400 mb-2">
                                 {t.type}
                             </label>
                             <div className="relative">
                                 <select
                                     value={selectedType}
                                     onChange={(e) => { setSelectedType(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                                    className="w-full appearance-none px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full appearance-none px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none transition-colors"
                                 >
                                     <option value="all">{t.allTypes}</option>
                                     {availableTypes.map(type => (
                                         <option key={type} value={type}>{type}</option>
                                     ))}
                                 </select>
-                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373] pointer-events-none" />
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-bio-gray-500 pointer-events-none" />
                             </div>
                         </div>
                     </div>
 
                     {/* Clear Filters */}
                     {hasActiveFilters && (
-                        <div className="mt-4 pt-4 border-t border-[#262626]">
+                        <div className="mt-4 pt-4 border-t border-bio-gray-800">
                             <button
                                 onClick={clearFilters}
-                                className="text-[#ff0700] hover:underline text-sm"
+                                className="text-bio-accent hover:underline text-sm"
                             >
                                 {t.clearFilters}
                             </button>
@@ -233,7 +233,7 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
 
 
             {/* Results Count */}
-            <p className="text-[#737373] text-sm mb-6">
+            <p className="text-bio-gray-500 text-sm mb-6">
                 {t.showing} {visibleFestivals.length} {t.of} {filteredFestivals.length} {t.festivals}
             </p>
 
@@ -243,9 +243,9 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                     <a
                         key={festival.id}
                         href={lang === 'de' ? `/de/festivals/${festival.slug}` : `/festivals/${festival.slug}`}
-                        className="group bg-[#171717] border border-[#262626] rounded-xl overflow-hidden hover:border-[#404040] transition-all"
+                        className="group bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden hover:border-bio-gray-600 transition-all"
                     >
-                        <div className="aspect-video relative overflow-hidden bg-[#262626]">
+                        <div className="aspect-video relative overflow-hidden bg-bio-gray-800">
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                             <img
                                 src={festival.image}
@@ -254,34 +254,34 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                                 loading="lazy"
                             />
                             <div className="absolute bottom-3 left-3 z-20">
-                                <span className="px-3 py-1 bg-[#ff0700]/90 rounded-full text-white text-xs font-medium">
+                                <span className="px-3 py-1 bg-bio-accent/90 rounded-full text-white text-xs font-medium">
                                     {festival.artistSlugs?.length || 0} {t.artists}
                                 </span>
                             </div>
                         </div>
                         <div className="p-5">
-                            <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-[#ff0700] transition-colors">
+                            <h3 className="text-lg font-semibold text-bio-white mb-3 group-hover:text-bio-accent transition-colors">
                                 {festival.name}
                             </h3>
                             <div className="space-y-2 mb-4">
-                                <div className="flex items-center gap-2 text-sm text-[#a3a3a3]">
+                                <div className="flex items-center gap-2 text-sm text-bio-gray-400">
                                     <MapPin className="w-4 h-4" />
                                     {festival.location}, {festival.country}
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-[#a3a3a3]">
+                                <div className="flex items-center gap-2 text-sm text-bio-gray-400">
                                     <Calendar className="w-4 h-4" />
                                     {festival.date}
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-[#a3a3a3]">
+                                <div className="flex items-center gap-2 text-sm text-bio-gray-400">
                                     <Users className="w-4 h-4" />
                                     {festival.capacity}
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="px-2 py-1 bg-[#262626] rounded text-xs text-[#a3a3a3]">
+                                <span className="px-2 py-1 bg-bio-gray-800 rounded text-xs text-bio-gray-400">
                                     {festival.type}
                                 </span>
-                                <span className="text-[#ff0700] text-sm flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span className="text-bio-accent text-sm flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     {t.viewDetails}
                                     <ArrowRight className="w-4 h-4" />
                                 </span>
@@ -294,8 +294,8 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
             {/* Load More / No Results */}
             {visibleFestivals.length === 0 ? (
                 <div className="text-center py-12">
-                    <p className="text-[#a3a3a3] mb-4">{t.noFestivals}</p>
-                    <button onClick={clearFilters} className="text-[#ff0700] hover:underline">
+                    <p className="text-bio-gray-400 mb-4">{t.noFestivals}</p>
+                    <button onClick={clearFilters} className="text-bio-accent hover:underline">
                         {t.clearFilters}
                     </button>
                 </div>
@@ -303,7 +303,7 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                 <div className="text-center">
                     <button
                         onClick={loadMore}
-                        className="inline-flex items-center gap-2 px-8 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white font-medium hover:bg-[#404040] transition-colors"
+                        className="inline-flex items-center gap-2 px-8 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white font-medium hover:bg-bio-gray-700 transition-colors"
                     >
                         {t.loadMore}
                         <ChevronDown className="w-4 h-4" />

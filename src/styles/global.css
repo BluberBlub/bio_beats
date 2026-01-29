@@ -1,20 +1,64 @@
 @import "tailwindcss";
 
+@layer theme {
+  :root {
+    --bio-black: #0a0a0a;
+    --bio-white: #fafafa;
+    --bio-gray-50: #fafafa;
+    --bio-gray-100: #f5f5f5;
+    --bio-gray-200: #e5e5e5;
+    --bio-gray-300: #d4d4d4;
+    --bio-gray-400: #a3a3a3;
+    --bio-gray-500: #737373;
+    --bio-gray-600: #525252;
+    --bio-gray-700: #404040;
+    --bio-gray-800: #262626;
+    --bio-gray-900: #171717;
+    --bio-accent: #ff0700;
+    --bio-accent-hover: #cc0600;
+  }
+
+  [data-theme="light"] {
+    --bio-black: #f4f4f5;
+    --bio-white: #09090b;
+
+    /* Invert Gray Scale & Adjust for White Cards */
+    /* 900 is Card Bg -> White */
+    --bio-gray-900: #ffffff;
+    /* 800 is Borders -> Light Gray */
+    --bio-gray-800: #e5e5e5;
+    /* 700 is Secondary elements */
+    --bio-gray-700: #d4d4d4;
+
+    --bio-gray-600: #a3a3a3;
+    --bio-gray-500: #737373;
+    --bio-gray-400: #525252;
+    --bio-gray-300: #404040;
+    --bio-gray-200: #262626;
+    --bio-gray-100: #171717;
+    --bio-gray-50: #0a0a0a;
+
+    /* Accent - Slightly darker for better contrast on white */
+    --bio-accent: #d90600;
+    --bio-accent-hover: #b30500;
+  }
+}
+
 @theme {
-  --color-bio-black: #0a0a0a;
-  --color-bio-white: #fafafa;
-  --color-bio-gray-50: #fafafa;
-  --color-bio-gray-100: #f5f5f5;
-  --color-bio-gray-200: #e5e5e5;
-  --color-bio-gray-300: #d4d4d4;
-  --color-bio-gray-400: #a3a3a3;
-  --color-bio-gray-500: #737373;
-  --color-bio-gray-600: #525252;
-  --color-bio-gray-700: #404040;
-  --color-bio-gray-800: #262626;
-  --color-bio-gray-900: #171717;
-  --color-bio-accent: #ff0700;
-  --color-bio-accent-hover: #cc0600;
+  --color-bio-black: var(--bio-black);
+  --color-bio-white: var(--bio-white);
+  --color-bio-gray-50: var(--bio-gray-50);
+  --color-bio-gray-100: var(--bio-gray-100);
+  --color-bio-gray-200: var(--bio-gray-200);
+  --color-bio-gray-300: var(--bio-gray-300);
+  --color-bio-gray-400: var(--bio-gray-400);
+  --color-bio-gray-500: var(--bio-gray-500);
+  --color-bio-gray-600: var(--bio-gray-600);
+  --color-bio-gray-700: var(--bio-gray-700);
+  --color-bio-gray-800: var(--bio-gray-800);
+  --color-bio-gray-900: var(--bio-gray-900);
+  --color-bio-accent: var(--bio-accent);
+  --color-bio-accent-hover: var(--bio-accent-hover);
 
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', monospace;

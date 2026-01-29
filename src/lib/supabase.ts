@@ -62,6 +62,7 @@ export interface UserProfile {
     is_verified: boolean;
     created_at: string;
     avatar_url?: string;
+    theme?: 'light' | 'dark'; // User preference for UI theme
 
     // General user data (available for all roles)
     socials?: {

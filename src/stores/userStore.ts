@@ -49,9 +49,30 @@ if (typeof window !== 'undefined') {
     const savedUser = localStorage.getItem('bio-admin-user');
     if (savedUser) {
         try {
-            userStore.set(JSON.parse(savedUser));
+            const parsedUser = JSON.parse(savedUser);
+            userStore.set(parsedUser);
+
+            // Apply theme if saved in user profile
+            if (parsedUser.theme) {
+                document.documentElement.setAttribute('data-theme', parsedUser.theme);
+            }
         } catch (e) {
             console.error('Failed to parse user from localStorage', e);
         }
     }
 }
+
+// Subscribe to user store changes to update theme
+userStore.subscribe(user => {
+    if (typeof window !== 'undefined' && user?.theme) {
+        document.documentElement.setAttribute('data-theme', user.theme);
+    } else if (typeof window !== 'undefined') {
+        // Default to dark if no user or no theme set
+        // But check if we want to support non-logged in theme persistence?
+        // for now, let's strictly follow "user profile setting"
+        // remove attribute if no theme (defaults to dark via CSS)
+        if (!user) {
+            document.documentElement.removeAttribute('data-theme');
+        }
+    }
+});

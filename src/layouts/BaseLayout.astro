@@ -117,11 +117,34 @@ import { ClientRouter } from "astro:transitions";
 
     <title>{title}</title>
 
+    <!-- Theme Initialization Script -->
+    <script is:inline>
+      function initTheme() {
+        try {
+          const savedUser = localStorage.getItem("bio-admin-user");
+          if (savedUser) {
+            const user = JSON.parse(savedUser);
+            if (user.theme) {
+              document.documentElement.setAttribute("data-theme", user.theme);
+            }
+          }
+        } catch (e) {
+          console.error("Theme init error:", e);
+        }
+      }
+
+      // Init on first load
+      initTheme();
+
+      // Init on View Transitions navigation
+      document.addEventListener("astro:after-swap", initTheme);
+    </script>
+
     <!-- Critical CSS Inline -->
     <style is:inline>
       body {
-        background-color: #0a0a0a;
-        color: #fafafa;
+        background-color: var(--color-bio-black);
+        color: var(--color-bio-white);
       }
       .loading {
         opacity: 0;

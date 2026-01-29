@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { User, Bell, Camera, Save, Loader2, Check, Shield, Lock, Trash2, AlertTriangle, Calendar } from 'lucide-react';
+import { User, Bell, Camera, Save, Loader2, Check, Shield, Lock, Trash2, AlertTriangle, Calendar, Sun, Moon } from 'lucide-react';
 import EventCalendar from './EventCalendar';
 import { userStore, updateUser } from '../../stores/userStore';
 import { useStore } from '@nanostores/react';
 
-type Tab = 'profile' | 'security' | 'notifications' | 'calendar';
+type Tab = 'profile' | 'security' | 'notifications' | 'calendar' | 'appearance';
 
 export default function UserProfileSettings() {
     const $user = useStore(userStore);
@@ -167,8 +167,8 @@ export default function UserProfileSettings() {
         const hasFavorites = $user?.favorite_artists && $user.favorite_artists.length > 0;
 
         return (
-            <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
-                <h2 className="text-xl font-bold text-white mb-4">Favorisierte Künstler</h2>
+            <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                <h2 className="text-xl font-bold text-bio-white mb-4">Favorisierte Künstler</h2>
                 <div className="space-y-4">
                     <p className="text-gray-400 text-sm">
                         Sie erhalten Benachrichtigungen, wenn diese Künstler neue Events ankündigen.
@@ -177,7 +177,7 @@ export default function UserProfileSettings() {
                     {hasFavorites ? (
                         <div className="flex flex-wrap gap-2">
                             {$user.favorite_artists?.map(slug => (
-                                <div key={slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-bio-gray-800 text-sm text-gray-300 border border-bio-gray-700">
+                                <div key={slug} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-bio-gray-800 text-sm text-bio-gray-300 border border-bio-gray-700">
                                     <span>{slug}</span> {/* In real app: fetch name */}
                                     <button className="text-gray-500 hover:text-red-400 transition-colors">
                                         <Trash2 className="w-3 h-3" />
@@ -298,6 +298,7 @@ export default function UserProfileSettings() {
     const tabs: { id: Tab, label: string, icon: any }[] = [
         { id: 'profile', label: 'Profil', icon: User },
         ...($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer' ? [{ id: 'calendar' as Tab, label: 'Kalender', icon: Calendar }] : []),
+        { id: 'appearance', label: 'Darstellung', icon: Sun },
         { id: 'security', label: 'Sicherheit', icon: Lock },
         { id: 'notifications', label: 'Benachrichtigungen', icon: Bell },
     ];
@@ -315,14 +316,14 @@ export default function UserProfileSettings() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                 {/* Sidebar / Tabs */}
                 <div className="md:col-span-3">
-                    <div className="bg-[#171717] rounded-xl border border-[#262626] overflow-hidden">
+                    <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 overflow-hidden">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as Tab)}
                                 className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab.id
                                     ? 'bg-bio-accent text-white'
-                                    : 'text-gray-400 hover:bg-[#262626] hover:text-white'
+                                    : 'text-bio-gray-400 hover:bg-bio-gray-800 hover:text-bio-white'
                                     }`}
                             >
                                 <tab.icon className="w-4 h-4" />
@@ -342,13 +343,50 @@ export default function UserProfileSettings() {
                         </div>
                     )}
 
+                    {/* Appearance Tab */}
+                    {activeTab === 'appearance' && (
+                        <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                            <h2 className="text-xl font-bold text-bio-white mb-4">Erscheinungsbild</h2>
+                            <div className="space-y-6">
+                                <div className="p-4 bg-bio-black/50 rounded-lg border border-bio-gray-800">
+                                    <h4 className="text-bio-white font-medium mb-4">Design Modus</h4>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <button
+                                            onClick={() => updateUser({ theme: 'dark' })}
+                                            className={`flex items-center justify-center gap-3 p-4 rounded-lg border-2 transition-all ${(!$user.theme || $user.theme === 'dark')
+                                                ? 'border-bio-accent bg-bio-accent/10 text-white'
+                                                : 'border-bio-gray-800 hover:border-bio-gray-600 text-bio-gray-400'
+                                                }`}
+                                        >
+                                            <Moon className="w-5 h-5" />
+                                            <span>Dark Mode</span>
+                                        </button>
+                                        <button
+                                            onClick={() => updateUser({ theme: 'light' })}
+                                            className={`flex items-center justify-center gap-3 p-4 rounded-lg border-2 transition-all ${$user.theme === 'light'
+                                                ? 'border-bio-accent bg-bio-accent/10 text-white'
+                                                : 'border-bio-gray-800 hover:border-bio-gray-600 text-bio-gray-400'
+                                                }`}
+                                        >
+                                            <Sun className="w-5 h-5" />
+                                            <span>Light Mode</span>
+                                        </button>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mt-4">
+                                        Wähle zwischen dem klassischen Dark Mode oder dem neuen Light Mode.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Profile Tab */}
                     {activeTab === 'profile' && (
                         <>
-                            <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
-                                <div className="flex items-center gap-6 pb-6 border-b border-[#262626]">
+                            <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                                <div className="flex items-center gap-6 pb-6 border-b border-bio-gray-800">
                                     <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                                        <div className="w-24 h-24 rounded-full bg-[#262626] flex items-center justify-center text-gray-400 text-3xl font-bold overflow-hidden border-2 border-[#262626] group-hover:border-bio-accent transition-colors">
+                                        <div className="w-24 h-24 rounded-full bg-bio-gray-800 flex items-center justify-center text-gray-400 text-3xl font-bold overflow-hidden border-2 border-bio-gray-800 group-hover:border-bio-accent transition-colors">
                                             {$user.avatar_url ? (
                                                 <img src={$user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                                             ) : (
@@ -382,7 +420,7 @@ export default function UserProfileSettings() {
                                             type="text"
                                             value={formData.fullName}
                                             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                            className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -391,7 +429,7 @@ export default function UserProfileSettings() {
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                            className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                         />
                                     </div>
                                     <div className="col-span-1 md:col-span-2 space-y-2">
@@ -400,7 +438,7 @@ export default function UserProfileSettings() {
                                             rows={4}
                                             value={formData.bio}
                                             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent resize-none"
+                                            className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent resize-none"
                                         />
                                     </div>
 
@@ -416,7 +454,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.artistProfile.alias}
                                                     onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, alias: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                     placeholder="Stage Name"
                                                 />
                                             </div>
@@ -425,7 +463,7 @@ export default function UserProfileSettings() {
                                                 <select
                                                     value={formData.artistProfile.type}
                                                     onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, type: e.target.value as any } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 >
                                                     <option value="dj">DJ</option>
                                                     <option value="live">Live Act</option>
@@ -440,7 +478,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.artistProfile.location}
                                                     onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, location: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                     placeholder="Berlin, Germany"
                                                 />
                                             </div>
@@ -450,7 +488,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.artistProfile.genres}
                                                     onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, genres: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                     placeholder="Techno, House, Ambient"
                                                 />
                                             </div>
@@ -461,14 +499,14 @@ export default function UserProfileSettings() {
                                                         type="number"
                                                         value={formData.artistProfile.bpmMin}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, bpmMin: e.target.value } })}
-                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="120"
                                                     />
                                                     <input
                                                         type="number"
                                                         value={formData.artistProfile.bpmMax}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, bpmMax: e.target.value } })}
-                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="140"
                                                     />
                                                 </div>
@@ -481,28 +519,28 @@ export default function UserProfileSettings() {
                                                         type="text"
                                                         value={formData.artistProfile.instagram}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, instagram: e.target.value } })}
-                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="Instagram URL"
                                                     />
                                                     <input
                                                         type="text"
                                                         value={formData.artistProfile.soundcloud}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, soundcloud: e.target.value } })}
-                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="SoundCloud URL"
                                                     />
                                                     <input
                                                         type="text"
                                                         value={formData.artistProfile.spotify}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, spotify: e.target.value } })}
-                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="Spotify URL"
                                                     />
                                                     <input
                                                         type="text"
                                                         value={formData.artistProfile.website}
                                                         onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, website: e.target.value } })}
-                                                        className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="Website / RA URL"
                                                     />
                                                 </div>
@@ -513,8 +551,8 @@ export default function UserProfileSettings() {
                                     {/* --- BOOKER FORM --- */}
                                     {($user.role === 'booker') && (
                                         <>
-                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
-                                                <h3 className="text-lg font-bold text-white mb-4">Booker / Venue Info</h3>
+                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
+                                                <h3 className="text-lg font-bold text-bio-white mb-4">Booker / Venue Info</h3>
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="text-sm font-medium text-gray-300">Organisation / Venue Name</label>
@@ -522,7 +560,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.bookerProfile.organization}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, organization: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -530,7 +568,7 @@ export default function UserProfileSettings() {
                                                 <select
                                                     value={formData.bookerProfile.type}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, type: e.target.value as any } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 >
                                                     <option value="club">Club</option>
                                                     <option value="festival">Festival</option>
@@ -544,7 +582,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.bookerProfile.location}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, location: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -553,7 +591,7 @@ export default function UserProfileSettings() {
                                                     type="number"
                                                     value={formData.bookerProfile.capacity}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, capacity: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             <div className="col-span-1 md:col-span-2 space-y-2">
@@ -562,7 +600,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.bookerProfile.website}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, website: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                         </>
@@ -571,8 +609,8 @@ export default function UserProfileSettings() {
                                     {/* --- INDUSTRY / LABEL FORM --- */}
                                     {(['label', 'manager', 'provider'].includes($user.role || '')) && (
                                         <>
-                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
-                                                <h3 className="text-lg font-bold text-white mb-4">Business Info</h3>
+                                            <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
+                                                <h3 className="text-lg font-bold text-bio-white mb-4">Business Info</h3>
                                             </div>
                                             <div className="col-span-1 md:col-span-2 space-y-2">
                                                 <label className="text-sm font-medium text-gray-300">Firma / Label Name</label>
@@ -580,7 +618,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.industryProfile.organization}
                                                     onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, organization: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -589,7 +627,7 @@ export default function UserProfileSettings() {
                                                     type="text"
                                                     value={formData.industryProfile.website}
                                                     onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, website: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -598,7 +636,7 @@ export default function UserProfileSettings() {
                                                     type="email"
                                                     value={formData.industryProfile.contactEmail}
                                                     onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, contactEmail: e.target.value } })}
-                                                    className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 />
                                             </div>
                                             {$user.role === 'label' && (
@@ -608,7 +646,7 @@ export default function UserProfileSettings() {
                                                         type="text"
                                                         value={formData.industryProfile.demoDropUrl}
                                                         onChange={(e) => setFormData({ ...formData, industryProfile: { ...formData.industryProfile, demoDropUrl: e.target.value } })}
-                                                        className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                        className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                         placeholder="https://..."
                                                     />
                                                 </div>
@@ -617,35 +655,35 @@ export default function UserProfileSettings() {
                                     )}
 
                                     {/* --- GENERAL SOCIALS (ALL USERS) --- */}
-                                    <div className="col-span-1 md:col-span-2 pt-6 border-t border-[#262626]">
-                                        <h3 className="text-lg font-bold text-white mb-4">Meine Links</h3>
+                                    <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
+                                        <h3 className="text-lg font-bold text-bio-white mb-4">Meine Links</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <input
                                                 type="text"
                                                 value={formData.socials.instagram}
                                                 onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, instagram: e.target.value } })}
-                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 placeholder="Instagram URL"
                                             />
                                             <input
                                                 type="text"
                                                 value={formData.socials.twitter}
                                                 onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, twitter: e.target.value } })}
-                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 placeholder="X / Twitter URL"
                                             />
                                             <input
                                                 type="text"
                                                 value={formData.socials.linkedin}
                                                 onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, linkedin: e.target.value } })}
-                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 placeholder="LinkedIn URL"
                                             />
                                             <input
                                                 type="text"
                                                 value={formData.socials.website}
                                                 onChange={(e) => setFormData({ ...formData, socials: { ...formData.socials, website: e.target.value } })}
-                                                className="bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                                 placeholder="Andere Website"
                                             />
                                         </div>
@@ -661,8 +699,8 @@ export default function UserProfileSettings() {
                     {/* Security Tab */}
                     {activeTab === 'security' && (
                         <div className="space-y-6">
-                            <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
-                                <h2 className="text-xl font-bold text-white mb-4">Passwort ändern</h2>
+                            <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                                <h2 className="text-xl font-bold text-bio-white mb-4">Passwort ändern</h2>
                                 <div className="space-y-4">
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-gray-300">Aktuelles Passwort</label>
@@ -670,7 +708,7 @@ export default function UserProfileSettings() {
                                             type="password"
                                             value={formData.currentPassword}
                                             onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
-                                            className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                            className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                         />
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -680,7 +718,7 @@ export default function UserProfileSettings() {
                                                 type="password"
                                                 value={formData.newPassword}
                                                 onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                                                className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -689,7 +727,7 @@ export default function UserProfileSettings() {
                                                 type="password"
                                                 value={formData.confirmPassword}
                                                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                                className="w-full bg-black border border-[#262626] rounded-lg px-4 py-2 text-white focus:outline-none focus:border-bio-accent"
+                                                className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                             />
                                         </div>
                                     </div>
@@ -725,8 +763,8 @@ export default function UserProfileSettings() {
 
                     {/* Notifications Tab */}
                     {activeTab === 'notifications' && (
-                        <div className="bg-[#171717] rounded-xl border border-[#262626] p-6 space-y-6">
-                            <h2 className="text-xl font-bold text-white mb-4">Benachrichtigungen</h2>
+                        <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                            <h2 className="text-xl font-bold text-bio-white mb-4">Benachrichtigungen</h2>
                             <div className="space-y-4">
                                 {[
                                     { id: 'emailNotifications', label: 'Email Benachrichtigungen', desc: 'Erhalten Sie Emails über Updates und Aktivitäten.' },
@@ -734,9 +772,9 @@ export default function UserProfileSettings() {
                                     { id: 'marketingEmails', label: 'Marketing Emails', desc: 'Erhalten Sie Emails über neue Features und Angebote.' },
                                     { id: 'artistAlerts', label: 'Künstler Updates (Favoriten)', desc: 'Benachrichtigung bei neuen Gigs deiner Favoriten.' }
                                 ].map((item) => (
-                                    <div key={item.id} className="flex items-center justify-between p-4 bg-black/50 rounded-lg border border-[#262626]">
+                                    <div key={item.id} className="flex items-center justify-between p-4 bg-bio-black/50 rounded-lg border border-bio-gray-800">
                                         <div>
-                                            <h4 className="text-white font-medium">{item.label}</h4>
+                                            <h4 className="text-bio-white font-medium">{item.label}</h4>
                                             <p className="text-gray-400 text-sm">{item.desc}</p>
                                         </div>
                                         <label className="relative inline-flex items-center cursor-pointer">
@@ -746,7 +784,7 @@ export default function UserProfileSettings() {
                                                 onChange={(e) => setFormData({ ...formData, [item.id]: e.target.checked })}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-bio-accent"></div>
+                                            <div className="w-11 h-6 bg-bio-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-bio-accent"></div>
                                         </label>
                                     </div>
                                 ))}
