@@ -36,27 +36,44 @@ htmlFiles.forEach(file => {
     let content = fs.readFileSync(file, 'utf8');
     let original = content;
 
+    // Calculate relative prefix from this file to the district root
+    // e.g., 'dist/client/artists/index.html' -> '../'
+    // e.g., 'dist/client/index.html' -> ''
+    const relativePathToRoot = path.relative(path.dirname(file), distDir).replace(/\\/g, '/');
+
+    // Prefix is just the traversal up (../) or current (./)
+    // We DO NOT add 'client/' here because .htaccess rewrites virtual root paths to physical client paths
+    const prefix = relativePathToRoot ? relativePathToRoot + '/' : './';
+
+    // Helper to make a path relative
+    // Cleans up any existing prefixes like /client/, ./client/, /_astro/ etc.
+    const makeRelative = (match, attribute, pathContent) => {
+        return `${attribute}="${prefix}${pathContent}`;
+    };
+
     // 1. Fix Astro Assets (_astro)
-    // Replaces: src="/_astro/..." with src="/client/_astro/..."
-    // Replaces: href="/_astro/..." with href="/client/_astro/..."
-    content = content.replace(/(src|href)="\/_astro\//g, '$1="/client/_astro/');
+    // Matches: /_astro/, /client/_astro/, ./client/_astro/, ../client/_astro/
+    content = content.replace(/(src|href)=".*?_astro\/(.*?)"/g, (match, attr, path) => makeRelative(match, attr, '_astro/' + path + '"'));
 
-    // 2. Fix Static Assets (fonts, images in assets folder if any)
-    content = content.replace(/(src|href)="\/assets\//g, '$1="/client/assets/');
-    content = content.replace(/(src|href)="\/fonts\//g, '$1="/client/fonts/');
+    // 2. Fix Static Assets (fonts, images)
+    content = content.replace(/(src|href)=".*?assets\/(.*?)"/g, (match, attr, path) => makeRelative(match, attr, 'assets/' + path + '"'));
+    content = content.replace(/(src|href)=".*?fonts\/(.*?)"/g, (match, attr, path) => makeRelative(match, attr, 'fonts/' + path + '"'));
+    content = content.replace(/(src|href)=".*?artists\/(.*?)"/g, (match, attr, path) => makeRelative(match, attr, 'artists/' + path + '"'));
 
-    // 3. Fix Specific Public Roots (logo, favicon, etc.)
-    // Only replace if they are root-relative calls
-    content = content.replace(/src="\/logo\.svg"/g, 'src="/client/logo.svg"');
-    content = content.replace(/href="\/favicon\.svg"/g, 'href="/client/favicon.svg"');
-    content = content.replace(/href="\/favicon\.ico"/g, 'href="/client/favicon.ico"');
-    content = content.replace(/href="\/site\.webmanifest"/g, 'href="/client/site.webmanifest"');
-    content = content.replace(/content="\/og-image\.png"/g, 'content="/client/og-image.png"');
-    content = content.replace(/src="\/artists\//g, 'src="/client/artists/'); // Artist images
+    // 3. Fix Specific Public Roots
+    const specificFiles = [
+        'logo.svg', 'favicon.svg', 'favicon.ico', 'site.webmanifest', 'robots.txt', 'og-image.png'
+    ];
+
+    specificFiles.forEach(filename => {
+        // Matches any path ending in the filename
+        const regex = new RegExp(`(src|href|content)=".*?${filename.replace('.', '\\.')}"`, 'g');
+        content = content.replace(regex, (match, attr) => `${attr}="${prefix}${filename}"`);
+    });
 
     if (content !== original) {
         fs.writeFileSync(file, content, 'utf8');
-        console.log(`✅ Fixed paths in: ${path.relative(distDir, file)}`);
+        // console.log(`✅ Fixed paths in: ${path.relative(distDir, file)}`); 
     }
 });
 

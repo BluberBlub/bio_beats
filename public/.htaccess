@@ -16,7 +16,12 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   
-  # 1. Assets & System Files
+  # 0. KEY FIX (v2 Safe Mode): 
+  # If request starts with /client/, Stop rewriting and serve file.
+  # This prevents loops and 500 errors on shared hosts.
+  RewriteRule ^client/ - [L]
+  
+  # 1. Assets & System Files (Legacy support for /_astro/ requests)
   RewriteRule ^_astro/(.*)$ /client/_astro/$1 [L]
   RewriteRule ^fonts/(.*)$ /client/fonts/$1 [L]
   RewriteRule ^assets/(.*)$ /client/assets/$1 [L]

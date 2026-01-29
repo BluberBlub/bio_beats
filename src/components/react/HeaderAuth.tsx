@@ -52,8 +52,16 @@ export default function HeaderAuth({ currentLang }: Props) {
                 onClick={toggleDropdown}
                 className="flex items-center gap-2 hover:bg-bio-gray-800/50 py-1.5 px-3 rounded-full transition-colors"
             >
-                <div className="w-8 h-8 rounded-full bg-bio-accent flex items-center justify-center text-white font-bold text-sm">
-                    {$user.full_name?.charAt(0) || 'U'}
+                <div className="w-8 h-8 rounded-full bg-bio-accent flex items-center justify-center text-white font-bold text-sm overflow-hidden border border-red-500">
+                    {$user.avatar_url ? (
+                        <img
+                            src={$user.avatar_url}
+                            alt={$user.full_name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        $user.full_name?.charAt(0) || 'U'
+                    )}
                 </div>
                 <span className="text-sm font-medium text-white hidden md:block">
                     {$user.full_name?.split(' ')[0]}
