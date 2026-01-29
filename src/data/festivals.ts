@@ -14,6 +14,7 @@ export interface Festival {
     artistSlugs: string[]; // References to artists performing
     stages?: string[];
     highlights?: string[];
+    coordinates: { lat: number; lng: number };
 }
 
 export const festivals: Festival[] = [
@@ -33,6 +34,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['rad-lez', 'aurora-waves', 'deep-circuit'],
         stages: ['Turmbühne', 'Sonnendeck', 'Palast', 'Seebühne', 'Waldfrieden'],
         highlights: ['Art installations', 'No commercial sponsors', 'DIY culture', 'Lake swimming'],
+        coordinates: { lat: 53.308, lng: 12.730 }
     },
     {
         id: 'f2',
@@ -50,6 +52,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['roz', 'deep-circuit', 'pulse-maker'],
         stages: ['Main Stage', 'Greenhouse', 'UFO', 'Selectors Stage'],
         highlights: ['Forest setting', 'Day and night program', 'Record fair', 'Film screenings'],
+        coordinates: { lat: 52.316, lng: 4.836 }
     },
     {
         id: 'f3',
@@ -67,6 +70,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['synthetix', 'night-shift', 'vinyl-theory'],
         stages: ['Depot Main', 'Archive', 'Concourse'],
         highlights: ['Industrial venue', 'Extended season', 'Multi-room experience'],
+        coordinates: { lat: 53.475, lng: -2.224 }
     },
     {
         id: 'f4',
@@ -84,6 +88,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['synthetix', 'rad-lez', 'night-shift', 'cosmos-audio'],
         stages: ['Area V', 'Area W', 'Area X', 'Area Y'],
         highlights: ['Massive production', 'All-star lineups', 'Open air', 'Extended sets'],
+        coordinates: { lat: 52.389, lng: 4.750 }
     },
     {
         id: 'f5',
@@ -101,6 +106,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['aurora-waves', 'frequency-lab', 'cosmos-audio', 'deep-circuit'],
         stages: ['SonarClub', 'SonarHall', 'SonarPub', 'SonarVillage'],
         highlights: ['Avant-garde programming', 'Tech conference', 'Art exhibitions', 'Daytime showcases'],
+        coordinates: { lat: 41.370, lng: 2.150 }
     },
     {
         id: 'f6',
@@ -118,6 +124,7 @@ export const festivals: Festival[] = [
         artistSlugs: ['vinyl-theory', 'pulse-maker', 'rad-lez', 'roz'],
         stages: ['Movement Main', 'Underground Stage', 'Pyramid Stage', 'Red Bull Stage'],
         highlights: ['Birthplace of techno', 'Detroit legends', 'Riverfront location', 'Afterparties'],
+        coordinates: { lat: 42.327, lng: -83.044 }
     },
 ];
 

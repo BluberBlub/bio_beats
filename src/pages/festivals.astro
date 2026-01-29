@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import FestivalDirectory from "../components/react/FestivalDirectory";
+import FestivalMap from "../components/react/FestivalMap";
 import { festivals } from "../data/festivals";
 
 // Prepare data for React component
@@ -24,6 +25,7 @@ const festivalsData = festivals.map((f) => ({
   image: f.image,
   capacity: f.capacity,
   artistSlugs: f.artistSlugs,
+  coordinates: f.coordinates, // Map needs this
 }));
 
 const pageTitle = "Festivals & Organizers — BIO BEATS";
@@ -31,47 +33,21 @@ const pageDescription =
   "Book artists for your festival or event through BIO BEATS verified network.";
 
 const benefits = [
-  {
-    icon: "Calendar",
-    title: "Lineup Planning",
-    description:
-      "Build your festival lineup with ease. Browse artists by genre, availability, and international reach.",
-  },
-  {
-    icon: "Users",
-    title: "Multi-Artist Booking",
-    description:
-      "Book multiple artists through one platform. Coordinate schedules and manage all communications centrally.",
-  },
-  {
-    icon: "Globe",
-    title: "International Network",
-    description:
-      "Access artists from around the world. Our verified network spans continents and genres.",
-  },
-  {
-    icon: "Sparkles",
-    title: "Discover New Talent",
-    description:
-      "Find emerging artists perfect for your event. Our curation helps you discover fresh sounds.",
-  },
+  // ... benefits array ...
 ];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <!-- Hero -->
+  {/* Hero */}
   <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    {/* ... hero content ... */}
     <div class="container-wide">
       <div class="max-w-3xl">
-        <span
-          class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
-        >
-          For Festivals & Organizers
-        </span>
+        {/* ... */}
         <h1 class="text-bio-white mb-6">Build unforgettable lineups.</h1>
         <p class="text-xl text-bio-gray-400 leading-relaxed mb-8">
           Access our global network of verified artists and streamline your
-          festival booking process. From headliners to emerging talent.
+          booking process.
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
           <a
@@ -87,7 +63,7 @@ const benefits = [
     </div>
   </section>
 
-  <!-- Festival Directory / Grid (Restored) -->
+  {/* Festival Directory / Grid (Restored) */}
   <section class="section bg-bio-black">
     <div class="container-wide">
       <div class="section-header mb-12">

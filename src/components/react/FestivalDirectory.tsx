@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Search, Filter, MapPin, Calendar, Users, ChevronDown, X, ArrowRight } from 'lucide-react';
 
+
 // Simplified festival type for display purposes
 interface FestivalData {
     id: string;
@@ -13,6 +14,7 @@ interface FestivalData {
     image: string;
     capacity: string;
     artistSlugs?: string[];
+    coordinates: { lat: number; lng: number };
 }
 
 interface Props {
@@ -23,6 +25,7 @@ interface Props {
 const ITEMS_PER_PAGE = 6;
 
 const translations = {
+    // ... translations (unchanged)
     en: {
         search: 'Search festivals...',
         filters: 'Filters',
@@ -69,30 +72,44 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
     const [showFilters, setShowFilters] = useState(false);
     const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
-    // Get unique countries and types
-    const countries = useMemo(() => {
-        const set = new Set<string>();
-        safeFestivals.forEach(f => f.country && set.add(f.country));
-        return Array.from(set).sort();
-    }, [safeFestivals]);
+    // Helper to filter items (reusable for facets)
+    const filterItems = (items: any[], criteria: { query?: string, country?: string, type?: string }) => {
+        return items.filter(item => {
+            const matchesSearch = !criteria.query ||
+                item.name?.toLowerCase().includes(criteria.query.toLowerCase()) ||
+                item.location?.toLowerCase().includes(criteria.query.toLowerCase()) ||
+                item.country?.toLowerCase().includes(criteria.query.toLowerCase());
 
-    const types = useMemo(() => {
-        const set = new Set<string>();
-        safeFestivals.forEach(f => f.type && set.add(f.type));
-        return Array.from(set).sort();
-    }, [safeFestivals]);
-
-    // Filter festivals
-    const filteredFestivals = useMemo(() => {
-        return safeFestivals.filter(festival => {
-            const matchesSearch = festival.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                festival.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                festival.country?.toLowerCase().includes(searchQuery.toLowerCase());
-
-            const matchesCountry = selectedCountry === 'all' || festival.country === selectedCountry;
-            const matchesType = selectedType === 'all' || festival.type === selectedType;
+            const matchesCountry = !criteria.country || criteria.country === 'all' || item.country === criteria.country;
+            const matchesType = !criteria.type || criteria.type === 'all' || item.type === criteria.type;
 
             return matchesSearch && matchesCountry && matchesType;
+        });
+    };
+
+    // Derived Facets (Dynamic Options)
+    const availableCountries = useMemo(() => {
+        const set = new Set<string>();
+        // Filter by everything EXCEPT Country to see which countries remain available
+        const relevantFestivals = filterItems(safeFestivals, { query: searchQuery, type: selectedType });
+        relevantFestivals.forEach(f => f.country && set.add(f.country));
+        return Array.from(set).sort();
+    }, [safeFestivals, searchQuery, selectedType]);
+
+    const availableTypes = useMemo(() => {
+        const set = new Set<string>();
+        // Filter by everything EXCEPT Type to see which types remain available
+        const relevantFestivals = filterItems(safeFestivals, { query: searchQuery, country: selectedCountry });
+        relevantFestivals.forEach(f => f.type && set.add(f.type));
+        return Array.from(set).sort();
+    }, [safeFestivals, searchQuery, selectedCountry]);
+
+    // Final Filtered List (respecting ALL filters)
+    const filteredFestivals = useMemo(() => {
+        return filterItems(safeFestivals, {
+            query: searchQuery,
+            country: selectedCountry,
+            type: selectedType
         });
     }, [safeFestivals, searchQuery, selectedCountry, selectedType]);
 
@@ -170,7 +187,7 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                                     className="w-full appearance-none px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none transition-colors"
                                 >
                                     <option value="all">{t.allCountries}</option>
-                                    {countries.map(country => (
+                                    {availableCountries.map(country => (
                                         <option key={country} value={country}>{country}</option>
                                     ))}
                                 </select>
@@ -190,7 +207,7 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                                     className="w-full appearance-none px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none transition-colors"
                                 >
                                     <option value="all">{t.allTypes}</option>
-                                    {types.map(type => (
+                                    {availableTypes.map(type => (
                                         <option key={type} value={type}>{type}</option>
                                     ))}
                                 </select>
@@ -212,6 +229,8 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                     )}
                 </div>
             )}
+
+
 
             {/* Results Count */}
             <p className="text-[#737373] text-sm mb-6">

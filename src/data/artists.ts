@@ -34,7 +34,7 @@ export const artists: Artist[] = [
         image: '/artists/rad-lez.png',
         socials: {
             instagram: 'https://instagram.com/rad.lez',
-            soundcloud: 'https://soundcloud.com/rad-lez',
+            soundcloud: 'https://soundcloud.com/latenightjockelsession',
             spotify: 'https://spotify.com/artist/rad-lez',
         },
         isVerified: true,

@@ -58,7 +58,9 @@ const directoryTranslations = {
         noLabels: 'No labels found matching your criteria.',
         loadMore: 'Load More',
         artistCount: 'artists',
-        since: 'Since'
+        since: 'Since',
+        country: 'Country',
+        allCountries: 'All Countries'
     },
     de: {
         artists: 'Künstler',
@@ -81,7 +83,9 @@ const directoryTranslations = {
         noLabels: 'Keine Labels gefunden.',
         loadMore: 'Mehr laden',
         artistCount: 'Künstler',
-        since: 'Seit'
+        since: 'Seit',
+        country: 'Land',
+        allCountries: 'Alle Länder'
     }
 };
 
@@ -95,44 +99,92 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState<string>('all');
     const [selectedGenre, setSelectedGenre] = useState<string>('all');
+    const [selectedCountry, setSelectedCountry] = useState<string>('all');
     const [showFilters, setShowFilters] = useState(false);
     const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
     const [activeTab, setActiveTab] = useState<'artists' | 'labels'>('artists');
 
-    // Get all unique genres
-    const allGenres = useMemo(() => {
+    // Helper to extract country
+    const extractCountry = (loc: string) => {
+        if (!loc) return null;
+        const parts = loc.split(',');
+        return parts.length > 1 ? parts[parts.length - 1].trim() : loc.trim();
+    };
+
+    // Helper to filter items (reusable for facets)
+    const filterItems = (items: any[], criteria: { query?: string, type?: string, genre?: string, country?: string }) => {
+        return items.filter(item => {
+            const matchesSearch = !criteria.query ||
+                item.name?.toLowerCase().includes(criteria.query.toLowerCase()) ||
+                (item.location && item.location.toLowerCase().includes(criteria.query.toLowerCase())) ||
+                item.genres?.some((g: string) => g.toLowerCase().includes(criteria.query!.toLowerCase()));
+
+            const matchesType = !criteria.type || criteria.type === 'all' || item.type === criteria.type;
+            const matchesGenre = !criteria.genre || criteria.genre === 'all' || item.genres?.includes(criteria.genre);
+
+            let matchesCountry = true;
+            if (criteria.country && criteria.country !== 'all') {
+                matchesCountry = item.location && item.location.includes(criteria.country);
+            }
+
+            return matchesSearch && matchesType && matchesGenre && matchesCountry;
+        });
+    };
+
+    // Derived Facets (Dynamic Options) - these depend on OTHER filters
+    const availableGenres = useMemo(() => {
         const genres = new Set<string>();
-        safeArtists.forEach(a => a.genres?.forEach(g => genres.add(g)));
-        safeLabels.forEach(l => l.genres?.forEach(g => genres.add(g)));
+        // Filter by everything EXCEPT Genre
+        // We use the ACTIVE filters for Query, Type, Country to limit the Available Genres
+        const artistsForGenres = filterItems(safeArtists, { query: searchQuery, type: selectedType, country: selectedCountry });
+        const labelsForGenres = filterItems(safeLabels, { query: searchQuery, country: selectedCountry }); // Labels don't have type
+
+        if (activeTab === 'artists') {
+            artistsForGenres.forEach(a => a.genres?.forEach((g: string) => genres.add(g)));
+        } else {
+            labelsForGenres.forEach(l => l.genres?.forEach((g: string) => genres.add(g)));
+        }
         return Array.from(genres).sort();
-    }, [safeArtists, safeLabels]);
+    }, [safeArtists, safeLabels, searchQuery, selectedType, selectedCountry, activeTab]);
 
-    // Filter artists
+    const availableCountries = useMemo(() => {
+        const countries = new Set<string>();
+        // Filter by everything EXCEPT Country
+        const artistsForCountries = filterItems(safeArtists, { query: searchQuery, type: selectedType, genre: selectedGenre });
+        const labelsForCountries = filterItems(safeLabels, { query: searchQuery, genre: selectedGenre });
+
+        if (activeTab === 'artists') {
+            artistsForCountries.forEach(a => {
+                const c = extractCountry(a.location);
+                if (c) countries.add(c);
+            });
+        } else {
+            labelsForCountries.forEach(l => {
+                const c = extractCountry(l.location);
+                if (c) countries.add(c);
+            });
+        }
+        return Array.from(countries).sort();
+    }, [safeArtists, safeLabels, searchQuery, selectedType, selectedGenre, activeTab]);
+
+
+    // Final Filtered Results (respecting ALL filters)
     const filteredArtists = useMemo(() => {
-        return safeArtists.filter(artist => {
-            const matchesSearch = artist.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                artist.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                artist.genres?.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
-
-            const matchesType = selectedType === 'all' || artist.type === selectedType;
-            const matchesGenre = selectedGenre === 'all' || artist.genres?.includes(selectedGenre);
-
-            return matchesSearch && matchesType && matchesGenre;
+        return filterItems(safeArtists, {
+            query: searchQuery,
+            type: selectedType,
+            genre: selectedGenre,
+            country: selectedCountry
         });
-    }, [safeArtists, searchQuery, selectedType, selectedGenre]);
+    }, [safeArtists, searchQuery, selectedType, selectedGenre, selectedCountry]);
 
-    // Filter labels
     const filteredLabels = useMemo(() => {
-        return safeLabels.filter(label => {
-            const matchesSearch = label.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                label.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                label.genres?.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
-
-            const matchesGenre = selectedGenre === 'all' || label.genres?.includes(selectedGenre);
-
-            return matchesSearch && matchesGenre;
+        return filterItems(safeLabels, {
+            query: searchQuery,
+            genre: selectedGenre,
+            country: selectedCountry
         });
-    }, [safeLabels, searchQuery, selectedGenre]);
+    }, [safeLabels, searchQuery, selectedGenre, selectedCountry]);
 
     const visibleArtists = filteredArtists.slice(0, visibleCount);
     const visibleLabels = filteredLabels.slice(0, visibleCount);
@@ -147,39 +199,40 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
         setSearchQuery('');
         setSelectedType('all');
         setSelectedGenre('all');
+        setSelectedCountry('all');
         setVisibleCount(ITEMS_PER_PAGE);
     };
 
-    const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedGenre !== 'all';
+    const hasActiveFilters = searchQuery || selectedType !== 'all' || selectedGenre !== 'all' || selectedCountry !== 'all';
 
     return (
         <div>
-            {/* Tabs */}
-            <div className="flex gap-4 mb-8">
-                <button
-                    onClick={() => { setActiveTab('artists'); setVisibleCount(ITEMS_PER_PAGE); }}
-                    className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'artists'
-                        ? 'bg-[#ff0700] text-white'
-                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
-                        }`}
-                >
-                    {t.artists} ({filteredArtists.length})
-                </button>
-                <button
-                    onClick={() => { setActiveTab('labels'); setVisibleCount(ITEMS_PER_PAGE); }}
-                    className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'labels'
-                        ? 'bg-[#ff0700] text-white'
-                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
-                        }`}
-                >
-                    {t.labels} ({filteredLabels.length})
-                </button>
-            </div>
+            {/* Top Bar: Tabs + Search + Filter */}
+            <div className="flex flex-col lg:flex-row gap-4 mb-8">
+                {/* Tabs */}
+                <div className="flex gap-4 shrink-0">
+                    <button
+                        onClick={() => { setActiveTab('artists'); setVisibleCount(ITEMS_PER_PAGE); }}
+                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'artists'
+                            ? 'bg-[#ff0700] text-white'
+                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                            }`}
+                    >
+                        {t.artists} ({filteredArtists.length})
+                    </button>
+                    <button
+                        onClick={() => { setActiveTab('labels'); setVisibleCount(ITEMS_PER_PAGE); }}
+                        className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'labels'
+                            ? 'bg-[#ff0700] text-white'
+                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                            }`}
+                    >
+                        {t.labels} ({filteredLabels.length})
+                    </button>
+                </div>
 
-            {/* Search and Filter Bar */}
-            <div className="flex flex-row gap-4 mb-8">
                 {/* Search */}
-                <div className="flex-1 relative">
+                <div className="flex-1 relative min-w-[200px]">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#737373]" />
                     <input
                         type="text"
@@ -201,7 +254,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                 {/* Filter Toggle */}
                 <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${showFilters || hasActiveFilters
+                    className={`shrink-0 flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${showFilters || hasActiveFilters
                         ? 'bg-[#ff0700] text-white'
                         : 'bg-[#262626] text-[#a3a3a3] hover:text-white border border-[#404040]'
                         }`}
@@ -242,8 +295,23 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                                 className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
                             >
                                 <option value="all">{t.allGenres}</option>
-                                {allGenres.map(genre => (
+                                {availableGenres.map(genre => (
                                     <option key={genre} value={genre}>{genre}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Country Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.country || 'Land'}</label>
+                            <select
+                                value={selectedCountry}
+                                onChange={(e) => { setSelectedCountry(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
+                                className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
+                            >
+                                <option value="all">{t.allCountries || 'Alle Länder'}</option>
+                                {availableCountries.map(country => (
+                                    <option key={country} value={country}>{country}</option>
                                 ))}
                             </select>
                         </div>
