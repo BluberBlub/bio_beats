@@ -148,7 +148,8 @@ export default function ContactForm({
             }
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('Error submitting form');
+            // In a real app, set an error state here
+            alert('Error submitting form. Please check your internet connection.');
         } finally {
             setLoading(false);
         }

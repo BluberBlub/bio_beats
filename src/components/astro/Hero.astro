@@ -159,6 +159,7 @@ const { title, subtitle, primaryCta, secondaryCta } = Astro.props;
 
   .animate-beat {
     animation: beat 3s ease-in-out infinite;
+    will-change: transform, opacity;
   }
 
   /* Equalizer Animations */
@@ -232,6 +233,15 @@ const { title, subtitle, primaryCta, secondaryCta } = Astro.props;
   }
   .animate-eq-5 {
     animation: eq5 0.9s ease-in-out infinite alternate;
+  }
+
+  [class*="animate-eq"] {
+    will-change: height, opacity;
+  }
+
+  /* Optimize equalizer bars */
+  [class*="animate-eq"] {
+    will-change: height, opacity;
   }
 
   .mask-linear-fade {

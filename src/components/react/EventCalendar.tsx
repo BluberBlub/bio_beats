@@ -182,15 +182,17 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                         <div className="flex bg-bio-gray-800 rounded-lg border border-bio-gray-700 p-1">
                             <button
                                 onClick={() => setViewType('grid')}
-                                className={`p-1.5 rounded ${viewType === 'grid' ? 'bg-bio-gray-700 text-bio-white' : 'text-bio-gray-400 hover:text-bio-white'}`}
+                                className={`p-1.5 rounded ${viewType === 'grid' ? 'bg-bio-gray-700 text-bio-white shadow-sm' : 'text-bio-gray-400 hover:text-bio-white'}`}
                                 title="Grid View"
+                                aria-label="Grid View"
                             >
                                 <Grid className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => setViewType('list')}
-                                className={`p-1.5 rounded ${viewType === 'list' ? 'bg-bio-gray-700 text-bio-white' : 'text-bio-gray-400 hover:text-bio-white'}`}
+                                className={`p-1.5 rounded ${viewType === 'list' ? 'bg-bio-gray-700 text-bio-white shadow-sm' : 'text-bio-gray-400 hover:text-bio-white'}`}
                                 title="List View"
+                                aria-label="List View"
                             >
                                 <List className="w-4 h-4" />
                             </button>
@@ -224,8 +226,15 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                             <div
                                 key={index}
                                 className={`min-h-[80px] sm:min-h-[120px] p-1 sm:p-2 border-t border-r border-bio-gray-700 ${!day.isCurrentMonth ? 'bg-bio-black' : ''
-                                    } ${day.events.length > 0 ? 'cursor-pointer hover:bg-bio-gray-800' : ''}`}
+                                    } ${day.events.length > 0 ? 'cursor-pointer hover:bg-bio-gray-800 focus:bg-bio-gray-800' : ''}`}
                                 onClick={() => day.events.length > 0 && setSelectedEvent(day.events[0])}
+                                tabIndex={day.events.length > 0 ? 0 : -1}
+                                onKeyDown={(e) => {
+                                    if (day.events.length > 0 && (e.key === 'Enter' || e.key === ' ')) {
+                                        e.preventDefault();
+                                        setSelectedEvent(day.events[0]);
+                                    }
+                                }}
                             >
                                 <span className={`text-sm ${day.isCurrentMonth ? 'text-bio-white' : 'text-bio-gray-600'}`}>{day.date.getDate()}</span>
                                 <div className="mt-1 space-y-1">
@@ -262,7 +271,17 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                     </div>
                                     {/* Event Info */}
                                     <div>
-                                        <h3 className="text-lg font-bold text-bio-white hover:text-bio-accent cursor-pointer" onClick={() => setSelectedEvent(event)}>
+                                        <h3
+                                            className="text-lg font-bold text-bio-white hover:text-bio-accent cursor-pointer focus:text-bio-accent outline-none"
+                                            onClick={() => setSelectedEvent(event)}
+                                            tabIndex={0}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    e.preventDefault();
+                                                    setSelectedEvent(event);
+                                                }
+                                            }}
+                                        >
                                             {event.name}
                                         </h3>
                                         <div className="flex items-center gap-2 text-sm text-bio-gray-400 mt-1">

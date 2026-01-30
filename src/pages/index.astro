@@ -108,7 +108,11 @@ const features = [
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredArtists.map((artist) => <ArtistCard artist={artist} />)}
+        {
+          featuredArtists.map((artist) => (
+            <ArtistCard artist={artist} lang="en" />
+          ))
+        }
       </div>
 
       <div class="mt-8 text-center md:hidden">

@@ -4,9 +4,10 @@ import { BadgeCheck, MapPin } from "lucide-react";
 
 interface Props {
   artist: Artist;
+  lang?: string;
 }
 
-const { artist } = Astro.props;
+const { artist, lang = "de" } = Astro.props;
 
 const availabilityColors = {
   available: "bg-green-500/20 text-green-400",
