@@ -157,13 +157,13 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
 
     // Styling
     const getEventColor = (event: CalendarEvent) => {
-        if (event.type === 'gig') return 'bg-bio-accent text-white'; // Artist Gigs = Red
+        if (event.type === 'gig') return 'bg-bio-accent text-white'; // Keep white text on accent background
 
-        // Festivals (Blue/Purple/Green)
-        if (event.subType?.includes('Techno')) return 'bg-purple-600';
-        if (event.subType?.includes('Electronic')) return 'bg-blue-600';
-        if (event.subType?.includes('Multi')) return 'bg-emerald-600';
-        return 'bg-bio-gray-600';
+        // Festivals
+        if (event.subType?.includes('Techno')) return 'bg-purple-600 text-white';
+        if (event.subType?.includes('Electronic')) return 'bg-blue-600 text-white';
+        if (event.subType?.includes('Multi')) return 'bg-emerald-600 text-white';
+        return 'bg-bio-gray-600 text-white';
     };
 
     return (
@@ -171,25 +171,25 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <h2 className="text-2xl font-bold text-white">
+                    <h2 className="text-2xl font-bold text-bio-white">
                         {months[currentDate.getMonth()]} {currentDate.getFullYear()}
                     </h2>
                     <div className="flex gap-2">
-                        <button onClick={goToToday} className="px-3 py-1 text-sm bg-bio-gray-800 text-gray-300 rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
+                        <button onClick={goToToday} className="px-3 py-1 text-sm bg-bio-gray-800 text-bio-gray-300 rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
                             {lang === 'de' ? 'Start' : 'Start'}
                         </button>
                         {/* View Toggle */}
                         <div className="flex bg-bio-gray-800 rounded-lg border border-bio-gray-700 p-1">
                             <button
                                 onClick={() => setViewType('grid')}
-                                className={`p-1.5 rounded ${viewType === 'grid' ? 'bg-bio-gray-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                                className={`p-1.5 rounded ${viewType === 'grid' ? 'bg-bio-gray-700 text-bio-white' : 'text-bio-gray-400 hover:text-bio-white'}`}
                                 title="Grid View"
                             >
                                 <Grid className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => setViewType('list')}
-                                className={`p-1.5 rounded ${viewType === 'list' ? 'bg-bio-gray-700 text-white' : 'text-gray-400 hover:text-white'}`}
+                                className={`p-1.5 rounded ${viewType === 'list' ? 'bg-bio-gray-700 text-bio-white' : 'text-bio-gray-400 hover:text-bio-white'}`}
                                 title="List View"
                             >
                                 <List className="w-4 h-4" />
@@ -198,10 +198,10 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={() => navigateMonth(-1)} className="p-2 bg-bio-gray-800 text-white rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
+                    <button onClick={() => navigateMonth(-1)} className="p-2 bg-bio-gray-800 text-bio-white rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
                         <ChevronLeft className="w-5 h-5" />
                     </button>
-                    <button onClick={() => navigateMonth(1)} className="p-2 bg-bio-gray-800 text-white rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
+                    <button onClick={() => navigateMonth(1)} className="p-2 bg-bio-gray-800 text-bio-white rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
                         <ChevronRight className="w-5 h-5" />
                     </button>
                 </div>
@@ -213,7 +213,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                     {/* Day Headers */}
                     <div className="grid grid-cols-7 bg-bio-gray-800">
                         {daysOfWeek.map(day => (
-                            <div key={day} className="p-3 text-center text-sm font-medium text-gray-400">
+                            <div key={day} className="p-3 text-center text-sm font-medium text-bio-gray-400">
                                 {day}
                             </div>
                         ))}
@@ -227,7 +227,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                     } ${day.events.length > 0 ? 'cursor-pointer hover:bg-bio-gray-800' : ''}`}
                                 onClick={() => day.events.length > 0 && setSelectedEvent(day.events[0])}
                             >
-                                <span className={`text-sm ${day.isCurrentMonth ? 'text-white' : 'text-gray-600'}`}>{day.date.getDate()}</span>
+                                <span className={`text-sm ${day.isCurrentMonth ? 'text-bio-white' : 'text-bio-gray-600'}`}>{day.date.getDate()}</span>
                                 <div className="mt-1 space-y-1">
                                     {day.events.slice(0, 3).map(event => (
                                         <div
@@ -240,7 +240,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                         </div>
                                     ))}
                                     {day.events.length > 3 && (
-                                        <div className="text-[10px] sm:text-xs text-gray-500 pl-1">+{day.events.length - 3}</div>
+                                        <div className="text-[10px] sm:text-xs text-bio-gray-500 pl-1">+{day.events.length - 3}</div>
                                     )}
                                 </div>
                             </div>
@@ -257,15 +257,15 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                 <div className="flex items-center gap-4">
                                     {/* Date Box */}
                                     <div className="flex-shrink-0 w-16 text-center">
-                                        <div className="text-sm text-gray-400 uppercase font-bold">{months[event.startDate.getMonth()].substring(0, 3)}</div>
-                                        <div className="text-2xl font-bold text-white">{event.startDate.getDate()}</div>
+                                        <div className="text-sm text-bio-gray-400 uppercase font-bold">{months[event.startDate.getMonth()].substring(0, 3)}</div>
+                                        <div className="text-2xl font-bold text-bio-white">{event.startDate.getDate()}</div>
                                     </div>
                                     {/* Event Info */}
                                     <div>
-                                        <h3 className="text-lg font-bold text-white hover:text-bio-accent cursor-pointer" onClick={() => setSelectedEvent(event)}>
+                                        <h3 className="text-lg font-bold text-bio-white hover:text-bio-accent cursor-pointer" onClick={() => setSelectedEvent(event)}>
                                             {event.name}
                                         </h3>
-                                        <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
+                                        <div className="flex items-center gap-2 text-sm text-bio-gray-400 mt-1">
                                             <span className={`px-2 py-0.5 rounded text-[10px] text-white uppercase tracking-wider ${getEventColor(event)}`}>
                                                 {event.type === 'festival' ? 'Festival' : 'Gig'}
                                             </span>
@@ -274,19 +274,19 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                     </div>
                                 </div>
                                 {/* Action */}
-                                <button onClick={() => setSelectedEvent(event)} className="px-3 py-1.5 text-sm bg-bio-gray-800 hover:bg-bio-gray-700 text-white rounded-lg border border-bio-gray-700">
+                                <button onClick={() => setSelectedEvent(event)} className="px-3 py-1.5 text-sm bg-bio-gray-800 hover:bg-bio-gray-700 text-bio-white rounded-lg border border-bio-gray-700">
                                     Details
                                 </button>
                             </div>
                         ))}
                     {events.filter(e => e.startDate.getMonth() === currentDate.getMonth()).length === 0 && (
-                        <div className="p-8 text-center text-gray-400">No events found for this month.</div>
+                        <div className="p-8 text-center text-bio-gray-400">No events found for this month.</div>
                     )}
                 </div>
             )}
 
             {/* Legend */}
-            <div className="flex flex-wrap gap-4 text-sm text-gray-400 border-t border-bio-gray-700 pt-4">
+            <div className="flex flex-wrap gap-4 text-sm text-bio-gray-400 border-t border-bio-gray-700 pt-4">
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-bio-accent"></div>
                     <span>Artist Gig</span>
@@ -309,30 +309,30 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
             {selectedEvent && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedEvent(null)}>
                     <div className="bg-bio-gray-900 border border-bio-gray-700 rounded-xl p-6 shadow-2xl w-full max-w-md animate-fade-in relative" onClick={e => e.stopPropagation()}>
-                        <button className="absolute top-4 right-4 text-gray-400 hover:text-white" onClick={() => setSelectedEvent(null)}>✕</button>
+                        <button className="absolute top-4 right-4 text-bio-gray-400 hover:text-bio-white" onClick={() => setSelectedEvent(null)}>✕</button>
 
                         <div className={`inline-block px-2 py-1 rounded text-xs text-white mb-4 ${getEventColor(selectedEvent)}`}>
                             {selectedEvent.type === 'festival' ? 'Festival' : 'Artist Booking'}
                         </div>
 
-                        <h3 className="text-2xl font-bold text-white mb-2">{selectedEvent.name}</h3>
+                        <h3 className="text-2xl font-bold text-bio-white mb-2">{selectedEvent.name}</h3>
 
                         <div className="space-y-4 mb-6">
-                            <div className="flex items-center gap-3 text-gray-300">
+                            <div className="flex items-center gap-3 text-bio-gray-300">
                                 <CalendarIcon className="w-5 h-5 text-bio-accent" />
                                 <div>
                                     <div className="font-medium">
                                         {selectedEvent.startDate.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                     </div>
                                     {selectedEvent.endDate && (
-                                        <div className="text-sm text-gray-500">
+                                        <div className="text-sm text-bio-gray-500">
                                             to {selectedEvent.endDate.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-US', { month: 'long', day: 'numeric' })}
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 text-gray-300">
+                            <div className="flex items-center gap-3 text-bio-gray-300">
                                 <MapPin className="w-5 h-5 text-bio-accent" />
                                 <span>{selectedEvent.location}, {selectedEvent.city ? `${selectedEvent.city}, ` : ''}{selectedEvent.country}</span>
                             </div>
@@ -343,7 +343,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                 View Festival Details
                             </a>
                         ) : (
-                            <div className="p-3 bg-bio-gray-900 rounded-lg text-sm text-gray-400 text-center border border-bio-gray-800">
+                            <div className="p-3 bg-bio-gray-900 rounded-lg text-sm text-bio-gray-400 text-center border border-bio-gray-800">
                                 Contact agent for guestlist or booking inquiries.
                             </div>
                         )}

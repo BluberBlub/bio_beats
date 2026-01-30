@@ -274,12 +274,12 @@ transition: transform 0.5s ease;
 
 ## Assets Checklist
 
-- [ ] Logo SVG (red)
-- [ ] OG Image (1200x630)
-- [ ] Favicon SVG
-- [ ] Artist photos (square, 1:1)
-- [ ] Festival photos (16:9)
-- [ ] Hero background (if needed)
+- [x] Logo SVG (red)
+- [x] OG Image (1200x630)
+- [x] Favicon SVG
+- [x] Artist photos (square, 1:1)
+- [x] Festival photos (16:9)
+- [x] Hero background (if needed)
 
 ---
 

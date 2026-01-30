@@ -35,7 +35,7 @@ export default function MobileNav({ navigation, currentPath = '' }: MobileNavPro
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed top-0 left-0 w-full h-[100dvh] bg-[#0a0a0a]/95 backdrop-blur-md z-[9998] lg:hidden"
+                        className="fixed top-0 left-0 w-full h-[100dvh] bg-bio-black/95 backdrop-blur-md z-[9998] lg:hidden"
                         onClick={() => setIsOpen(false)}
                     >
                         {/* Menu Panel */}
@@ -74,8 +74,8 @@ export default function MobileNav({ navigation, currentPath = '' }: MobileNavPro
                                                     href={item.href}
                                                     onClick={() => setIsOpen(false)}
                                                     className={`block py-3 px-4 rounded-lg transition-colors ${(item.href === '/' ? currentPath === item.href : currentPath.startsWith(item.href))
-                                                            ? 'text-bio-accent bg-bio-gray-800/80 font-medium'
-                                                            : 'text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50'
+                                                        ? 'text-bio-accent bg-bio-gray-800/80 font-medium'
+                                                        : 'text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50'
                                                         }`}
                                                 >
                                                     {item.label}
@@ -102,8 +102,8 @@ export default function MobileNav({ navigation, currentPath = '' }: MobileNavPro
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="text-white font-medium">{$user.full_name}</p>
-                                                    <p className="text-sm text-gray-400 truncate max-w-[180px]">{$user.email}</p>
+                                                    <p className="text-bio-white font-medium">{$user.full_name}</p>
+                                                    <p className="text-sm text-bio-gray-400 truncate max-w-[180px]">{$user.email}</p>
                                                 </div>
                                             </div>
 
@@ -112,7 +112,7 @@ export default function MobileNav({ navigation, currentPath = '' }: MobileNavPro
                                                 <a
                                                     href="/admin/dashboard"
                                                     onClick={() => setIsOpen(false)}
-                                                    className="flex items-center gap-2 w-full px-4 py-3 bg-bio-gray-800 text-white rounded-lg hover:bg-bio-gray-700 transition-colors"
+                                                    className="flex items-center gap-2 w-full px-4 py-3 bg-bio-gray-800 text-bio-white rounded-lg hover:bg-bio-gray-700 transition-colors"
                                                 >
                                                     <LayoutDashboard className="w-5 h-5" />
                                                     Admin Dashboard

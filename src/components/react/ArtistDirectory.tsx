@@ -214,8 +214,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                     <button
                         onClick={() => { setActiveTab('artists'); setVisibleCount(ITEMS_PER_PAGE); }}
                         className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'artists'
-                            ? 'bg-[#ff0700] text-white'
-                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                            ? 'bg-bio-accent text-white'
+                            : 'bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white'
                             }`}
                     >
                         {t.artists} ({filteredArtists.length})
@@ -223,8 +223,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                     <button
                         onClick={() => { setActiveTab('labels'); setVisibleCount(ITEMS_PER_PAGE); }}
                         className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'labels'
-                            ? 'bg-[#ff0700] text-white'
-                            : 'bg-[#262626] text-[#a3a3a3] hover:text-white'
+                            ? 'bg-bio-accent text-white'
+                            : 'bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white'
                             }`}
                     >
                         {t.labels} ({filteredLabels.length})
@@ -233,18 +233,18 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
 
                 {/* Search */}
                 <div className="flex-1 relative min-w-[200px]">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#737373]" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bio-gray-500" />
                     <input
                         type="text"
                         placeholder={activeTab === 'artists' ? t.searchArtists : t.searchLabels}
                         value={searchQuery}
                         onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                        className="w-full pl-12 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-[#737373] focus:border-[#ff0700] outline-none transition-colors"
+                        className="w-full pl-12 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                     />
                     {searchQuery && (
                         <button
                             onClick={() => setSearchQuery('')}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#737373] hover:text-white"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-bio-gray-500 hover:text-bio-white"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -255,8 +255,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                 <button
                     onClick={() => setShowFilters(!showFilters)}
                     className={`shrink-0 flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors ${showFilters || hasActiveFilters
-                        ? 'bg-[#ff0700] text-white'
-                        : 'bg-[#262626] text-[#a3a3a3] hover:text-white border border-[#404040]'
+                        ? 'bg-bio-accent text-white'
+                        : 'bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white border border-bio-gray-700'
                         }`}
                 >
                     <Filter className="w-5 h-5" />
@@ -265,18 +265,18 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                 </button>
             </div>
 
-            {/* Expanded Filters */}
+            {/* Expandable Filters */}
             {showFilters && (
-                <div className="bg-[#171717] border border-[#404040] rounded-lg p-6 mb-8">
+                <div className="bg-bio-gray-900 border border-bio-gray-800 rounded-lg p-6 mb-8">
                     <div className="flex flex-wrap gap-6">
                         {/* Type Filter (Artists only) */}
                         {activeTab === 'artists' && (
                             <div>
-                                <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.type}</label>
+                                <label className="block text-sm font-medium text-bio-gray-400 mb-2">{t.type}</label>
                                 <select
                                     value={selectedType}
                                     onChange={(e) => { setSelectedType(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                                    className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
+                                    className="px-4 py-2 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                                 >
                                     <option value="all">{t.allTypes}</option>
                                     <option value="dj">{t.dj}</option>
@@ -288,11 +288,11 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
 
                         {/* Genre Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.genre}</label>
+                            <label className="block text-sm font-medium text-bio-gray-400 mb-2">{t.genre}</label>
                             <select
                                 value={selectedGenre}
                                 onChange={(e) => { setSelectedGenre(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                                className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
+                                className="px-4 py-2 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                             >
                                 <option value="all">{t.allGenres}</option>
                                 {availableGenres.map(genre => (
@@ -303,11 +303,11 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
 
                         {/* Country Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-[#a3a3a3] mb-2">{t.country || 'Land'}</label>
+                            <label className="block text-sm font-medium text-bio-gray-400 mb-2">{t.country || 'Land'}</label>
                             <select
                                 value={selectedCountry}
                                 onChange={(e) => { setSelectedCountry(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
-                                className="px-4 py-2 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
+                                className="px-4 py-2 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                             >
                                 <option value="all">{t.allCountries || 'Alle Länder'}</option>
                                 {availableCountries.map(country => (
@@ -344,42 +344,44 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                             <a
                                 key={artist.id}
                                 href={lang === 'de' ? `/de/artists/${artist.slug}` : `/artists/${artist.slug}`}
-                                className="group bg-[#171717] border border-[#262626] rounded-xl overflow-hidden hover:border-[#404040] transition-all"
+                                className="group bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden hover:border-bio-gray-700 transition-all hover:shadow-lg"
                             >
-                                <div className="aspect-square relative overflow-hidden bg-[#262626]">
+                                <div className="aspect-square relative overflow-hidden bg-bio-gray-800">
+                                    <div className="absolute inset-0 bg-bio-gray-800 animate-pulse" />
                                     <img
                                         src={artist.image}
                                         alt={artist.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10 opacity-0 transition-opacity duration-300"
                                         loading="lazy"
+                                        onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
                                     {artist.isVerified && (
-                                        <div className="absolute top-3 right-3 px-2 py-1 bg-[#ff0700]/90 rounded text-white text-xs font-medium">
+                                        <div className="absolute top-3 right-3 px-2 py-1 bg-bio-accent/90 rounded text-white text-xs font-medium z-20">
                                             {t.verified}
                                         </div>
                                     )}
-                                    <div className="absolute bottom-3 left-3">
-                                        <span className="px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-white text-sm capitalize">
+                                    <div className="absolute bottom-3 left-3 z-20">
+                                        <span className="px-3 py-1 bg-bio-black/70 backdrop-blur-sm rounded-full text-white text-sm capitalize border border-white/10">
                                             {artist.type === 'dj' ? 'DJ' : artist.type}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="p-5">
-                                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#ff0700] transition-colors">
+                                    <h3 className="text-lg font-semibold text-bio-white mb-2 group-hover:text-bio-accent transition-colors">
                                         {artist.name}
                                     </h3>
-                                    <div className="flex items-center gap-2 text-sm text-[#a3a3a3] mb-3">
+                                    <div className="flex items-center gap-2 text-sm text-bio-gray-400 mb-3">
                                         <MapPin className="w-4 h-4" />
                                         {artist.location}
                                     </div>
                                     <div className="flex flex-wrap gap-2 mb-3">
-                                        {artist.genres.slice(0, 2).map((genre) => (
-                                            <span key={genre} className="px-2 py-1 bg-[#262626] rounded-full text-xs text-[#a3a3a3]">
+                                        {artist.genres.slice(0, 2).map((genre: string) => (
+                                            <span key={genre} className="px-2 py-1 bg-bio-gray-800 rounded-full text-xs text-bio-gray-400">
                                                 {genre}
                                             </span>
                                         ))}
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-[#737373]">
+                                    <div className="flex items-center gap-2 text-sm text-bio-gray-500">
                                         <Music className="w-4 h-4" />
                                         {artist.bpmRange.min}–{artist.bpmRange.max} BPM
                                     </div>
@@ -391,8 +393,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                     {/* Load More / No Results */}
                     {visibleArtists.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-[#a3a3a3] mb-4">{t.noArtists}</p>
-                            <button onClick={clearFilters} className="text-[#ff0700] hover:underline">
+                            <p className="text-bio-gray-400 mb-4">{t.noArtists}</p>
+                            <button onClick={clearFilters} className="text-bio-accent hover:underline">
                                 {t.clearFilters}
                             </button>
                         </div>
@@ -400,7 +402,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                         <div className="text-center">
                             <button
                                 onClick={loadMore}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white font-medium hover:bg-[#404040] transition-colors"
+                                className="inline-flex items-center gap-2 px-8 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white font-medium hover:bg-bio-gray-700 transition-colors"
                             >
                                 {t.loadMore} {t.artists}
                                 <ChevronDown className="w-4 h-4" />
@@ -417,42 +419,44 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                         {visibleLabels.map((label) => (
                             <div
                                 key={label.id}
-                                className="group bg-[#171717] border border-[#262626] rounded-xl overflow-hidden hover:border-[#404040] transition-all"
+                                className="group bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden hover:border-bio-gray-700 transition-all hover:shadow-lg"
                             >
-                                <div className="aspect-video relative overflow-hidden bg-[#262626]">
+                                <div className="aspect-video relative overflow-hidden bg-bio-gray-800">
+                                    <div className="absolute inset-0 bg-bio-gray-800 animate-pulse" />
                                     <img
                                         src={label.image}
                                         alt={label.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10 opacity-0 transition-opacity duration-300"
                                         loading="lazy"
+                                        onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
                                     {label.isVerified && (
-                                        <div className="absolute top-3 right-3 px-2 py-1 bg-[#ff0700]/90 rounded text-white text-xs font-medium">
+                                        <div className="absolute top-3 right-3 px-2 py-1 bg-bio-accent/90 rounded text-white text-xs font-medium z-20">
                                             {t.verified}
                                         </div>
                                     )}
                                 </div>
                                 <div className="p-5">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Building2 className="w-4 h-4 text-[#ff0700]" />
-                                        <span className="text-xs text-[#737373] uppercase tracking-wider">{t.labels}</span>
+                                        <Building2 className="w-4 h-4 text-bio-accent" />
+                                        <span className="text-xs text-bio-gray-500 uppercase tracking-wider">{t.labels}</span>
                                     </div>
-                                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#ff0700] transition-colors">
+                                    <h3 className="text-lg font-semibold text-bio-white mb-2 group-hover:text-bio-accent transition-colors">
                                         {label.name}
                                     </h3>
-                                    <div className="flex items-center gap-2 text-sm text-[#a3a3a3] mb-3">
+                                    <div className="flex items-center gap-2 text-sm text-bio-gray-400 mb-3">
                                         <MapPin className="w-4 h-4" />
                                         {label.location}
                                     </div>
-                                    <p className="text-sm text-[#737373] mb-3">{label.shortBio}</p>
+                                    <p className="text-sm text-bio-gray-500 mb-3 line-clamp-2">{label.shortBio}</p>
                                     <div className="flex flex-wrap gap-2 mb-3">
-                                        {label.genres.slice(0, 2).map((genre) => (
-                                            <span key={genre} className="px-2 py-1 bg-[#262626] rounded-full text-xs text-[#a3a3a3]">
+                                        {label.genres.slice(0, 2).map((genre: string) => (
+                                            <span key={genre} className="px-2 py-1 bg-bio-gray-800 rounded-full text-xs text-bio-gray-400">
                                                 {genre}
                                             </span>
                                         ))}
                                     </div>
-                                    <div className="flex items-center justify-between text-sm text-[#737373]">
+                                    <div className="flex items-center justify-between text-sm text-bio-gray-500">
                                         <span>{label.artistCount} {t.artistCount}</span>
                                         <span>{t.since} {label.founded}</span>
                                     </div>
@@ -464,8 +468,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                     {/* Load More / No Results */}
                     {visibleLabels.length === 0 ? (
                         <div className="text-center py-12">
-                            <p className="text-[#a3a3a3] mb-4">{t.noLabels}</p>
-                            <button onClick={clearFilters} className="text-[#ff0700] hover:underline">
+                            <p className="text-bio-gray-400 mb-4">{t.noLabels}</p>
+                            <button onClick={clearFilters} className="text-bio-accent hover:underline">
                                 {t.clearFilters}
                             </button>
                         </div>
@@ -473,7 +477,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                         <div className="text-center">
                             <button
                                 onClick={loadMore}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white font-medium hover:bg-[#404040] transition-colors"
+                                className="inline-flex items-center gap-2 px-8 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white font-medium hover:bg-bio-gray-700 transition-colors"
                             >
                                 {t.loadMore} {t.labels}
                                 <ChevronDown className="w-4 h-4" />

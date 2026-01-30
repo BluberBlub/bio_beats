@@ -56,7 +56,7 @@ export default function LanguageSwitcher({ currentLang, currentPath }: LanguageS
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50 transition-colors cursor-pointer"
                 aria-label="Select language"
                 aria-expanded={isOpen}
             >
@@ -67,14 +67,14 @@ export default function LanguageSwitcher({ currentLang, currentPath }: LanguageS
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-40 py-2 bg-[#1a1a1a] border border-[#333] rounded-lg shadow-xl z-[100]">
+                <div className="absolute right-0 mt-2 w-40 py-2 bg-bio-gray-900 border border-bio-gray-800 rounded-lg shadow-xl z-[100]">
                     {languages.map((lang) => (
                         <a
                             key={lang.code}
                             href={getLocalizedPath(lang.code)}
                             className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${lang.code === currentLang
-                                ? 'text-[#ff0700] bg-[#ff0700]/10'
-                                : 'text-gray-300 hover:text-white hover:bg-white/5'
+                                ? 'text-bio-accent bg-bio-accent/10'
+                                : 'text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800'
                                 }`}
                             onClick={() => setIsOpen(false)}
                         >

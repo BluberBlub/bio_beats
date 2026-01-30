@@ -183,7 +183,7 @@ export default function ContactForm({
         <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-bio-gray-300 mb-2">
                         {strings.name}
                     </label>
                     <input
@@ -193,12 +193,12 @@ export default function ContactForm({
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                        className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                         placeholder={strings.namePlaceholder}
                     />
                 </div>
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-bio-gray-300 mb-2">
                         {strings.email}
                     </label>
                     <input
@@ -208,21 +208,21 @@ export default function ContactForm({
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                        className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                         placeholder={strings.emailPlaceholder}
                     />
                 </div>
             </div>
 
             <div>
-                <label htmlFor="reason" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="reason" className="block text-sm font-medium text-bio-gray-300 mb-2">
                     {strings.topic}
                 </label>
                 <select
                     id="reason"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white focus:border-[#ff0700] outline-none cursor-pointer"
+                    className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                 >
                     <option value="">{strings.selectTopic}</option>
                     <option value="general">{strings.topics.general}</option>
@@ -237,15 +237,15 @@ export default function ContactForm({
 
             {/* Dynamic Festival Fields */}
             {isFestivalSubmission && (
-                <div className="p-6 bg-[#1a1a1a] border border-[#333] rounded-xl space-y-6 animate-in fade-in slide-in-from-top-4">
-                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-[#ff0700]" />
+                <div className="p-6 bg-bio-gray-900 border border-bio-gray-800 rounded-xl space-y-6 animate-in fade-in slide-in-from-top-4">
+                    <h3 className="text-lg font-semibold text-bio-white flex items-center gap-2">
+                        <Calendar className="w-5 h-5 text-bio-accent" />
                         {strings.festivalDetails}
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="festivalName" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalName" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.festivalName}
                             </label>
                             <input
@@ -254,12 +254,12 @@ export default function ContactForm({
                                 name="festivalName"
                                 value={formData.festivalName}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                 placeholder="Name of the event"
                             />
                         </div>
                         <div>
-                            <label htmlFor="festivalDate" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalDate" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.date}
                             </label>
                             <input
@@ -268,74 +268,74 @@ export default function ContactForm({
                                 name="festivalDate"
                                 value={formData.festivalDate}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                 placeholder="e.g. July 24-26, 2026"
                             />
                         </div>
                         <div>
-                            <label htmlFor="festivalLocation" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalLocation" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.location}
                             </label>
                             <div className="relative">
-                                <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
+                                <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
                                 <input
                                     type="text"
                                     id="festivalLocation"
                                     name="festivalLocation"
                                     value={formData.festivalLocation}
                                     onChange={handleChange}
-                                    className="w-full pl-10 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                     placeholder="City, Country"
                                 />
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="festivalGenre" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalGenre" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.genre}
                             </label>
                             <div className="relative">
-                                <Music className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
+                                <Music className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
                                 <input
                                     type="text"
                                     id="festivalGenre"
                                     name="festivalGenre"
                                     value={formData.festivalGenre}
                                     onChange={handleChange}
-                                    className="w-full pl-10 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                     placeholder="e.g. Techno, House"
                                 />
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="festivalWebsite" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalWebsite" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.website}
                             </label>
                             <div className="relative">
-                                <Globe className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
+                                <Globe className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
                                 <input
                                     type="url"
                                     id="festivalWebsite"
                                     name="festivalWebsite"
                                     value={formData.festivalWebsite}
                                     onChange={handleChange}
-                                    className="w-full pl-10 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                     placeholder="https://"
                                 />
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="festivalCapacity" className="block text-sm font-medium text-gray-300 mb-2">
+                            <label htmlFor="festivalCapacity" className="block text-sm font-medium text-bio-gray-300 mb-2">
                                 {strings.capacity}
                             </label>
                             <div className="relative">
-                                <Users className="absolute left-3 top-3.5 w-5 h-5 text-gray-500" />
+                                <Users className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
                                 <input
                                     type="text"
                                     id="festivalCapacity"
                                     name="festivalCapacity"
                                     value={formData.festivalCapacity}
                                     onChange={handleChange}
-                                    className="w-full pl-10 pr-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors"
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
                                     placeholder="e.g. 5,000 - 10,000"
                                 />
                             </div>
@@ -345,7 +345,7 @@ export default function ContactForm({
             )}
 
             <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-bio-gray-300 mb-2">
                     {strings.message}
                 </label>
                 <textarea
@@ -355,7 +355,7 @@ export default function ContactForm({
                     required={!isFestivalSubmission} // Optional if just listing festival
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-[#262626] border border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-[#ff0700] outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors resize-none"
                     placeholder={strings.messagePlaceholder}
                 />
             </div>
