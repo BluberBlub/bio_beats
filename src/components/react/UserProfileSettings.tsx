@@ -3,10 +3,17 @@ import { User, Bell, Camera, Save, Loader2, Check, Shield, Lock, Trash2, AlertTr
 import EventCalendar from './EventCalendar';
 import { userStore, updateUser } from '../../stores/userStore';
 import { useStore } from '@nanostores/react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 type Tab = 'profile' | 'security' | 'notifications' | 'calendar' | 'appearance';
 
-export default function UserProfileSettings() {
+interface UserProfileSettingsProps {
+    lang?: 'en' | 'de';
+}
+
+export default function UserProfileSettings({ lang = 'en' }: UserProfileSettingsProps) {
+    const { t: allTranslations } = useTranslation(lang);
+    const t = allTranslations.profile;
     const $user = useStore(userStore);
     const [activeTab, setActiveTab] = useState<Tab>('profile');
     const [loading, setLoading] = useState(false);
@@ -56,6 +63,10 @@ export default function UserProfileSettings() {
             website: '',
             contactEmail: '',
             demoDropUrl: ''
+        },
+        // Guest specific
+        guestProfile: {
+            preferredGenres: [] as string[]
         }
     });
 
@@ -98,6 +109,9 @@ export default function UserProfileSettings() {
                     website: $user.industry_profile?.website || '',
                     contactEmail: $user.industry_profile?.contact_email || '',
                     demoDropUrl: $user.industry_profile?.demo_drop_url || ''
+                },
+                guestProfile: {
+                    preferredGenres: $user.guest_profile?.preferred_genres || []
                 }
             }));
         }
@@ -150,13 +164,17 @@ export default function UserProfileSettings() {
                 contact_email: formData.industryProfile.contactEmail,
                 demo_drop_url: formData.industryProfile.demoDropUrl
             };
+        } else if ($user?.role === 'guest') {
+            updates.guest_profile = {
+                preferred_genres: formData.guestProfile.preferredGenres
+            };
         }
 
         // Update global store
         updateUser(updates);
 
         setLoading(false);
-        setSuccessMessage('Einstellungen erfolgreich gespeichert.');
+        setSuccessMessage(t.settingsSaved);
         setTimeout(() => setSuccessMessage(''), 3000);
     };
 
@@ -168,10 +186,10 @@ export default function UserProfileSettings() {
 
         return (
             <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
-                <h2 className="text-xl font-bold text-bio-white mb-4">Favorisierte Künstler</h2>
+                <h2 className="text-xl font-bold text-bio-white mb-4">{t.favoriteArtists}</h2>
                 <div className="space-y-4">
                     <p className="text-gray-400 text-sm">
-                        Sie erhalten Benachrichtigungen, wenn diese Künstler neue Events ankündigen.
+                        {t.favoritesDesc}
                     </p>
 
                     {hasFavorites ? (
@@ -187,8 +205,8 @@ export default function UserProfileSettings() {
                         </div>
                     ) : (
                         <div className="p-4 bg-bio-gray-800/30 rounded-lg text-center border border-dashed border-bio-gray-700">
-                            <p className="text-gray-500 text-sm">Noch keine Favoriten.</p>
-                            <a href="/artists" className="text-bio-accent text-sm hover:underline mt-2 inline-block">Künstler entdecken</a>
+                            <p className="text-gray-500 text-sm">{t.noFavorites}</p>
+                            <a href="/artists" className="text-bio-accent text-sm hover:underline mt-2 inline-block">{t.discoverArtists}</a>
                         </div>
                     )}
                 </div>
@@ -244,7 +262,7 @@ export default function UserProfileSettings() {
 
         // Check file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
-            alert('Die Datei ist zu groß. Bitte maximal 10MB hochladen.');
+            alert(t.maxFileSize);
             return;
         }
 
@@ -279,7 +297,7 @@ export default function UserProfileSettings() {
             if (data.success && data.url) {
                 // Update local User Store
                 updateUser({ avatar_url: data.url });
-                setSuccessMessage('Profilbild erfolgreich aktualisiert.');
+                setSuccessMessage(t.profileUpdated);
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
                 throw new Error(data.error || 'Upload failed');
@@ -296,17 +314,17 @@ export default function UserProfileSettings() {
     if (!$user) return null;
 
     const tabs: { id: Tab, label: string, icon: any }[] = [
-        { id: 'profile', label: 'Profil', icon: User },
-        ...($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer' ? [{ id: 'calendar' as Tab, label: 'Kalender', icon: Calendar }] : []),
-        { id: 'appearance', label: 'Darstellung', icon: Sun },
-        { id: 'security', label: 'Sicherheit', icon: Lock },
-        { id: 'notifications', label: 'Benachrichtigungen', icon: Bell },
+        { id: 'profile', label: t.tabs.profile, icon: User },
+        ...($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer' || $user.role === 'booker' ? [{ id: 'calendar' as Tab, label: t.tabs.calendar, icon: Calendar }] : []),
+        { id: 'appearance', label: t.tabs.appearance, icon: Sun },
+        { id: 'security', label: t.tabs.security, icon: Lock },
+        { id: 'notifications', label: t.tabs.notifications, icon: Bell },
     ];
 
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-bio-white">Profile Settings</h1>
+                <h1 className="text-3xl font-bold text-bio-white">{t.title}</h1>
                 <div className="px-3 py-1 rounded-full bg-bio-accent/20 border border-bio-accent/30 text-bio-accent text-sm font-medium flex items-center gap-2 capitalize">
                     <Shield className="w-3.5 h-3.5" />
                     {$user.role || 'User'}
@@ -346,10 +364,10 @@ export default function UserProfileSettings() {
                     {/* Appearance Tab */}
                     {activeTab === 'appearance' && (
                         <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
-                            <h2 className="text-xl font-bold text-bio-white mb-4">Erscheinungsbild</h2>
+                            <h2 className="text-xl font-bold text-bio-white mb-4">{t.appearanceTitle}</h2>
                             <div className="space-y-6">
                                 <div className="p-4 bg-bio-black/50 rounded-lg border border-bio-gray-800">
-                                    <h4 className="text-bio-white font-medium mb-4">Design Modus</h4>
+                                    <h4 className="text-bio-white font-medium mb-4">{t.designMode}</h4>
                                     <div className="grid grid-cols-2 gap-4">
                                         <button
                                             onClick={() => updateUser({ theme: 'dark' })}
@@ -359,7 +377,7 @@ export default function UserProfileSettings() {
                                                 }`}
                                         >
                                             <Moon className="w-5 h-5" />
-                                            <span>Dark Mode</span>
+                                            <span>{t.darkMode}</span>
                                         </button>
                                         <button
                                             onClick={() => updateUser({ theme: 'light' })}
@@ -369,11 +387,11 @@ export default function UserProfileSettings() {
                                                 }`}
                                         >
                                             <Sun className="w-5 h-5" />
-                                            <span>Light Mode</span>
+                                            <span>{t.lightMode}</span>
                                         </button>
                                     </div>
                                     <p className="text-sm text-gray-500 mt-4">
-                                        Wähle zwischen dem klassischen Dark Mode oder dem neuen Light Mode.
+                                        {t.themeDesc}
                                     </p>
                                 </div>
                             </div>
@@ -405,17 +423,17 @@ export default function UserProfileSettings() {
                                         />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-bio-white">Profilbild</h3>
+                                        <h3 className="text-xl font-bold text-bio-white">{t.profilePicture}</h3>
                                         <p className="text-bio-gray-400 text-sm mt-1">
-                                            Klicken zum Ändern.<br />
-                                            JPG, GIF oder PNG. Max. 1MB.
+                                            {t.clickToChange}<br />
+                                            {t.maxFileSize}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-bio-gray-300">Voller Name</label>
+                                        <label className="text-sm font-medium text-bio-gray-300">{t.fullName}</label>
                                         <input
                                             type="text"
                                             value={formData.fullName}
@@ -424,7 +442,7 @@ export default function UserProfileSettings() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-bio-gray-300">Email Adresse</label>
+                                        <label className="text-sm font-medium text-bio-gray-300">{t.emailAddress}</label>
                                         <input
                                             type="email"
                                             value={formData.email}
@@ -433,7 +451,7 @@ export default function UserProfileSettings() {
                                         />
                                     </div>
                                     <div className="col-span-1 md:col-span-2 space-y-2">
-                                        <label className="text-sm font-medium text-bio-gray-300">Bio</label>
+                                        <label className="text-sm font-medium text-bio-gray-300">{t.bio}</label>
                                         <textarea
                                             rows={4}
                                             value={formData.bio}
@@ -446,10 +464,10 @@ export default function UserProfileSettings() {
                                     {($user.role === 'artist' || $user.role === 'creative' || $user.role === 'performer') && (
                                         <>
                                             <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
-                                                <h3 className="text-lg font-bold text-bio-white mb-4">Artist Details</h3>
+                                                <h3 className="text-lg font-bold text-bio-white mb-4">{t.artistDetails}</h3>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-bio-gray-300">Künstlername / Alias</label>
+                                                <label className="text-sm font-medium text-bio-gray-300">{t.artistAlias}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.artistProfile.alias}
@@ -459,7 +477,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Typ</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.artistType}</label>
                                                 <select
                                                     value={formData.artistProfile.type}
                                                     onChange={(e) => setFormData({ ...formData, artistProfile: { ...formData.artistProfile, type: e.target.value as any } })}
@@ -473,7 +491,7 @@ export default function UserProfileSettings() {
                                                 </select>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Homebase / Location</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.homebase}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.artistProfile.location}
@@ -483,7 +501,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Genres (kommagetrennt)</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.genresComma}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.artistProfile.genres}
@@ -493,7 +511,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">BPM Range (Min - Max)</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.bpmRange}</label>
                                                 <div className="flex gap-2">
                                                     <input
                                                         type="number"
@@ -513,7 +531,7 @@ export default function UserProfileSettings() {
                                             </div>
 
                                             <div className="col-span-1 md:col-span-2 pt-4">
-                                                <h4 className="text-md font-semibold text-gray-300 mb-3">Social Media</h4>
+                                                <h4 className="text-md font-semibold text-gray-300 mb-3">{t.socialMedia}</h4>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <input
                                                         type="text"
@@ -552,10 +570,10 @@ export default function UserProfileSettings() {
                                     {($user.role === 'booker') && (
                                         <>
                                             <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
-                                                <h3 className="text-lg font-bold text-bio-white mb-4">Booker / Venue Info</h3>
+                                                <h3 className="text-lg font-bold text-bio-white mb-4">{t.bookerDetails}</h3>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Organisation / Venue Name</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.organization}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.bookerProfile.organization}
@@ -564,7 +582,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Typ</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.venueType}</label>
                                                 <select
                                                     value={formData.bookerProfile.type}
                                                     onChange={(e) => setFormData({ ...formData, bookerProfile: { ...formData.bookerProfile, type: e.target.value as any } })}
@@ -577,7 +595,7 @@ export default function UserProfileSettings() {
                                                 </select>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Location / City</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.venueLocation}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.bookerProfile.location}
@@ -586,7 +604,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Kapazität (Pax)</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.venueCapacity}</label>
                                                 <input
                                                     type="number"
                                                     value={formData.bookerProfile.capacity}
@@ -595,7 +613,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="col-span-1 md:col-span-2 space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Website</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.venueWebsite}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.bookerProfile.website}
@@ -610,10 +628,10 @@ export default function UserProfileSettings() {
                                     {(['label', 'manager', 'provider'].includes($user.role || '')) && (
                                         <>
                                             <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
-                                                <h3 className="text-lg font-bold text-bio-white mb-4">Business Info</h3>
+                                                <h3 className="text-lg font-bold text-bio-white mb-4">{t.businessInfo}</h3>
                                             </div>
                                             <div className="col-span-1 md:col-span-2 space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Firma / Label Name</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.companyName}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.industryProfile.organization}
@@ -622,7 +640,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Offizielle Website</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.officialWebsite}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.industryProfile.website}
@@ -631,7 +649,7 @@ export default function UserProfileSettings() {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-medium text-gray-300">Kontakt Email</label>
+                                                <label className="text-sm font-medium text-gray-300">{t.contactEmail}</label>
                                                 <input
                                                     type="email"
                                                     value={formData.industryProfile.contactEmail}
@@ -641,7 +659,7 @@ export default function UserProfileSettings() {
                                             </div>
                                             {$user.role === 'label' && (
                                                 <div className="col-span-1 md:col-span-2 space-y-2">
-                                                    <label className="text-sm font-medium text-gray-300">Demo Drop URL</label>
+                                                    <label className="text-sm font-medium text-gray-300">{t.demoDropUrl}</label>
                                                     <input
                                                         type="text"
                                                         value={formData.industryProfile.demoDropUrl}
@@ -656,7 +674,7 @@ export default function UserProfileSettings() {
 
                                     {/* --- GENERAL SOCIALS (ALL USERS) --- */}
                                     <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
-                                        <h3 className="text-lg font-bold text-bio-white mb-4">Meine Links</h3>
+                                        <h3 className="text-lg font-bold text-bio-white mb-4">{t.myLinks}</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <input
                                                 type="text"
@@ -688,6 +706,29 @@ export default function UserProfileSettings() {
                                             />
                                         </div>
                                     </div>
+
+                                    {/* --- GUEST PREFERENCES --- */}
+                                    {($user.role === 'guest') && (
+                                        <div className="col-span-1 md:col-span-2 pt-6 border-t border-bio-gray-800">
+                                            <h3 className="text-lg font-bold text-bio-white mb-4">{t.preferences}</h3>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">{t.preferredGenres}</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.guestProfile.preferredGenres.join(', ')}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        guestProfile: {
+                                                            preferredGenres: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                                                        }
+                                                    })}
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
+                                                    placeholder="Techno, House, Ambient"
+                                                />
+                                                <p className="text-xs text-gray-500">{t.preferredGenresDesc}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -698,79 +739,120 @@ export default function UserProfileSettings() {
 
                     {/* Security Tab */}
                     {activeTab === 'security' && (
-                        <div className="space-y-6">
-                            <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
-                                <h2 className="text-xl font-bold text-bio-white mb-4">Passwort ändern</h2>
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-300">Aktuelles Passwort</label>
-                                        <input
-                                            type="password"
-                                            value={formData.currentPassword}
-                                            onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
-                                            className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <>
+                            <div className="space-y-6">
+                                <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
+                                    <h2 className="text-xl font-bold text-bio-white mb-4">{t.changePassword}</h2>
+                                    <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-300">Neues Passwort</label>
+                                            <label className="text-sm font-medium text-gray-300">{t.currentPassword}</label>
                                             <input
                                                 type="password"
-                                                value={formData.newPassword}
-                                                onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
+                                                value={formData.currentPassword}
+                                                onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
                                                 className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
                                             />
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-medium text-gray-300">Passwort bestätigen</label>
-                                            <input
-                                                type="password"
-                                                value={formData.confirmPassword}
-                                                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                                className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
-                                            />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">{t.newPassword}</label>
+                                                <input
+                                                    type="password"
+                                                    value={formData.newPassword}
+                                                    onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">{t.confirmPassword}</label>
+                                                <input
+                                                    type="password"
+                                                    value={formData.confirmPassword}
+                                                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                                    className="w-full bg-bio-black border border-bio-gray-800 rounded-lg px-4 py-2 text-bio-white focus:outline-none focus:border-bio-accent"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex justify-end">
+                                            <button
+                                                onClick={async () => {
+                                                    if (!formData.currentPassword || !formData.newPassword) {
+                                                        alert('Bitte alle Felder ausfüllen');
+                                                        return;
+                                                    }
+                                                    if (formData.newPassword !== formData.confirmPassword) {
+                                                        alert('Passwörter stimmen nicht überein');
+                                                        return;
+                                                    }
+                                                    // Mock API call
+                                                    setLoading(true);
+                                                    await new Promise(r => setTimeout(r, 1000));
+                                                    setLoading(false);
+                                                    setSuccessMessage(t.passwordChanged);
+                                                    setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
+                                                    setTimeout(() => setSuccessMessage(''), 3000);
+                                                }}
+                                                className="px-4 py-2 bg-bio-gray-800 text-white rounded-lg hover:bg-bio-gray-700 transition-colors"
+                                            >
+                                                {t.changePassword}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="bg-red-500/5 rounded-xl border border-red-500/20 p-6">
-                                <h3 className="text-red-400 font-bold mb-2 flex items-center gap-2">
-                                    <AlertTriangle className="w-5 h-5" />
-                                    Account löschen
-                                </h3>
-                                <p className="text-bio-gray-400 text-sm mb-4">
-                                    Wenn Sie Ihren Account löschen, werden alle Ihre Daten unwiderruflich entfernt. Diese Aktion kann nicht rückgängig gemacht werden.
-                                </p>
-                                <button className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors flex items-center gap-2 cursor-pointer">
-                                    <Trash2 className="w-4 h-4" />
-                                    Account löschen
-                                </button>
+                                <div className="bg-red-500/5 rounded-xl border border-red-500/20 p-6">
+                                    <h3 className="text-red-400 font-bold mb-2 flex items-center gap-2">
+                                        <AlertTriangle className="w-5 h-5" />
+                                        {t.deleteAccount}
+                                    </h3>
+                                    <p className="text-bio-gray-400 text-sm mb-4">
+                                        {t.deleteAccountDesc}
+                                    </p>
+                                    <button className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors flex items-center gap-2 cursor-pointer">
+                                        <Trash2 className="w-4 h-4" />
+                                        {t.deleteAccountBtn}
+                                    </button>
+                                    {formData.currentPassword === 'DELETE' && (
+                                        <div className="mt-4 p-4 border border-red-500/30 rounded bg-red-500/10">
+                                            <p className="text-red-300 text-sm mb-4">{t.confirmDeleteDesc}</p>
+                                            <button
+                                                onClick={() => {
+                                                    alert('Account wurde gelöscht (Simulation)');
+                                                    window.location.href = '/';
+                                                }}
+                                                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                            >
+                                                {t.confirmDelete}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        </>
                     )}
 
                     {/* Calendar Tab */}
                     {activeTab === 'calendar' && (
                         <div className="bg-bio-gray-900 border border-bio-gray-800 rounded-xl p-6">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-bio-white">Mein Kalender</h2>
-                                <p className="text-sm text-bio-gray-400">Verwalte deine Gigs und Festival-Auftritte.</p>
+                                <h2 className="text-xl font-bold text-bio-white">{t.myCalendar}</h2>
+                                <p className="text-sm text-bio-gray-400">{t.calendarDesc}</p>
                             </div>
-                            <EventCalendar viewMode="artist" artistId={$user.id} lang="de" />
+                            <EventCalendar viewMode="artist" artistId={$user.id} lang={lang} />
                         </div>
                     )}
 
                     {/* Notifications Tab */}
                     {activeTab === 'notifications' && (
                         <div className="bg-bio-gray-900 rounded-xl border border-bio-gray-800 p-6 space-y-6">
-                            <h2 className="text-xl font-bold text-bio-white mb-4">Benachrichtigungen</h2>
+                            <h2 className="text-xl font-bold text-bio-white mb-4">{t.notificationsTitle}</h2>
                             <div className="space-y-4">
                                 {[
-                                    { id: 'emailNotifications', label: 'Email Benachrichtigungen', desc: 'Erhalten Sie Emails über Updates und Aktivitäten.' },
-                                    { id: 'pushNotifications', label: 'Push Benachrichtigungen', desc: 'Erhalten Sie Push-Nachrichten auf Ihrem Gerät.' },
-                                    { id: 'marketingEmails', label: 'Marketing Emails', desc: 'Erhalten Sie Emails über neue Features und Angebote.' },
-                                    { id: 'artistAlerts', label: 'Künstler Updates (Favoriten)', desc: 'Benachrichtigung bei neuen Gigs deiner Favoriten.' }
+                                    { id: 'emailNotifications', label: t.emailNotifications, desc: t.emailNotificationsDesc },
+                                    { id: 'pushNotifications', label: t.pushNotifications, desc: t.pushNotificationsDesc },
+                                    { id: 'marketingEmails', label: t.marketingEmails, desc: t.marketingEmailsDesc },
+                                    { id: 'artistAlerts', label: t.artistAlerts, desc: t.artistAlertsDesc }
                                 ].map((item) => (
                                     <div key={item.id} className="flex items-center justify-between p-4 bg-bio-black/50 rounded-lg border border-bio-gray-800">
                                         <div>
@@ -802,12 +884,12 @@ export default function UserProfileSettings() {
                             {loading ? (
                                 <>
                                     <Loader2 className="w-4 h-4 animate-spin" />
-                                    Speichern...
+                                    {t.saving}
                                 </>
                             ) : (
                                 <>
                                     <Save className="w-4 h-4" />
-                                    Änderungen speichern
+                                    {t.saveChanges}
                                 </>
                             )}
                         </button>

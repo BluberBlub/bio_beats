@@ -1,5 +1,7 @@
-import { en } from './en';
+import { en, type Translations } from './en';
 import { de } from './de';
+
+export type { Translations };
 
 export const languages = {
     en,

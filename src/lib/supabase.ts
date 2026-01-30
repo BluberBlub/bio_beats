@@ -54,6 +54,11 @@ export interface IndustryProfile {
     demo_drop_url?: string; // Label specific
 }
 
+// Guest / Fan
+export interface GuestProfile {
+    preferred_genres?: string[];
+}
+
 export interface UserProfile {
     id: string; // matches auth.users.id
     email: string;
@@ -77,4 +82,5 @@ export interface UserProfile {
     artist_profile?: ArtistProfile;  // For: artist, performer, creative
     booker_profile?: BookerProfile;  // For: booker
     industry_profile?: IndustryProfile; // For: label, manager, provider
+    guest_profile?: GuestProfile;    // For: guest
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Mail, Send, Loader2, Calendar, MapPin, Music, Globe, Users } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface ContactFormProps {
     initialReason?: string;
@@ -33,6 +34,12 @@ export default function ContactForm({
         festivalGenre: '',
         festivalWebsite: '',
         festivalCapacity: '',
+        // Booking specific fields
+        eventDate: '',
+        eventVenue: '',
+        eventType: '',
+        budgetRange: '',
+        artistRequested: initialContext.artist || '',
         // General fields
         ref: initialContext.ref || '',
     });
@@ -40,75 +47,8 @@ export default function ContactForm({
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    // Translations
-    const t = {
-        en: {
-            name: 'Name',
-            namePlaceholder: 'Your name',
-            email: 'Email',
-            emailPlaceholder: 'your@email.com',
-            topic: 'Topic',
-            selectTopic: 'Select a topic',
-            message: 'Message',
-            messagePlaceholder: 'Your message...',
-            send: 'Send Message',
-            sending: 'Sending...',
-            sent: 'Message Sent!',
-            sentDesc: "Thanks for reaching out. We'll get back to you within 24-48 hours.",
-            sendAnother: 'Send another message',
-            festivalDetails: 'Festival Details',
-            festivalName: 'Festival Name',
-            date: 'Date(s)',
-            location: 'Location',
-            genre: 'Primary Genre(s)',
-            website: 'Website',
-            capacity: 'Expected Capacity',
-            submitFestival: 'Submit Festival',
-            topics: {
-                general: 'General Inquiry',
-                partnership: 'Partnership',
-                booking: 'Artist Booking',
-                submit_festival: 'Submit / List a Festival',
-                support: 'Support',
-                press: 'Press',
-                other: 'Other'
-            }
-        },
-        de: {
-            name: 'Name',
-            namePlaceholder: 'Dein Name',
-            email: 'E-Mail',
-            emailPlaceholder: 'deine@email.com',
-            topic: 'Thema',
-            selectTopic: 'Thema wählen',
-            message: 'Nachricht',
-            messagePlaceholder: 'Deine Nachricht...',
-            send: 'Nachricht senden',
-            sending: 'Sende...',
-            sent: 'Nachricht gesendet!',
-            sentDesc: 'Danke für deine Nachricht. Wir melden uns innerhalb von 24-48 Stunden.',
-            sendAnother: 'Weitere Nachricht senden',
-            festivalDetails: 'Festival Details',
-            festivalName: 'Festival Name',
-            date: 'Datum',
-            location: 'Ort',
-            genre: 'Genre(s)',
-            website: 'Webseite',
-            capacity: 'Erwartete Kapazität',
-            submitFestival: 'Festival einreichen',
-            topics: {
-                general: 'Allgemeine Anfrage',
-                partnership: 'Partnerschaft',
-                booking: 'Künstler-Buchung',
-                submit_festival: 'Festival einreichen / listen',
-                support: 'Support',
-                press: 'Presse',
-                other: 'Sonstiges'
-            }
-        }
-    };
-
-    const strings = t[lang];
+    const { t: allTranslations } = useTranslation(lang);
+    const strings = allTranslations.contact;
 
     // Update reason if prop changes (e.g. navigation)
     useEffect(() => {
@@ -137,7 +77,11 @@ export default function ContactForm({
                     message: formData.message,
                     festivalName: formData.festivalName,
                     festivalDate: formData.festivalDate,
-                    // Pass other fields as needed
+                    // Booking fields
+                    eventDate: formData.eventDate,
+                    eventVenue: formData.eventVenue,
+                    budgetRange: formData.budgetRange,
+                    artistRequested: formData.artistRequested,
                 }),
             });
 
@@ -179,6 +123,7 @@ export default function ContactForm({
     }
 
     const isFestivalSubmission = reason === 'festival' || reason === 'submit_festival';
+    const isBookingInquiry = reason === 'booking';
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
@@ -195,7 +140,7 @@ export default function ContactForm({
                         value={formData.name}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
-                        placeholder={strings.namePlaceholder}
+                        placeholder={strings.yourName}
                     />
                 </div>
                 <div>
@@ -210,14 +155,14 @@ export default function ContactForm({
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
-                        placeholder={strings.emailPlaceholder}
+                        placeholder={strings.yourEmail}
                     />
                 </div>
             </div>
 
             <div>
                 <label htmlFor="reason" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                    {strings.topic}
+                    {strings.subject}
                 </label>
                 <select
                     id="reason"
@@ -226,17 +171,96 @@ export default function ContactForm({
                     className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
                 >
                     <option value="">{strings.selectTopic}</option>
-                    <option value="general">{strings.topics.general}</option>
-                    <option value="partnership">{strings.topics.partnership}</option>
-                    <option value="booking">{strings.topics.booking}</option>
-                    <option value="submit_festival">{strings.topics.submit_festival}</option>
-                    <option value="support">{strings.topics.support}</option>
-                    <option value="press">{strings.topics.press}</option>
-                    <option value="other">{strings.topics.other}</option>
+                    <option value="general">{strings.generalInquiry}</option>
+                    <option value="partnership">{strings.partnership}</option>
+                    <option value="booking">{strings.booking}</option>
+                    <option value="submit_festival">{strings.submitFestival}</option>
+                    <option value="support">{strings.support}</option>
+                    <option value="press">{strings.press}</option>
+                    <option value="other">{strings.other}</option>
                 </select>
             </div>
 
-            {/* Dynamic Festival Fields */}
+            {/* Dynamic Booking Fields */}
+            {isBookingInquiry && (
+                <div className="p-6 bg-bio-gray-900 border border-bio-gray-800 rounded-xl space-y-6 animate-in fade-in slide-in-from-top-4">
+                    <h3 className="text-lg font-semibold text-bio-white flex items-center gap-2">
+                        <Music className="w-5 h-5 text-bio-accent" />
+                        {strings.bookingDetails}
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label htmlFor="artistRequested" className="block text-sm font-medium text-bio-gray-300 mb-2">
+                                {strings.artistRequested}
+                            </label>
+                            <input
+                                type="text"
+                                id="artistRequested"
+                                name="artistRequested"
+                                value={formData.artistRequested}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
+                                placeholder={strings.artistPlaceholder}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="eventDate" className="block text-sm font-medium text-bio-gray-300 mb-2">
+                                {strings.eventDate}
+                            </label>
+                            <div className="relative">
+                                <Calendar className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
+                                <input
+                                    type="text"
+                                    id="eventDate"
+                                    name="eventDate"
+                                    value={formData.eventDate}
+                                    onChange={handleChange}
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
+                                    placeholder="e.g. Oct 31, 2026"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="eventVenue" className="block text-sm font-medium text-bio-gray-300 mb-2">
+                                {strings.eventVenue}
+                            </label>
+                            <div className="relative">
+                                <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
+                                <input
+                                    type="text"
+                                    id="eventVenue"
+                                    name="eventVenue"
+                                    value={formData.eventVenue}
+                                    onChange={handleChange}
+                                    className="w-full pl-10 pr-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors"
+                                    placeholder="Club name or City"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="budgetRange" className="block text-sm font-medium text-bio-gray-300 mb-2">
+                                {strings.budgetRange}
+                            </label>
+                            <select
+                                id="budgetRange"
+                                name="budgetRange"
+                                value={formData.budgetRange}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white focus:border-bio-accent outline-none cursor-pointer"
+                            >
+                                <option value="">{strings.budgetSelect}</option>
+                                <option value="<1k">&lt; €1.000</option>
+                                <option value="1k-5k">€1.000 - €5.000</option>
+                                <option value="5k-10k">€5.000 - €10.000</option>
+                                <option value="10k+">€10.000+</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
             {isFestivalSubmission && (
                 <div className="p-6 bg-bio-gray-900 border border-bio-gray-800 rounded-xl space-y-6 animate-in fade-in slide-in-from-top-4">
                     <h3 className="text-lg font-semibold text-bio-white flex items-center gap-2">
@@ -261,7 +285,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalDate" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                                {strings.date}
+                                {strings.festivalDate}
                             </label>
                             <input
                                 type="text"
@@ -275,7 +299,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalLocation" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                                {strings.location}
+                                {strings.festivalLocation}
                             </label>
                             <div className="relative">
                                 <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
@@ -292,7 +316,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalGenre" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                                {strings.genre}
+                                {strings.festivalGenre}
                             </label>
                             <div className="relative">
                                 <Music className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
@@ -309,7 +333,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalWebsite" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                                {strings.website}
+                                {strings.festivalWebsite}
                             </label>
                             <div className="relative">
                                 <Globe className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
@@ -326,7 +350,7 @@ export default function ContactForm({
                         </div>
                         <div>
                             <label htmlFor="festivalCapacity" className="block text-sm font-medium text-bio-gray-300 mb-2">
-                                {strings.capacity}
+                                {strings.festivalCapacity}
                             </label>
                             <div className="relative">
                                 <Users className="absolute left-3 top-3.5 w-5 h-5 text-bio-gray-500" />
@@ -357,7 +381,7 @@ export default function ContactForm({
                     value={formData.message}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none transition-colors resize-none"
-                    placeholder={strings.messagePlaceholder}
+                    placeholder={strings.yourMessage}
                 />
             </div>
 

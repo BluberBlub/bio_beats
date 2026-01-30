@@ -20,28 +20,13 @@ const t = getTranslations("de");
 const pageTitle = `Registrieren als ${role.label} — BIO BEATS`;
 const pageDescription = `Tritt BIO BEATS als ${role.label} bei.`;
 
-const roleBenefits: Record<string, string[]> = {
-    artist: [
-        "Professionelles Künstlerprofil",
-        "Direkte Buchungsanfragen",
-        "Verträge & Rechnungen inklusive",
-        "Wachstums-Tools nutzen",
-    ],
-    booker: [
-        "Zugang zu verifizierten Künstlern",
-        "Einfacher Buchungsprozess",
-        "Sichere Zahlungsabwicklung",
-        "Talent Scouting Tools",
-    ],
-    // ... other roles (using generic defaults if not specified)
-};
-
-const benefits = roleBenefits[role.id] || [
+const roleId = role.id as keyof typeof t.join.benefits;
+const benefits = (t.join.benefits[roleId] || [
     "Zugang zum professionellen Netzwerk",
     "Verifizierte Profile und Kontakte",
     "Sichere Kommunikation",
     "Markt-Insights und Trends",
-];
+]) as string[];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>

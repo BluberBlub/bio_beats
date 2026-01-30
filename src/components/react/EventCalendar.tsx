@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, MapPin, ExternalLink, List, Grid } from 'lucide-react';
 import { festivals as festivalData } from '../../data/festivals';
 import { bookings as bookingData } from '../../data/bookings';
+import { useTranslation } from '../../i18n/useTranslation';
 
 const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTHS_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
@@ -49,6 +50,7 @@ function parseDate(dateStr: string): Date | null {
 }
 
 export default function EventCalendar({ lang = 'en', viewMode = 'public', artistId }: EventCalendarProps) {
+    const { t } = useTranslation(lang);
     const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 1)); // Start at June 2026
     const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
     const [viewType, setViewType] = useState<'grid' | 'list'>('grid'); // Toggle between Grid and Agenda
@@ -176,7 +178,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                     </h2>
                     <div className="flex gap-2">
                         <button onClick={goToToday} className="px-3 py-1 text-sm bg-bio-gray-800 text-bio-gray-300 rounded-lg hover:bg-bio-gray-700 transition-colors border border-bio-gray-700">
-                            {lang === 'de' ? 'Start' : 'Start'}
+                            {t.profile.today}
                         </button>
                         {/* View Toggle */}
                         <div className="flex bg-bio-gray-800 rounded-lg border border-bio-gray-700 p-1">
@@ -286,7 +288,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                                         </h3>
                                         <div className="flex items-center gap-2 text-sm text-bio-gray-400 mt-1">
                                             <span className={`px-2 py-0.5 rounded text-[10px] text-white uppercase tracking-wider ${getEventColor(event)}`}>
-                                                {event.type === 'festival' ? 'Festival' : 'Gig'}
+                                                {event.type === 'festival' ? t.profile.festival : t.profile.gig}
                                             </span>
                                             <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {event.location}, {event.city || event.country}</span>
                                         </div>
@@ -331,7 +333,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
                         <button className="absolute top-4 right-4 text-bio-gray-400 hover:text-bio-white" onClick={() => setSelectedEvent(null)}>✕</button>
 
                         <div className={`inline-block px-2 py-1 rounded text-xs text-white mb-4 ${getEventColor(selectedEvent)}`}>
-                            {selectedEvent.type === 'festival' ? 'Festival' : 'Artist Booking'}
+                            {selectedEvent.type === 'festival' ? t.profile.festival : t.profile.gig}
                         </div>
 
                         <h3 className="text-2xl font-bold text-bio-white mb-2">{selectedEvent.name}</h3>
@@ -359,11 +361,11 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
 
                         {selectedEvent.type === 'festival' && selectedEvent.slug ? (
                             <a href={`/festivals`} className="btn-primary w-full text-center block">
-                                View Festival Details
+                                {t.profile.viewFestivalDetails}
                             </a>
                         ) : (
                             <div className="p-3 bg-bio-gray-900 rounded-lg text-sm text-bio-gray-400 text-center border border-bio-gray-800">
-                                Contact agent for guestlist or booking inquiries.
+                                {t.profile.contactAgent}
                             </div>
                         )}
                     </div>

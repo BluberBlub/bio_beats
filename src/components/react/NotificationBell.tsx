@@ -6,8 +6,9 @@ import {
     markAllAsRead,
     notificationMeta
 } from '../../stores/notificationStore';
-import { Bell, Check, X } from 'lucide-react';
+import { Bell, Check } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface Props {
     currentLang?: 'en' | 'de';
@@ -18,6 +19,7 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
     const $unreadCount = useStore(unreadCount);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation(currentLang);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -47,30 +49,12 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return currentLang === 'de' ? 'Gerade eben' : 'Just now';
-        if (diffMins < 60) return currentLang === 'de' ? `vor ${diffMins} Min.` : `${diffMins}m ago`;
-        if (diffHours < 24) return currentLang === 'de' ? `vor ${diffHours} Std.` : `${diffHours}h ago`;
-        return currentLang === 'de' ? `vor ${diffDays} Tagen` : `${diffDays}d ago`;
+        if (diffMins < 1) return t.profile.time.justNow;
+        if (diffMins < 60) return t.profile.time.minAgo.replace('{min}', diffMins.toString());
+        if (diffHours < 24) return t.profile.time.hourAgo.replace('{hour}', diffHours.toString());
+        return t.profile.time.dayAgo.replace('{day}', diffDays.toString());
     };
 
-    const labels = {
-        en: {
-            title: 'Notifications',
-            markAllRead: 'Mark all as read',
-            viewAll: 'View all notifications',
-            empty: 'No notifications yet',
-            emptyDesc: 'Follow artists to receive updates'
-        },
-        de: {
-            title: 'Benachrichtigungen',
-            markAllRead: 'Alle als gelesen markieren',
-            viewAll: 'Alle Benachrichtigungen',
-            empty: 'Keine Benachrichtigungen',
-            emptyDesc: 'Folge Artisten um Updates zu erhalten'
-        }
-    };
-
-    const t = labels[currentLang];
     const recentNotifications = notifications.slice(0, 5);
 
     return (
@@ -79,7 +63,7 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
             <button
                 onClick={toggleDropdown}
                 className="relative p-2 rounded-full hover:bg-bio-gray-800/50 transition-colors"
-                aria-label={t.title}
+                aria-label={t.profile.notificationsTitle}
             >
                 <Bell className="w-5 h-5 text-bio-gray-300" />
                 {$unreadCount > 0 && (
@@ -94,14 +78,14 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
                 <div className="absolute right-0 top-full mt-2 w-80 bg-bio-gray-900 border border-bio-gray-800 rounded-xl shadow-2xl z-[100] overflow-hidden">
                     {/* Header */}
                     <div className="px-4 py-3 border-b border-bio-gray-800 flex items-center justify-between">
-                        <h3 className="font-semibold text-bio-white">{t.title}</h3>
+                        <h3 className="font-semibold text-bio-white">{t.profile.notificationsTitle}</h3>
                         {$unreadCount > 0 && (
                             <button
                                 onClick={() => markAllAsRead()}
                                 className="text-xs text-bio-accent hover:text-bio-accent/80 flex items-center gap-1"
                             >
                                 <Check className="w-3 h-3" />
-                                {t.markAllRead}
+                                {t.profile.markAllRead}
                             </button>
                         )}
                     </div>
@@ -111,8 +95,8 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
                         {recentNotifications.length === 0 ? (
                             <div className="px-4 py-8 text-center">
                                 <Bell className="w-10 h-10 text-bio-gray-700 mx-auto mb-2" />
-                                <p className="text-bio-gray-400 text-sm">{t.empty}</p>
-                                <p className="text-bio-gray-600 text-xs mt-1">{t.emptyDesc}</p>
+                                <p className="text-bio-gray-400 text-sm">{t.profile.empty}</p>
+                                <p className="text-bio-gray-600 text-xs mt-1">{t.profile.emptyDesc}</p>
                             </div>
                         ) : (
                             recentNotifications.map((notification) => (
@@ -154,7 +138,7 @@ export default function NotificationBell({ currentLang = 'en' }: Props) {
                             href={currentLang === 'de' ? '/de/notifications' : '/notifications'}
                             className="block px-4 py-3 text-center text-sm text-bio-accent hover:bg-bio-gray-800/50 border-t border-bio-gray-800"
                         >
-                            {t.viewAll}
+                            {t.profile.viewAll}
                         </a>
                     )}
                 </div>

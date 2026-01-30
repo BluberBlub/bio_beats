@@ -3,20 +3,25 @@ export const prerender = false;
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
+import { getLangFromUrl, useTranslations } from "../i18n/index";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const p = t.profile; // Profile/Notification strings
 ---
 
 <BaseLayout
-    title="Notifications — BIO BEATS"
-    description="Your notifications on BIO BEATS"
+    title={`${p.notificationsTitle} — BIO BEATS`}
+    description={p.emailNotificationsDesc}
 >
     <div class="bg-bio-black py-4">
         <div class="container-wide">
             <a
-                href="/"
+                href={lang === "de" ? "/de" : "/"}
                 class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
             >
                 <ArrowLeft className="w-4 h-4" />
-                Back
+                {p.back}
             </a>
         </div>
     </div>
@@ -27,7 +32,7 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
                 <div class="flex items-center gap-3">
                     <Bell className="w-8 h-8 text-bio-accent" />
                     <h1 class="text-3xl md:text-4xl font-bold text-bio-white">
-                        Benachrichtigungen
+                        {p.notificationsTitle}
                     </h1>
                 </div>
 
@@ -36,32 +41,33 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
                     class="btn-ghost text-sm flex items-center gap-2"
                 >
                     <Check className="w-4 h-4" />
-                    Alle gelesen
+                    {p.markAllRead}
                 </button>
             </div>
 
             <!-- Filter Tabs -->
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button class="filter-btn active" data-filter="all">Alle</button
+                <button class="filter-btn active" data-filter="all"
+                    >{p.filterAll}</button
                 >
                 <button class="filter-btn" data-filter="follow"
-                    >❤️ Folge ich</button
+                    >❤️ {p.filterFollow}</button
                 >
                 <button class="filter-btn" data-filter="new_event"
-                    >📅 Events</button
+                    >📅 {p.filterEvents}</button
                 >
                 <button class="filter-btn" data-filter="new_track"
-                    >🎵 Tracks</button
+                    >🎵 {p.filterTracks}</button
                 >
                 <button class="filter-btn" data-filter="availability"
-                    >✅ Verfügbarkeit</button
+                    >✅ {p.filterAvailability}</button
                 >
             </div>
 
             <!-- Loading State -->
             <div id="loading-state" class="text-center py-16">
                 <div class="animate-pulse text-bio-gray-400">
-                    Lade Benachrichtigungen...
+                    {p.loading}
                 </div>
             </div>
 
@@ -69,12 +75,17 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
             <div id="empty-state" class="hidden text-center py-16">
                 <Bell className="w-16 h-16 text-bio-gray-700 mx-auto mb-4" />
                 <h2 class="text-xl font-semibold text-bio-white mb-2">
-                    Keine Benachrichtigungen
+                    {p.empty}
                 </h2>
                 <p class="text-bio-gray-400 mb-6 max-w-md mx-auto">
-                    Folge Artisten um Updates zu erhalten.
+                    {p.emptyDesc}
                 </p>
-                <a href="/artists" class="btn-primary"> Artisten entdecken </a>
+                <a
+                    href={lang === "de" ? "/de/artists" : "/artists"}
+                    class="btn-primary"
+                >
+                    {p.discoverArtists}
+                </a>
             </div>
 
             <!-- Notifications List -->
@@ -104,19 +115,18 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
     }
 </style>
 
-<script>
+<script define:vars={{ p }}>
     import {
         notificationsStore,
         markAsRead,
         markAllAsRead,
         deleteNotification,
         notificationMeta,
-        type Notification,
     } from "../stores/notificationStore";
 
     let currentFilter = "all";
 
-    function formatTimeAgo(timestamp: string): string {
+    function formatTimeAgo(timestamp) {
         const now = new Date();
         const date = new Date(timestamp);
         const diffMs = now.getTime() - date.getTime();
@@ -124,10 +134,10 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return "Gerade eben";
-        if (diffMins < 60) return `vor ${diffMins} Min.`;
-        if (diffHours < 24) return `vor ${diffHours} Std.`;
-        return `vor ${diffDays} Tagen`;
+        if (diffMins < 1) return p.time.justNow;
+        if (diffMins < 60) return p.time.minAgo.replace("{min}", diffMins);
+        if (diffHours < 24) return p.time.hourAgo.replace("{hour}", diffHours);
+        return p.time.dayAgo.replace("{day}", diffDays);
     }
 
     function renderNotifications() {
@@ -157,7 +167,7 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
 
         list.innerHTML = filtered
             .map(
-                (notification: Notification) => `
+                (notification) => `
       <div 
         class="group p-4 rounded-xl border transition-all ${
             notification.isRead
@@ -201,7 +211,7 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
               <button 
                 onclick="markRead('${notification.id}')"
                 class="p-1.5 rounded-lg hover:bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white transition-colors"
-                title="Als gelesen markieren"
+                title="${p.markAsRead}"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -213,7 +223,7 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
             <button 
               onclick="deleteNotif('${notification.id}')"
               class="p-1.5 rounded-lg hover:bg-red-500/10 text-bio-gray-400 hover:text-red-400 transition-colors"
-              title="Löschen"
+              title="${p.delete}"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -228,16 +238,16 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
     }
 
     // Global functions for inline onclick handlers
-    (window as any).handleClick = (id: string) => {
+    window.handleClick = (id) => {
         markAsRead(id);
     };
 
-    (window as any).markRead = (id: string) => {
+    window.markRead = (id) => {
         markAsRead(id);
         renderNotifications();
     };
 
-    (window as any).deleteNotif = (id: string) => {
+    window.deleteNotif = (id) => {
         deleteNotification(id);
         renderNotifications();
     };
@@ -251,7 +261,7 @@ import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
     // Filter buttons
     document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
-            const target = e.currentTarget as HTMLElement;
+            const target = e.currentTarget;
             const filter = target.dataset.filter || "all";
 
             // Update active state

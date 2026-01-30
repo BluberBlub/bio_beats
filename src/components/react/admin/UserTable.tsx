@@ -153,8 +153,12 @@ export default function UserTable() {
                         <option value="all">All Roles</option>
                         <option value="admin">Admin</option>
                         <option value="artist">Artist</option>
-                        <option value="booker">Booker</option>
+                        <option value="performer">Performer</option>
+                        <option value="creative">Creative</option>
+                        <option value="manager">Manager</option>
                         <option value="label">Label</option>
+                        <option value="booker">Booker</option>
+                        <option value="provider">Provider</option>
                         <option value="guest">Guest</option>
                     </select>
                     <select
@@ -361,8 +365,12 @@ export default function UserTable() {
                                 >
                                     <option value="admin">Admin</option>
                                     <option value="artist">Artist</option>
-                                    <option value="booker">Booker</option>
+                                    <option value="performer">Performer</option>
+                                    <option value="creative">Creative</option>
+                                    <option value="manager">Manager</option>
                                     <option value="label">Label</option>
+                                    <option value="booker">Booker</option>
+                                    <option value="provider">Provider</option>
                                     <option value="guest">Guest</option>
                                 </select>
                             </div>

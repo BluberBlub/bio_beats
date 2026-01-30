@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { useTranslation } from '../../i18n/useTranslation';
 
 interface AuthFormProps {
     mode: 'login' | 'register';
@@ -8,95 +9,10 @@ interface AuthFormProps {
     lang?: 'en' | 'de';
 }
 
-const translations = {
-    en: {
-        emailRequired: 'Email is required',
-        invalidEmail: 'Invalid email format',
-        passwordRequired: 'Password is required',
-        passwordLength: 'Password must be at least 8 characters',
-        nameRequired: 'Name is required',
-        termsRequired: 'You must agree to the terms',
-        accountCreated: 'Account created!',
-        welcomeBack: 'Welcome back!',
-        redirectingEmail: 'Redirecting to email verification...',
-        redirecting: 'Redirecting...',
-        artistName: 'Artist Name / Alias',
-        fullName: 'Full Name',
-        yourArtistName: 'Your artist name',
-        yourName: 'Your name',
-        email: 'Email',
-        password: 'Password',
-        forgotPassword: 'Forgot password?',
-        location: 'Location',
-        cityCountry: 'City, Country',
-        agreeTerms: 'I agree to the',
-        termsOfService: 'Terms of Service',
-        and: 'and',
-        privacyPolicy: 'Privacy Policy',
-        rememberMe: 'Remember me',
-        creatingAccount: 'Creating account...',
-        loggingIn: 'Logging in...',
-        createAccount: 'Create Account',
-        login: 'Login',
-        hidePassword: 'Hide password',
-        showPassword: 'Show password',
-        loginSuccess: 'Login successful!',
-        selectCountry: 'Select Country',
-        germany: 'Germany',
-        austria: 'Austria',
-        switzerland: 'Switzerland',
-        us: 'United States',
-        uk: 'United Kingdom',
-        netherlands: 'Netherlands',
-        france: 'France',
-        other: 'Other'
-    },
-    de: {
-        emailRequired: 'E-Mail ist erforderlich',
-        invalidEmail: 'Ungültiges E-Mail-Format',
-        passwordRequired: 'Passwort ist erforderlich',
-        passwordLength: 'Passwort muss mindestens 8 Zeichen lang sein',
-        nameRequired: 'Name ist erforderlich',
-        termsRequired: 'Du musst den Bedingungen zustimmen',
-        accountCreated: 'Konto erstellt!',
-        welcomeBack: 'Willkommen zurück!',
-        redirectingEmail: 'Weiterleitung zur E-Mail-Verifizierung...',
-        redirecting: 'Weiterleitung...',
-        artistName: 'Künstlername / Alias',
-        fullName: 'Vollständiger Name',
-        yourArtistName: 'Dein Künstlername',
-        yourName: 'Dein Name',
-        email: 'E-Mail',
-        password: 'Passwort',
-        forgotPassword: 'Passwort vergessen?',
-        location: 'Standort',
-        cityCountry: 'Stadt, Land',
-        agreeTerms: 'Ich stimme den',
-        termsOfService: 'Nutzungsbedingungen',
-        and: 'und der',
-        privacyPolicy: 'Datenschutzerklärung zu',
-        rememberMe: 'Angemeldet bleiben',
-        creatingAccount: 'Erstelle Konto...',
-        loggingIn: 'Melde an...',
-        createAccount: 'Konto erstellen',
-        login: 'Anmelden',
-        hidePassword: 'Passwort verbergen',
-        showPassword: 'Passwort anzeigen',
-        loginSuccess: 'Login erfolgreich!',
-        selectCountry: 'Land auswählen',
-        germany: 'Deutschland',
-        austria: 'Österreich',
-        switzerland: 'Schweiz',
-        us: 'Vereinigte Staaten',
-        uk: 'Vereinigtes Königreich',
-        netherlands: 'Niederlande',
-        france: 'Frankreich',
-        other: 'Anderes Land'
-    }
-};
-
 export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFormProps) {
-    const t = translations[lang];
+    const { t: allTranslations } = useTranslation(lang);
+    const t = allTranslations.auth;
+
 
     const [formData, setFormData] = useState({
         name: '',
@@ -215,7 +131,7 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
                 setUser({
                     id: 'mock-user-id',
                     email: formData.email,
-                    role: 'user', // Default role for login
+                    role: 'guest', // Default role for login
                     full_name: 'Demo User',
                     is_verified: true,
                     created_at: new Date().toISOString()
@@ -366,7 +282,7 @@ export default function AuthForm({ mode, role, onSuccess, lang = 'en' }: AuthFor
                             <option value="United Kingdom">{t.uk}</option>
                             <option value="Netherlands">{t.netherlands}</option>
                             <option value="France">{t.france}</option>
-                            <option value="Other">{t.other}</option>
+                            <option value="Other">{t.otherCountry}</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
