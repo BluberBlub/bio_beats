@@ -56,13 +56,11 @@ export default function LanguageSwitcher({ currentLang, currentPath }: LanguageS
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800/50 transition-colors cursor-pointer"
                 aria-label="Select language"
                 aria-expanded={isOpen}
             >
-                <Globe className="w-4 h-4" />
-                <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.code.toUpperCase()}</span>
-                <span className="sm:hidden">{currentLanguage.flag}</span>
+                <span className="text-base">{currentLanguage.flag}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 

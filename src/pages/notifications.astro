@@ -1,0 +1,275 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Bell, Check, Trash2, ArrowLeft, Filter } from "lucide-react";
+---
+
+<BaseLayout
+    title="Notifications — BIO BEATS"
+    description="Your notifications on BIO BEATS"
+>
+    <div class="bg-bio-black py-4">
+        <div class="container-wide">
+            <a
+                href="/"
+                class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+            </a>
+        </div>
+    </div>
+
+    <section class="section bg-bio-black min-h-[60vh]">
+        <div class="container-wide max-w-2xl">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-3">
+                    <Bell className="w-8 h-8 text-bio-accent" />
+                    <h1 class="text-3xl md:text-4xl font-bold text-bio-white">
+                        Benachrichtigungen
+                    </h1>
+                </div>
+
+                <button
+                    id="mark-all-read"
+                    class="btn-ghost text-sm flex items-center gap-2"
+                >
+                    <Check className="w-4 h-4" />
+                    Alle gelesen
+                </button>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                <button class="filter-btn active" data-filter="all">Alle</button
+                >
+                <button class="filter-btn" data-filter="follow"
+                    >❤️ Folge ich</button
+                >
+                <button class="filter-btn" data-filter="new_event"
+                    >📅 Events</button
+                >
+                <button class="filter-btn" data-filter="new_track"
+                    >🎵 Tracks</button
+                >
+                <button class="filter-btn" data-filter="availability"
+                    >✅ Verfügbarkeit</button
+                >
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="text-center py-16">
+                <div class="animate-pulse text-bio-gray-400">
+                    Lade Benachrichtigungen...
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16">
+                <Bell className="w-16 h-16 text-bio-gray-700 mx-auto mb-4" />
+                <h2 class="text-xl font-semibold text-bio-white mb-2">
+                    Keine Benachrichtigungen
+                </h2>
+                <p class="text-bio-gray-400 mb-6 max-w-md mx-auto">
+                    Folge Artisten um Updates zu erhalten.
+                </p>
+                <a href="/artists" class="btn-primary"> Artisten entdecken </a>
+            </div>
+
+            <!-- Notifications List -->
+            <div id="notifications-list" class="hidden space-y-3"></div>
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 9999px;
+        border: 1px solid var(--color-bio-gray-800);
+        color: var(--color-bio-gray-400);
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+        color: var(--color-bio-white);
+        border-color: var(--color-bio-gray-600);
+    }
+    .filter-btn.active {
+        background-color: var(--color-bio-accent);
+        border-color: var(--color-bio-accent);
+        color: white;
+    }
+</style>
+
+<script>
+    import {
+        notificationsStore,
+        markAsRead,
+        markAllAsRead,
+        deleteNotification,
+        notificationMeta,
+        type Notification,
+    } from "../stores/notificationStore";
+
+    let currentFilter = "all";
+
+    function formatTimeAgo(timestamp: string): string {
+        const now = new Date();
+        const date = new Date(timestamp);
+        const diffMs = now.getTime() - date.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return "Gerade eben";
+        if (diffMins < 60) return `vor ${diffMins} Min.`;
+        if (diffHours < 24) return `vor ${diffHours} Std.`;
+        return `vor ${diffDays} Tagen`;
+    }
+
+    function renderNotifications() {
+        const notifications = notificationsStore.get();
+        const loadingState = document.getElementById("loading-state");
+        const emptyState = document.getElementById("empty-state");
+        const list = document.getElementById("notifications-list");
+
+        if (!loadingState || !emptyState || !list) return;
+
+        loadingState.classList.add("hidden");
+
+        // Filter notifications
+        const filtered =
+            currentFilter === "all"
+                ? notifications
+                : notifications.filter((n) => n.type === currentFilter);
+
+        if (filtered.length === 0) {
+            emptyState.classList.remove("hidden");
+            list.classList.add("hidden");
+            return;
+        }
+
+        emptyState.classList.add("hidden");
+        list.classList.remove("hidden");
+
+        list.innerHTML = filtered
+            .map(
+                (notification: Notification) => `
+      <div 
+        class="group p-4 rounded-xl border transition-all ${
+            notification.isRead
+                ? "bg-bio-gray-900/30 border-bio-gray-800/50"
+                : "bg-bio-accent/5 border-bio-accent/20"
+        }"
+        data-id="${notification.id}"
+      >
+        <div class="flex gap-4">
+          <!-- Icon -->
+          <span class="text-2xl flex-shrink-0">
+            ${notificationMeta[notification.type].icon}
+          </span>
+          
+          <!-- Content -->
+          <div class="flex-1 min-w-0">
+            <a 
+              href="${notification.link || "#"}" 
+              class="block hover:text-bio-accent transition-colors"
+              onclick="handleClick('${notification.id}')"
+            >
+              <p class="${notification.isRead ? "text-bio-gray-300" : "text-bio-white font-medium"}">
+                ${notification.message}
+              </p>
+            </a>
+            <div class="flex items-center gap-3 mt-2">
+              <span class="text-xs text-bio-gray-500">
+                ${formatTimeAgo(notification.timestamp)}
+              </span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-bio-gray-800 text-bio-gray-400">
+                ${notificationMeta[notification.type].labelDe}
+              </span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-start gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            ${
+                !notification.isRead
+                    ? `
+              <button 
+                onclick="markRead('${notification.id}')"
+                class="p-1.5 rounded-lg hover:bg-bio-gray-800 text-bio-gray-400 hover:text-bio-white transition-colors"
+                title="Als gelesen markieren"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </button>
+            `
+                    : ""
+            }
+            <button 
+              onclick="deleteNotif('${notification.id}')"
+              class="p-1.5 rounded-lg hover:bg-red-500/10 text-bio-gray-400 hover:text-red-400 transition-colors"
+              title="Löschen"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    `,
+            )
+            .join("");
+    }
+
+    // Global functions for inline onclick handlers
+    (window as any).handleClick = (id: string) => {
+        markAsRead(id);
+    };
+
+    (window as any).markRead = (id: string) => {
+        markAsRead(id);
+        renderNotifications();
+    };
+
+    (window as any).deleteNotif = (id: string) => {
+        deleteNotification(id);
+        renderNotifications();
+    };
+
+    // Mark all as read
+    document.getElementById("mark-all-read")?.addEventListener("click", () => {
+        markAllAsRead();
+        renderNotifications();
+    });
+
+    // Filter buttons
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            const target = e.currentTarget as HTMLElement;
+            const filter = target.dataset.filter || "all";
+
+            // Update active state
+            document
+                .querySelectorAll(".filter-btn")
+                .forEach((b) => b.classList.remove("active"));
+            target.classList.add("active");
+
+            currentFilter = filter;
+            renderNotifications();
+        });
+    });
+
+    // Initial render
+    renderNotifications();
+
+    // Re-render on store changes
+    notificationsStore.subscribe(() => {
+        renderNotifications();
+    });
+</script>

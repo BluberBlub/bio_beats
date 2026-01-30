@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ArrowLeft,
 } from "lucide-react";
+import FavoriteButton from "../../components/react/FavoriteButton";
 
 export function getStaticPaths() {
   return artists.map((artist) => ({
@@ -193,7 +194,11 @@ const typeLabels = {
               <Calendar className="w-4 h-4 mr-2" />
               Request Booking
             </a>
-            <button class="btn-secondary"> Add to Wishlist </button>
+            <FavoriteButton
+              client:load
+              artistSlug={artist.slug}
+              artistName={artist.name}
+            />
           </div>
         </div>
       </div>

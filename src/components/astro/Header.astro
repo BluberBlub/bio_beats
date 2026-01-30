@@ -17,11 +17,11 @@ const lang = getLangFromUrl(url);
       <!-- Logo -->
       <a
         href={lang === "de" ? "/de" : "/"}
-        class="flex items-center gap-3 group"
+        class="flex items-center gap-3 group flex-shrink-0"
       >
         <img src="/logo.svg" alt="BIO BEATS" class="h-8 w-8" />
         <span
-          class="text-xl md:text-2xl font-bold tracking-tight text-bio-white group-hover:text-bio-accent transition-colors"
+          class="text-xl md:text-2xl font-bold tracking-tight text-bio-white group-hover:text-bio-accent transition-colors whitespace-nowrap"
         >
           BIO BEATS
         </span>

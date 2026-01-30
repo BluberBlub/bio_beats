@@ -1,0 +1,167 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArtistCard from "../components/astro/ArtistCard.astro";
+import { artists } from "../data/artists";
+import { Heart, ArrowLeft, Music } from "lucide-react";
+---
+
+<BaseLayout
+    title="My Favorites — BIO BEATS"
+    description="Your favorite artists on BIO BEATS"
+>
+    <div class="bg-bio-black py-4">
+        <div class="container-wide">
+            <a
+                href="/artists"
+                class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4" />
+                Browse Artists
+            </a>
+        </div>
+    </div>
+
+    <section class="section bg-bio-black min-h-[60vh]">
+        <div class="container-wide">
+            <div class="flex items-center gap-3 mb-8">
+                <Heart className="w-8 h-8 text-bio-accent" />
+                <h1 class="text-3xl md:text-4xl font-bold text-bio-white">
+                    My Favorites
+                </h1>
+            </div>
+
+            <p class="text-bio-gray-400 mb-8">
+                Artists you follow. Stay updated on their latest activities and
+                bookings.
+            </p>
+
+            <!-- Client-side rendered favorites list -->
+            <div id="favorites-container">
+                <div class="text-center py-16 text-bio-gray-400">
+                    <div class="animate-pulse">Loading your favorites...</div>
+                </div>
+            </div>
+
+            <!-- Empty State (hidden by default, shown by JS) -->
+            <div id="empty-state" class="hidden text-center py-16">
+                <Heart className="w-16 h-16 text-bio-gray-700 mx-auto mb-4" />
+                <h2 class="text-xl font-semibold text-bio-white mb-2">
+                    No favorites yet
+                </h2>
+                <p class="text-bio-gray-400 mb-6 max-w-md mx-auto">
+                    Start following artists to keep track of your favorites and
+                    stay updated on their activities.
+                </p>
+                <a href="/artists" class="btn-primary">
+                    <Music className="w-4 h-4 mr-2" />
+                    Browse Artists
+                </a>
+            </div>
+
+            <!-- Login Prompt (hidden by default, shown by JS) -->
+            <div id="login-prompt" class="hidden text-center py-16">
+                <Heart className="w-16 h-16 text-bio-gray-700 mx-auto mb-4" />
+                <h2 class="text-xl font-semibold text-bio-white mb-2">
+                    Sign in to see your favorites
+                </h2>
+                <p class="text-bio-gray-400 mb-6 max-w-md mx-auto">
+                    Create an account or sign in to save and view your favorite
+                    artists.
+                </p>
+                <a href="/login?redirect=/favorites" class="btn-primary">
+                    Sign In
+                </a>
+            </div>
+
+            <!-- Artists Grid (populated by JS) -->
+            <div
+                id="favorites-grid"
+                class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+
+<script>
+    import { userStore } from "../stores/userStore";
+
+    // Artist data embedded for client-side filtering
+    const allArtists = await import("../data/artists").then((m) => m.artists);
+
+    function renderFavorites() {
+        const user = userStore.get();
+        const container = document.getElementById("favorites-container");
+        const emptyState = document.getElementById("empty-state");
+        const loginPrompt = document.getElementById("login-prompt");
+        const grid = document.getElementById("favorites-grid");
+
+        if (!container || !emptyState || !loginPrompt || !grid) return;
+
+        // Hide loading
+        container.classList.add("hidden");
+
+        if (!user) {
+            // Not logged in
+            loginPrompt.classList.remove("hidden");
+            return;
+        }
+
+        const favoriteArtists = user.favorite_artists || [];
+
+        if (favoriteArtists.length === 0) {
+            // No favorites
+            emptyState.classList.remove("hidden");
+            return;
+        }
+
+        // Filter artists that are in favorites
+        const favArtistData = allArtists.filter((a) =>
+            favoriteArtists.includes(a.slug),
+        );
+
+        if (favArtistData.length === 0) {
+            emptyState.classList.remove("hidden");
+            return;
+        }
+
+        // Render cards
+        grid.innerHTML = favArtistData
+            .map(
+                (artist) => `
+      <a href="/artists/${artist.slug}" class="group block card-hover overflow-hidden">
+        <div class="aspect-square bg-bio-gray-800 relative overflow-hidden">
+          <img
+            src="${artist.image}"
+            alt="${artist.name}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-bio-black/90 via-bio-black/40 to-transparent pointer-events-none"></div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="text-lg font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
+              ${artist.name}
+            </h3>
+          </div>
+          <p class="text-sm text-bio-gray-400">${artist.location}</p>
+        </div>
+      </a>
+    `,
+            )
+            .join("");
+
+        grid.classList.remove("hidden");
+    }
+
+    // Initial render
+    renderFavorites();
+
+    // Re-render when user changes
+    userStore.subscribe(() => {
+        renderFavorites();
+    });
+</script>

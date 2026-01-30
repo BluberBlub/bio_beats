@@ -1,7 +1,8 @@
 import { useStore } from '@nanostores/react';
 import { userStore, logout } from '../../stores/userStore';
-import { User, LogOut, ChevronDown, LayoutDashboard } from 'lucide-react';
+import { User, LogOut, ChevronDown, LayoutDashboard, Heart } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import NotificationBell from './NotificationBell';
 
 interface Props {
     currentLang: 'en' | 'de';
@@ -47,65 +48,80 @@ export default function HeaderAuth({ currentLang }: Props) {
     }
 
     return (
-        <div className="relative" ref={dropdownRef}>
-            <button
-                onClick={toggleDropdown}
-                className="flex items-center gap-2 hover:bg-bio-gray-800/50 py-1.5 px-3 rounded-full transition-colors"
+        <div className="flex items-center gap-2">
+            {/* Favorites Link */}
+            <a
+                href={currentLang === "de" ? "/de/favorites" : "/favorites"}
+                className="p-2 rounded-full hover:bg-bio-gray-800/50 transition-colors"
+                title={currentLang === "de" ? "Meine Favoriten" : "My Favorites"}
             >
-                <div className="w-8 h-8 rounded-full bg-bio-accent flex items-center justify-center text-white font-bold text-sm overflow-hidden border border-red-500">
-                    {$user.avatar_url ? (
-                        <img
-                            src={$user.avatar_url}
-                            alt={$user.full_name}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        $user.full_name?.charAt(0) || 'U'
-                    )}
-                </div>
-                <span className="text-sm font-medium text-bio-white hidden md:block">
-                    {$user.full_name?.split(' ')[0]}
-                </span>
-                <ChevronDown className={`w-4 h-4 text-bio-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
+                <Heart className="w-5 h-5 text-bio-gray-300" />
+            </a>
 
-            {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-56 bg-bio-gray-900 border border-bio-gray-800 rounded-xl shadow-xl py-2 z-[100]">
-                    <div className="px-4 py-3 border-b border-bio-gray-800">
-                        <p className="text-sm font-medium text-bio-white break-words">{$user.full_name}</p>
-                        <p className="text-xs text-bio-gray-400 truncate">{$user.email}</p>
+            {/* Notification Bell */}
+            <NotificationBell currentLang={currentLang} />
+
+            {/* User Menu */}
+            <div className="relative" ref={dropdownRef}>
+                <button
+                    onClick={toggleDropdown}
+                    className="flex items-center gap-2 hover:bg-bio-gray-800/50 py-1.5 px-3 rounded-full transition-colors"
+                >
+                    <div className="w-8 h-8 rounded-full bg-bio-accent flex items-center justify-center text-white font-bold text-sm overflow-hidden border border-red-500">
+                        {$user.avatar_url ? (
+                            <img
+                                src={$user.avatar_url}
+                                alt={$user.full_name}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            $user.full_name?.charAt(0) || 'U'
+                        )}
                     </div>
+                    <span className="text-sm font-medium text-bio-white hidden md:block">
+                        {$user.full_name?.split(' ')[0]}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-bio-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                </button>
 
-                    <div className="py-2">
-                        {$user.role === 'admin' && (
+                {isOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-bio-gray-900 border border-bio-gray-800 rounded-xl shadow-xl py-2 z-[100]">
+                        <div className="px-4 py-3 border-b border-bio-gray-800">
+                            <p className="text-sm font-medium text-bio-white break-words">{$user.full_name}</p>
+                            <p className="text-xs text-bio-gray-400 truncate">{$user.email}</p>
+                        </div>
+
+                        <div className="py-2">
+                            {$user.role === 'admin' && (
+                                <a
+                                    href="/admin/dashboard"
+                                    className="w-full text-left px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800 flex items-center gap-2"
+                                >
+                                    <LayoutDashboard className="w-4 h-4" />
+                                    Admin Dashboard
+                                </a>
+                            )}
                             <a
-                                href="/admin/dashboard"
+                                href={currentLang === "de" ? "/de/profile" : "/profile"}
                                 className="w-full text-left px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800 flex items-center gap-2"
                             >
-                                <LayoutDashboard className="w-4 h-4" />
-                                Admin Dashboard
+                                <User className="w-4 h-4" />
+                                {currentLang === "de" ? "Mein Profil" : "My Profile"}
                             </a>
-                        )}
-                        <a
-                            href={currentLang === "de" ? "/de/profile" : "/profile"}
-                            className="w-full text-left px-4 py-2 text-sm text-bio-gray-300 hover:text-bio-white hover:bg-bio-gray-800 flex items-center gap-2"
-                        >
-                            <User className="w-4 h-4" />
-                            {currentLang === "de" ? "Mein Profil" : "My Profile"}
-                        </a>
-                    </div>
+                        </div>
 
-                    <div className="border-t border-bio-gray-800 pt-2">
-                        <button
-                            onClick={() => logout()}
-                            className="w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center gap-2"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            {currentLang === "de" ? "Abmelden" : "Log out"}
-                        </button>
+                        <div className="border-t border-bio-gray-800 pt-2">
+                            <button
+                                onClick={() => logout()}
+                                className="w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center gap-2"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                {currentLang === "de" ? "Abmelden" : "Log out"}
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
