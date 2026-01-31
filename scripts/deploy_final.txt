@@ -19,7 +19,9 @@ put -resume -preservetime -permissions=644 dist\client\_astro ./client/
 synchronize remote -delete -permissions=644 -criteria=size dist\server ./server
 
 # 3. Upload Root Files
-put -resume -preservetime -permissions=644 dist\client\index.html ./index.html
+# Remove static index.html from server to allow SSR to handle root
+rm index.html
+# put -resume -preservetime -permissions=644 dist\client\index.html ./index.html
 put -resume -preservetime -permissions=644 dist\client\.htaccess ./.htaccess
 
 exit
