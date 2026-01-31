@@ -1,12 +1,5 @@
 ---
-export const prerender = true;
 import { artists } from "../../data/artists";
-
-export function getStaticPaths() {
-  return artists.map((artist) => ({
-    params: { slug: artist.slug },
-  }));
-}
 
 const { slug } = Astro.params;
 return Astro.redirect(`/en/artists/${slug}`);
