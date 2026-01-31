@@ -11,15 +11,27 @@ import {
     ExternalLink,
     ArrowLeft,
 } from "lucide-react";
+import FavoriteButton from "../../../components/react/FavoriteButton";
+import { languages } from "../../../i18n";
+import { getTranslations } from "../../../i18n";
 
 export function getStaticPaths() {
-    return artists.map((artist) => ({
-        params: { slug: artist.slug },
-        props: { artist },
-    }));
+    const paths = [];
+    Object.keys(languages).forEach((lang) => {
+        artists.forEach((artist) => {
+            paths.push({
+                params: { lang, slug: artist.slug },
+                props: { artist },
+            });
+        });
+    });
+    return paths;
 }
 
 const { artist } = Astro.props;
+const { lang } = Astro.params;
+const t = getTranslations(lang as keyof typeof languages);
+const ta = t.artists;
 
 const availabilityColors = {
     available: "bg-green-500/20 text-green-400 border-green-500/30",
@@ -28,9 +40,9 @@ const availabilityColors = {
 };
 
 const availabilityLabels = {
-    available: "Verfügbar für Bookings",
-    limited: "Begrenzte Verfügbarkeit",
-    unavailable: "Derzeit nicht verfügbar",
+    available: ta.availableBookings,
+    limited: ta.limitedAvailability,
+    unavailable: ta.unavailable,
 };
 
 const typeLabels = {
@@ -40,16 +52,20 @@ const typeLabels = {
 };
 ---
 
-<BaseLayout title={`${artist.name} — BIO BEATS`} description={artist.shortBio}>
+<BaseLayout
+    title={`${artist.name} — BIO BEATS`}
+    description={artist.shortBio}
+    lang={lang}
+>
     <!-- Back Link -->
     <div class="bg-bio-black py-4">
         <div class="container-wide">
             <a
-                href="/de/artists"
+                href={`/${lang === "de" ? "de/" : ""}artists`}
                 class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
             >
                 <ArrowLeft className="w-4 h-4" />
-                Zurück zu Künstlern
+                {ta.backToArtists}
             </a>
         </div>
     </div>
@@ -73,7 +89,7 @@ const typeLabels = {
                                 <div class="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-bio-accent/20 backdrop-blur-sm border border-bio-accent/30">
                                     <BadgeCheck className="w-4 h-4 text-bio-accent" />
                                     <span class="text-sm font-medium text-bio-accent">
-                                        Verifiziert
+                                        {ta.verified}
                                     </span>
                                 </div>
                             )
@@ -191,11 +207,18 @@ const typeLabels = {
 
                     <!-- Booking CTA -->
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href={`/de/book/${artist.slug}`} class="btn-primary">
+                        <a
+                            href={`/${lang === "de" ? "de/" : ""}book/${artist.slug}`}
+                            class="btn-primary"
+                        >
                             <Calendar className="w-4 h-4 mr-2" />
-                            Buchung anfragen
+                            {ta.requestBooking}
                         </a>
-                        <button class="btn-secondary"> Zur Wunschliste </button>
+                        <FavoriteButton
+                            client:load
+                            artistSlug={artist.slug}
+                            artistName={artist.name}
+                        />
                     </div>
                 </div>
             </div>
@@ -209,34 +232,34 @@ const typeLabels = {
                 <!-- Stats Card -->
                 <div class="card">
                     <h3 class="text-lg font-semibold text-bio-white mb-4">
-                        Quick Stats
+                        {ta.quickStats}
                     </h3>
                     <dl class="space-y-4">
                         <div class="flex justify-between">
-                            <dt class="text-bio-gray-400">Typ</dt>
+                            <dt class="text-bio-gray-400">{ta.type}</dt>
                             <dd class="text-bio-white font-medium">
                                 {typeLabels[artist.type]}
                             </dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-bio-gray-400">BPM Bereich</dt>
+                            <dt class="text-bio-gray-400">{ta.bpmRange}</dt>
                             <dd class="text-bio-white font-medium">
                                 {artist.bpmRange.min}–{artist.bpmRange.max}
                             </dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-bio-gray-400">Standort</dt>
+                            <dt class="text-bio-gray-400">{ta.location}</dt>
                             <dd class="text-bio-white font-medium">
                                 {artist.location}
                             </dd>
                         </div>
                         <div class="flex justify-between">
-                            <dt class="text-bio-gray-400">Status</dt>
+                            <dt class="text-bio-gray-400">{ta.status}</dt>
                             <dd class="text-bio-white font-medium">
                                 {
                                     artist.isVerified
-                                        ? "Verifiziert"
-                                        : "Unverifiziert"
+                                        ? ta.verified
+                                        : ta.unverified
                                 }
                             </dd>
                         </div>
@@ -246,7 +269,7 @@ const typeLabels = {
                 <!-- Genres Card -->
                 <div class="card">
                     <h3 class="text-lg font-semibold text-bio-white mb-4">
-                        Genres
+                        {ta.genres}
                     </h3>
                     <div class="flex flex-wrap gap-2">
                         {
@@ -260,19 +283,44 @@ const typeLabels = {
                 <!-- Contact Card -->
                 <div class="card">
                     <h3 class="text-lg font-semibold text-bio-white mb-4">
-                        Kontakt
+                        {ta.getInTouch}
                     </h3>
                     <p class="text-bio-gray-400 mb-4">
-                        Interessiert an einer Buchung von {artist.name}? Sende
-                        eine Anfrage über die Plattform.
+                        {ta.getInTouchDesc.replace("{name}", artist.name)}
                     </p>
                     <a
-                        href={`/de/book/${artist.slug}`}
+                        href={`/${lang === "de" ? "de/" : ""}book/${artist.slug}`}
                         class="btn-primary w-full text-center"
                     >
-                        Buchungsanfrage senden
+                        {ta.sendInquiry}
                     </a>
                 </div>
+            </div>
+
+            {/* SoundCloud Player */}
+            <div class="mt-8 card">
+                <h3 class="text-lg font-semibold text-bio-white mb-4">
+                    {ta.latestTracks}
+                </h3>
+                {
+                    artist.socials.soundcloud ? (
+                        <iframe
+                            width="100%"
+                            height="400"
+                            scrolling="no"
+                            frameborder="no"
+                            allow="autoplay"
+                            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+                                artist.socials.soundcloud,
+                            )}&color=%23ff0700&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`}
+                            class="rounded-xl border border-bio-gray-800 shadow-lg bg-bio-gray-900"
+                        />
+                    ) : (
+                        <div class="p-8 rounded-xl border border-bio-gray-800 bg-bio-gray-900/30 text-bio-gray-400 text-center">
+                            <p>{ta.noTracks}</p>
+                        </div>
+                    )
+                }
             </div>
         </div>
     </section>

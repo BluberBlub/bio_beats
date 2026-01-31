@@ -6,69 +6,79 @@ import ArtistCard from "../../components/astro/ArtistCard.astro";
 import { getFeaturedArtists } from "../../data/artists";
 import { roleOptions } from "../../data/navigation";
 import { ArrowRight, Zap, Shield, Globe, TrendingUp } from "lucide-react";
+import { languages } from "../../i18n";
 import { getTranslations } from "../../i18n";
 
-const t = getTranslations("de");
+// Dynamic routing for static site generation
+export function getStaticPaths() {
+    return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = getTranslations(lang as keyof typeof languages);
 const featuredArtists = getFeaturedArtists();
 
 const features = [
     {
         icon: "Zap",
-        title: "Smart Booking",
-        description:
-            "Optimierter Buchungsprozess mit intelligenter Vermittlung zwischen Künstlern und Venues.",
+        title: t.home.features.smartBooking, // Translations need to be added
+        description: t.home.features.smartBookingDesc,
     },
     {
         icon: "Shield",
-        title: "Verifiziertes Netzwerk",
-        description:
-            "Geprüfte Profis für sichere und professionelle Zusammenarbeit.",
+        title: t.home.features.verifiedNetwork,
+        description: t.home.features.verifiedNetworkDesc,
     },
     {
         icon: "Globe",
-        title: "Globale Reichweite",
-        description:
-            "Verbinde dich mit Künstlern, Labels und Venues aus der ganzen Welt.",
+        title: t.home.features.globalReach,
+        description: t.home.features.globalReachDesc,
     },
     {
         icon: "TrendingUp",
-        title: "Karriere-Wachstum",
-        description: "Tools und Einblicke für eine nachhaltige Musikkarriere.",
+        title: t.home.features.careerGrowth,
+        description: t.home.features.careerGrowthDesc,
     },
 ];
 
 const roleLabels: Record<string, string> = {
-    artist: "Künstler",
-    performer: "Performer",
-    creative: "Kreative",
-    manager: "Manager",
-    label: "Labels",
-    booker: "Booker",
-    provider: "Dienstleister",
-    guest: "Gast",
+    artist: t.admin.roles.artist,
+    performer: t.admin.roles.performer,
+    creative: t.admin.roles.creative,
+    manager: t.admin.roles.manager,
+    label: t.admin.roles.label,
+    booker: t.admin.roles.booker,
+    provider: t.admin.roles.provider,
+    guest: t.admin.roles.guest,
 };
 ---
 
 <BaseLayout
-    title="BIO BEATS — Management & Booking Plattform für elektronische Kultur"
+    title={`BIO BEATS — ${t.home.heroSubtitle.split(".")[0]}`}
+    description={t.home.heroSubtitle}
+    lang={lang}
 >
-    <!-- Hero Section -->
+    {/* Hero Section */}
     <Hero
         title="BIO BEATS"
-        subtitle="Die Management- und Booking-Plattform für elektronische Kultur. Weniger Chaos. Mehr Fokus. Mehr Bookings."
-        primaryCta={{ label: "Jetzt starten", href: "/de/join" }}
-        secondaryCta={{ label: "Mehr erfahren", href: "/de/about" }}
+        subtitle={t.home.heroSubtitle}
+        primaryCta={{
+            label: t.home.ctaPrimary,
+            href: `/${lang === "de" ? "de/" : ""}join`,
+        }}
+        secondaryCta={{
+            label: t.home.ctaSecondary,
+            href: `/${lang === "de" ? "de/" : ""}about`,
+        }}
     />
 
-    <!-- Features Section -->
+    {/* Features Section */}
     <section class="section bg-bio-black">
         <div class="container-wide">
             <div class="section-header">
-                <h2 class="text-bio-white mb-4">Warum BIO BEATS?</h2>
+                <h2 class="text-bio-white mb-4">{t.home.whyBioBeats}</h2>
                 <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
-                    Wir bauen die Infrastruktur, die elektronische Musik
-                    verdient. Professionell, transparent und auf Wachstum
-                    ausgelegt.
+                    {t.home.whyBioBeatsDesc}
                 </p>
             </div>
 
@@ -103,21 +113,23 @@ const roleLabels: Record<string, string> = {
         </div>
     </section>
 
-    <!-- Featured Artists Section -->
+    {/* Featured Artists Section */}
     <section class="section bg-bio-gray-900">
         <div class="container-wide">
             <div class="flex items-end justify-between mb-12">
                 <div>
-                    <h2 class="text-bio-white mb-2">Ausgewählte Künstler</h2>
+                    <h2 class="text-bio-white mb-2">
+                        {t.home.featuredArtists}
+                    </h2>
                     <p class="text-bio-gray-400">
-                        Entdecke talentierte Künstler für dein nächstes Event
+                        {t.home.featuredArtistsDesc}
                     </p>
                 </div>
                 <a
-                    href="/de/artists"
+                    href={`/${lang === "de" ? "de/" : ""}artists`}
                     class="btn-ghost hidden md:inline-flex items-center gap-2"
                 >
-                    Alle Künstler
+                    {t.home.viewAllArtists}
                     <ArrowRight className="w-4 h-4" />
                 </a>
             </div>
@@ -125,31 +137,30 @@ const roleLabels: Record<string, string> = {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {
                     featuredArtists.map((artist) => (
-                        <ArtistCard artist={artist} lang="de" />
+                        <ArtistCard artist={artist} lang={lang} />
                     ))
                 }
             </div>
 
             <div class="mt-8 text-center md:hidden">
                 <a
-                    href="/de/artists"
+                    href={`/${lang === "de" ? "de/" : ""}artists`}
                     class="btn-secondary inline-flex items-center gap-2"
                 >
-                    Alle Künstler
+                    {t.home.viewAllArtists}
                     <ArrowRight className="w-4 h-4" />
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Role Selection CTA -->
+    {/* Role Selection CTA */}
     <section class="section bg-bio-black">
         <div class="container-wide">
             <div class="section-header">
-                <h2 class="text-bio-white mb-4">Wer bist du?</h2>
+                <h2 class="text-bio-white mb-4">{t.home.whoAreYou}</h2>
                 <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
-                    BIO BEATS ist für alle im elektronischen Musik-Ökosystem
-                    gebaut. Finde deine Rolle und starte durch.
+                    {t.home.whoAreYouDesc}
                 </p>
             </div>
 
@@ -159,11 +170,11 @@ const roleLabels: Record<string, string> = {
                 {
                     roleOptions.slice(0, 4).map((role) => (
                         <a
-                            href={`/de/join?role=${role.id}`}
+                            href={`/${lang === "de" ? "de/" : ""}join?role=${role.id}`}
                             class="card-hover p-6 text-center group"
                         >
                             <h4 class="font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
-                                {roleLabels[role.id] || role.label}
+                                {roleLabels[role.id]}
                             </h4>
                         </a>
                     ))
@@ -172,30 +183,33 @@ const roleLabels: Record<string, string> = {
 
             <div class="mt-8 text-center">
                 <a
-                    href="/de/join"
+                    href={`/${lang === "de" ? "de/" : ""}join`}
                     class="btn-primary inline-flex items-center gap-2"
                 >
-                    Jetzt starten
+                    {t.common.getStarted}
                     <ArrowRight className="w-4 h-4" />
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    {/* CTA Section */}
     <section class="section bg-gradient-to-b from-bio-gray-900 to-bio-black">
         <div class="container-narrow text-center">
-            <h2 class="text-bio-white mb-4">Bereit beizutreten?</h2>
+            <h2 class="text-bio-white mb-4">{t.home.readyToJoin}</h2>
             <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
-                Schließe dich hunderten von Künstlern, Bookern und
-                Branchenprofis an, die bereits ihre Karriere mit BIO BEATS
-                aufbauen.
+                {t.home.readyToJoinDesc}
             </p>
             <div
                 class="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-                <a href="/de/join" class="btn-primary">Profil erstellen</a>
-                <a href="/de/faq" class="btn-ghost">FAQ lesen</a>
+                <a
+                    href={`/${lang === "de" ? "de/" : ""}join`}
+                    class="btn-primary">{t.home.createProfile}</a
+                >
+                <a href={`/${lang === "de" ? "de/" : ""}faq`} class="btn-ghost"
+                    >{t.nav.faq}</a
+                >
             </div>
         </div>
     </section>

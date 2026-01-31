@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
     Search,
     Plus,
@@ -11,16 +11,16 @@ import {
     Upload,
     Image as ImageIcon
 } from 'lucide-react';
-import { festivals as frontendFestivals, type Festival } from '../../../data/festivals';
+import { type Festival } from '../../../data/festivals';
+import { supabase } from '../../../lib/supabase';
 
 // Use frontend data as initial state
-const initialFestivals: Festival[] = frontendFestivals.map(f => ({
-    ...f,
-    // Ensure all required fields are present
-}));
+// Initial state
+const initialFestivals: Festival[] = [];
 
 export default function FestivalTable() {
     const [festivals, setFestivals] = useState<Festival[]>(initialFestivals);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [countryFilter, setCountryFilter] = useState<string>('all');
     const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -28,6 +28,29 @@ export default function FestivalTable() {
     const [editingFestival, setEditingFestival] = useState<Festival | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Fetch festivals on mount
+    useEffect(() => {
+        fetchFestivals();
+    }, []);
+
+    const fetchFestivals = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('festivals')
+                .select('*')
+                .order('date', { ascending: true });
+
+            if (error) throw error;
+            if (data) setFestivals(data as Festival[]);
+        } catch (error) {
+            console.error('Error fetching festivals:', error);
+            setFestivals([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Get unique countries and types for filter dropdowns
     const countries = [...new Set(festivals.map(f => f.country))].sort();
@@ -43,9 +66,20 @@ export default function FestivalTable() {
     });
 
     // CRUD Operations
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this festival?')) {
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this festival?')) return;
+
+        try {
+            const { error } = await supabase
+                .from('festivals') // Check table name
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
             setFestivals(festivals.filter(f => f.id !== id));
+        } catch (error) {
+            console.error('Error deleting festival:', error);
+            alert('Failed to delete festival');
         }
     };
 
@@ -60,38 +94,51 @@ export default function FestivalTable() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
-        const festivalData: Partial<Festival> = {
+        const festivalData = {
             name: formData.get('name') as string,
             location: formData.get('location') as string,
             country: formData.get('country') as string,
             date: formData.get('date') as string,
-            dateEnd: (formData.get('dateEnd') as string) || undefined,
+            dateEnd: (formData.get('dateEnd') as string) || null,
             capacity: formData.get('capacity') as string,
             type: formData.get('type') as string,
             website: formData.get('website') as string,
             description: formData.get('description') as string,
-            slug: (formData.get('name') as string).toLowerCase().replace(/ /g, '-'),
+            slug: (formData.get('name') as string).toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, ''),
             image: imagePreview || editingFestival?.image || '/festivals/default.png',
-            artistSlugs: editingFestival?.artistSlugs || [],
+            // artistSlugs: editingFestival?.artistSlugs || [], // Handled separately or needs relational table
             stages: (formData.get('stages') as string)?.split(',').map(s => s.trim()).filter(Boolean) || [],
             highlights: (formData.get('highlights') as string)?.split(',').map(s => s.trim()).filter(Boolean) || [],
         };
 
-        if (editingFestival) {
-            setFestivals(festivals.map(f => f.id === editingFestival.id ? { ...f, ...festivalData } as Festival : f));
-        } else {
-            const newFestival: Festival = {
-                ...festivalData as Omit<Festival, 'id'>,
-                id: Math.random().toString(36).substr(2, 9),
-            };
-            setFestivals([...festivals, newFestival]);
-        }
+        try {
+            if (editingFestival) {
+                const { error } = await supabase
+                    .from('festivals')
+                    .update(festivalData)
+                    .eq('id', editingFestival.id);
 
-        closeModal();
+                if (error) throw error;
+                setFestivals(festivals.map(f => f.id === editingFestival.id ? { ...f, ...festivalData } as Festival : f));
+            } else {
+                const { data, error } = await supabase
+                    .from('festivals')
+                    .insert([festivalData])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+                if (data) setFestivals([...festivals, data as Festival]);
+            }
+            closeModal();
+        } catch (error) {
+            console.error('Error saving festival:', error);
+            alert('Failed to save festival');
+        }
     };
 
     const openCreateModal = () => {
@@ -229,6 +276,12 @@ export default function FestivalTable() {
                     </div>
                 ))}
             </div>
+            {loading && (
+                <div className="p-8 text-center text-bio-gray-400">Loading festivals...</div>
+            )}
+            {!loading && filteredFestivals.length === 0 && (
+                <div className="p-8 text-center text-bio-gray-400">No festivals found.</div>
+            )}
 
             {/* Modal */}
             {isModalOpen && (

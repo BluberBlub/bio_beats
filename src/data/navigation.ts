@@ -6,7 +6,6 @@ export const mainNavigation: NavItem[] = [
     { label: 'Festivals', href: '/festivals' },
     { label: 'Managers', href: '/managers' },
     { label: 'Services', href: '/services' },
-    { label: 'Festival Guide', href: '/guide' },
     // { label: 'Calendar', href: '/calendar' },
     { label: 'About', href: '/about' },
 ];

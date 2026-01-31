@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MoreHorizontal, Check, X, Eye, Calendar, User, Mail, DollarSign } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
 
 interface Booking {
     id: string;
@@ -13,50 +14,70 @@ interface Booking {
     createdAt: string;
 }
 
-const mockBookings: Booking[] = [
-    {
-        id: '1',
-        artistName: 'Neon Pulse',
-        promoterName: 'Techno Berlin',
-        promoterEmail: 'booking@berlintechno.de',
-        eventName: 'Summer Rave 2026',
-        eventDate: '2026-07-24',
-        offerAmount: 2500,
-        status: 'pending',
-        createdAt: '2026-01-28'
-    },
-    {
-        id: '2',
-        artistName: 'Solar Flare',
-        promoterName: 'Ibiza Global',
-        promoterEmail: 'events@ibiza.com',
-        eventName: 'Sunset Sessions',
-        eventDate: '2026-08-15',
-        offerAmount: 4000,
-        status: 'approved',
-        createdAt: '2026-01-25'
-    },
-    {
-        id: '3',
-        artistName: 'Lunar Echo',
-        promoterName: 'Underground Club',
-        promoterEmail: 'info@underground.uk',
-        eventName: 'Warehouse Project',
-        eventDate: '2026-09-05',
-        offerAmount: 1800,
-        status: 'rejected',
-        createdAt: '2026-01-20'
-    }
-];
+
 
 export default function BookingTable() {
-    const [bookings, setBookings] = useState<Booking[]>(mockBookings);
+    const [bookings, setBookings] = useState<Booking[]>([]);
+    const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
 
-    const handleStatusUpdate = (id: string, newStatus: Booking['status']) => {
-        setBookings(prev => prev.map(booking =>
-            booking.id === id ? { ...booking, status: newStatus } : booking
-        ));
+    useEffect(() => {
+        fetchBookings();
+    }, []);
+
+    const fetchBookings = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('bookings')
+                .select(`
+                    *,
+                    artist:artist_id(full_name),
+                    promoter:promoter_id(full_name, email)
+                `)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            // Map DB result to Booking interface
+            // Note: Adjust mapping based on actual DB schema.
+            // Assuming artist_id and promoter_id links to profiles
+            const mappedBookings: Booking[] = (data || []).map((b: any) => ({
+                id: b.id,
+                artistName: b.artist?.full_name || b.artist_name || 'Unknown Artist',
+                promoterName: b.promoter?.full_name || b.promoter_name || 'Unknown Promoter',
+                promoterEmail: b.promoter?.email || b.promoter_email || '',
+                eventName: b.event_name,
+                eventDate: b.event_date,
+                offerAmount: b.offer_amount,
+                status: b.status,
+                createdAt: b.created_at
+            }));
+
+            setBookings(mappedBookings);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleStatusUpdate = async (id: string, newStatus: Booking['status']) => {
+        try {
+            const { error } = await supabase
+                .from('bookings')
+                .update({ status: newStatus })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setBookings(prev => prev.map(booking =>
+                booking.id === id ? { ...booking, status: newStatus } : booking
+            ));
+        } catch (error) {
+            console.error('Error updating booking status:', error);
+            alert('Failed to update booking status');
+        }
     };
 
     const StatusBadge = ({ status }: { status: Booking['status'] }) => {
@@ -87,8 +108,8 @@ export default function BookingTable() {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${filter === f
-                                    ? 'bg-[#262626] text-white shadow-sm'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-[#262626] text-white shadow-sm'
+                                : 'text-gray-400 hover:text-white'
                                 } capitalize`}
                         >
                             {f}
@@ -171,6 +192,8 @@ export default function BookingTable() {
                             ))}
                         </tbody>
                     </table>
+                    {loading && <div className="p-4 text-center text-gray-500">Loading bookings...</div>}
+                    {!loading && filteredBookings.length === 0 && <div className="p-4 text-center text-gray-500">No bookings found.</div>}
                 </div>
             </div>
         </div>

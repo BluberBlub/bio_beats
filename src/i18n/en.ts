@@ -27,8 +27,27 @@ export const en = {
         ctaPrimary: 'Join BIO BEATS',
         ctaSecondary: 'Learn More',
         featuredArtists: 'Featured Artists',
+        featuredArtistsDesc: 'Discover talented artists ready for your next event',
         viewAll: 'View All',
+        viewAllArtists: 'View All Artists',
         seeProfile: 'See Profile',
+        whyBioBeats: 'Why BIO BEATS?',
+        whyBioBeatsDesc: "We're building the infrastructure that electronic music deserves. Professional, transparent, and designed for growth.",
+        features: {
+            smartBooking: 'Smart Booking',
+            smartBookingDesc: 'Streamlined booking process with intelligent matching between artists and venues.',
+            verifiedNetwork: 'Verified Network',
+            verifiedNetworkDesc: 'Trusted, verified professionals for secure and professional collaborations.',
+            globalReach: 'Global Reach',
+            globalReachDesc: 'Connect with artists, labels, and venues from around the world.',
+            careerGrowth: 'Career Growth',
+            careerGrowthDesc: 'Tools and insights to help you build a sustainable music career.',
+        },
+        whoAreYou: 'Who are you?',
+        whoAreYouDesc: 'BIO BEATS is built for everyone in the electronic music ecosystem. Find your role and get started.',
+        readyToJoin: 'Ready to join the platform?',
+        readyToJoinDesc: 'Join hundreds of artists, bookers, and industry professionals who are already building their careers with BIO BEATS.',
+        createProfile: 'Create Your Profile',
     },
 
     // Common
@@ -62,6 +81,10 @@ export const en = {
 
     // Artists
     artists: {
+        pageTitle: 'Artists & Labels — BIO BEATS',
+        pageDescription: 'Discover verified electronic music artists, DJs, live acts, and labels on BIO BEATS.',
+        heroTitle: 'Artists & Labels',
+        heroSubtitle: 'Discover verified electronic music artists, DJs, live acts, and labels. Find the perfect talent for your next event.',
         title: 'Artists Directory',
         subtitle: 'Discover verified electronic music artists available for booking',
         searchPlaceholder: 'Search artists...',
@@ -69,6 +92,24 @@ export const en = {
         allGenres: 'All Genres',
         bookNow: 'Book Now',
         viewProfile: 'View Profile',
+        backToArtists: 'Back to Artists',
+        verified: 'Verified',
+        availableBookings: 'Available for Bookings',
+        limitedAvailability: 'Limited Availability',
+        unavailable: 'Currently Unavailable',
+        requestBooking: 'Request Booking',
+        quickStats: 'Quick Stats',
+        type: 'Type',
+        bpmRange: 'BPM Range',
+        location: 'Location',
+        status: 'Status',
+        unverified: 'Unverified',
+        genres: 'Genres',
+        getInTouch: 'Get in Touch',
+        getInTouchDesc: 'Interested in booking {name}? Send a booking inquiry through the platform.',
+        sendInquiry: 'Send Booking Inquiry',
+        latestTracks: 'Latest Tracks',
+        noTracks: 'No tracks available on SoundCloud for this artist.',
     },
 
     // Festivals
@@ -81,6 +122,24 @@ export const en = {
         festivalInfo: 'Festival Info',
         bookArtists: 'Book Artists for This Festival',
         officialWebsite: 'Official Website',
+        heroTitle: 'Festival Guide',
+        heroSubtitle: 'Discover electronic music festivals around the world. Find your next adventure and connect with the global music community.',
+        exploreFestivals: 'Explore Festivals',
+        submitFestival: 'Submit Festival',
+        forOrganizers: 'For Organizers',
+        partnerTitle: 'Partner with BIO BEATS',
+        partnerDesc: 'Streamline your booking process, find verified talent, and manage your event lineup with our professional tools.',
+        becomePartner: 'Become a Partner',
+        benefits: {
+            smartScheduling: 'Smart Scheduling',
+            smartSchedulingDesc: 'Effortlessly manage artist bookings and stage times.',
+            verifiedTalent: 'Verified Talent',
+            verifiedTalentDesc: 'Access a pool of vetted, professional artists.',
+            globalReach: 'Global Reach',
+            globalReachDesc: 'Connect with reliability, anywhere in the world.',
+            curatedExperience: 'Curated Experience',
+            curatedExperienceDesc: 'Build lineups that tell a story.',
+        },
     },
 
     // Contact
@@ -134,12 +193,41 @@ export const en = {
 
     // About
     about: {
-        title: "We're building the infrastructure electronic music deserves.",
-        subtitle: 'BIO BEATS is more than a booking platform. It\'s a professional ecosystem designed to reduce chaos, create clarity, and enable sustainable careers in electronic music.',
-        missionTitle: 'Our Mission',
-        missionSubtitle: 'Less chaos. More focus. More bookings.',
-        values: 'Our Values',
+        pageTitle: 'About BIO BEATS — Management & Booking Platform',
+        pageDescription: 'Learn about BIO BEATS, the management and booking platform for electronic music culture.',
+        heroTitle: "We're building the infrastructure electronic music deserves.",
+        heroSubtitle: 'BIO BEATS is more than a booking platform. It\'s a professional ecosystem designed to reduce chaos, create clarity, and enable sustainable careers in electronic music.',
+        missionLabel: 'Our Mission',
+        missionTitle: 'Less chaos. More focus. More bookings.',
+        missionDesc1: 'The electronic music industry is fragmented. Artists struggle with bookings, bookers struggle to find reliable acts, and everyone wastes time on bureaucracy instead of creating.',
+        missionDesc2: "We're changing that. BIO BEATS connects artists, labels, bookers, festivals, and service providers in one structured, professional ecosystem.",
+        missionPoints: {
+            infrastructure: 'Professional booking infrastructure',
+            network: 'Verified network of professionals',
+            finance: 'Financial tools and reporting',
+            services: 'Modular services for growth',
+        },
+        beatsFull: 'Bringing Electronic Artists To Success',
+        valuesTitle: 'Our Values',
         valuesSubtitle: 'The principles that guide everything we build.',
+        values: {
+            community: {
+                title: 'Community First',
+                desc: 'Built by and for the electronic music community. We understand the industry because we are part of it.',
+            },
+            trust: {
+                title: 'Trust & Transparency',
+                desc: 'Verified profiles, clear processes, and honest communication. No hidden fees, no surprises.',
+            },
+            sustainable: {
+                title: 'Sustainable Careers',
+                desc: 'We focus on long-term success, not quick wins. Building infrastructure for lasting careers.',
+            },
+            infrastructure: {
+                title: 'Professional Infrastructure',
+                desc: 'From bookings to finances, we provide the tools professionals need to focus on their art.',
+            },
+        },
         readyToJoin: 'Ready to join us?',
         joinSubtitle: 'Be part of the future of electronic music management. Join BIO BEATS today.',
     },
@@ -403,6 +491,7 @@ export const en = {
             ],
         },
     },
+
 
     // Footer
     footer: {

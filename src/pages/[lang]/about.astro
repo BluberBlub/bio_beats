@@ -9,53 +9,54 @@ import {
     Shield,
     TrendingUp,
 } from "lucide-react";
+import { languages } from "../../i18n";
+import { getTranslations } from "../../i18n";
 
-const pageTitle = "Über BIO BEATS — Management & Booking Plattform";
-const pageDescription =
-    "Erfahre mehr über BIO BEATS, die Management- und Booking-Plattform für elektronische Kultur.";
+export function getStaticPaths() {
+    return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = getTranslations(lang as keyof typeof languages);
+const ta = t.about;
+
+const pageTitle = ta.pageTitle;
+const pageDescription = ta.pageDescription;
 
 const values = [
     {
         icon: "Users",
-        title: "Community First",
-        description:
-            "Von und für die elektronische Musik-Community gebaut. Wir verstehen die Branche, weil wir Teil davon sind.",
+        title: ta.values.community.title,
+        description: ta.values.community.desc,
     },
     {
         icon: "Shield",
-        title: "Vertrauen & Transparenz",
-        description:
-            "Verifizierte Profile, klare Prozesse, ehrliche Kommunikation. Keine versteckten Gebühren, keine Überraschungen.",
+        title: ta.values.trust.title,
+        description: ta.values.trust.desc,
     },
     {
         icon: "TrendingUp",
-        title: "Nachhaltige Karrieren",
-        description:
-            "Wir fokussieren auf langfristigen Erfolg, nicht auf schnelle Gewinne. Infrastruktur für dauerhafte Karrieren.",
+        title: ta.values.sustainable.title,
+        description: ta.values.sustainable.desc,
     },
     {
         icon: "Calendar",
-        title: "Professionelle Infrastruktur",
-        description:
-            "Von Bookings bis Finanzen – wir bieten die Tools, die Profis brauchen, um sich auf ihre Kunst zu konzentrieren.",
+        title: ta.values.infrastructure.title,
+        description: ta.values.infrastructure.desc,
     },
 ];
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} lang={lang}>
     <!-- Hero -->
     <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
         <div class="container-wide">
             <div class="max-w-3xl">
                 <h1 class="text-bio-white mb-6">
-                    Wir bauen die Infrastruktur, die elektronische Musik
-                    verdient.
+                    {ta.heroTitle}
                 </h1>
                 <p class="text-xl text-bio-gray-400 leading-relaxed">
-                    BIO BEATS ist mehr als eine Booking-Plattform. Es ist ein
-                    professionelles Ökosystem, das Chaos reduziert, Klarheit
-                    schafft und nachhaltige Karrieren in der elektronischen
-                    Musik ermöglicht.
+                    {ta.heroSubtitle}
                 </p>
             </div>
         </div>
@@ -68,46 +69,41 @@ const values = [
                 <div>
                     <span
                         class="text-bio-accent text-sm font-semibold uppercase tracking-wider"
-                        >Unsere Mission</span
+                        >{ta.missionLabel}</span
                     >
                     <h2 class="text-bio-white mt-4 mb-6">
-                        Weniger Chaos. Mehr Fokus. Mehr Bookings.
+                        {ta.missionTitle}
                     </h2>
                     <p class="text-bio-gray-400 text-lg leading-relaxed mb-6">
-                        Die Branche der elektronischen Musik ist fragmentiert.
-                        Künstler kämpfen mit Bookings, Booker haben
-                        Schwierigkeiten, zuverlässige Acts zu finden, und alle
-                        verschwenden Zeit mit Bürokratie statt zu kreieren.
+                        {ta.missionDesc1}
                     </p>
                     <p class="text-bio-gray-400 text-lg leading-relaxed mb-8">
-                        Das ändern wir. BIO BEATS verbindet Künstler, Labels,
-                        Booker, Festivals und Dienstleister in einem
-                        strukturierten, professionellen Ökosystem.
+                        {ta.missionDesc2}
                     </p>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3 text-bio-gray-300">
                             <CheckCircle
                                 className="w-5 h-5 text-bio-accent flex-shrink-0"
                             />
-                            <span>Professionelle Booking-Infrastruktur</span>
+                            <span>{ta.missionPoints.infrastructure}</span>
                         </div>
                         <div class="flex items-center gap-3 text-bio-gray-300">
                             <CheckCircle
                                 className="w-5 h-5 text-bio-accent flex-shrink-0"
                             />
-                            <span>Verifiziertes Netzwerk von Profis</span>
+                            <span>{ta.missionPoints.network}</span>
                         </div>
                         <div class="flex items-center gap-3 text-bio-gray-300">
                             <CheckCircle
                                 className="w-5 h-5 text-bio-accent flex-shrink-0"
                             />
-                            <span>Finanz-Tools und Reporting</span>
+                            <span>{ta.missionPoints.finance}</span>
                         </div>
                         <div class="flex items-center gap-3 text-bio-gray-300">
                             <CheckCircle
                                 className="w-5 h-5 text-bio-accent flex-shrink-0"
                             />
-                            <span>Modulare Services für Wachstum</span>
+                            <span>{ta.missionPoints.services}</span>
                         </div>
                     </div>
                 </div>
@@ -129,7 +125,7 @@ const values = [
                                     B.E.A.T.S.
                                 </div>
                                 <div class="text-bio-gray-400">
-                                    Bringing Electronic Artists To Success
+                                    {ta.beatsFull}
                                 </div>
                             </div>
                         </div>
@@ -143,9 +139,9 @@ const values = [
     <section class="section bg-bio-gray-900">
         <div class="container-wide">
             <div class="section-header">
-                <h2 class="text-bio-white mb-4">Unsere Werte</h2>
+                <h2 class="text-bio-white mb-4">{ta.valuesTitle}</h2>
                 <p class="text-bio-gray-400 text-lg max-w-2xl mx-auto">
-                    Die Prinzipien, die alles leiten, was wir bauen.
+                    {ta.valuesSubtitle}
                 </p>
             </div>
 
@@ -181,16 +177,15 @@ const values = [
     <!-- CTA -->
     <section class="section bg-bio-black">
         <div class="container-narrow text-center">
-            <h2 class="text-bio-white mb-4">Bereit beizutreten?</h2>
+            <h2 class="text-bio-white mb-4">{ta.readyToJoin}</h2>
             <p class="text-bio-gray-400 text-lg mb-8 max-w-xl mx-auto">
-                Werde Teil der Zukunft des Managements elektronischer Musik.
-                Tritt BIO BEATS noch heute bei.
+                {ta.joinSubtitle}
             </p>
             <a
-                href="/de/join"
+                href={`/${lang === "de" ? "de/" : ""}join`}
                 class="btn-primary inline-flex items-center gap-2"
             >
-                Jetzt starten
+                {t.home.ctaPrimary}
                 <ArrowRight className="w-4 h-4" />
             </a>
         </div>

@@ -3,12 +3,14 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  lang?: string;
 }
 
 const {
   title,
   description = "BIO BEATS is the management and booking platform for electronic culture. We connect artists, labels, bookers, and festivals.",
   image = "/og-image.png",
+  lang = Astro.currentLocale || "en",
 } = Astro.props;
 
 import "../styles/global.css";
@@ -19,7 +21,7 @@ import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale || "de"}>
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

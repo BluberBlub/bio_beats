@@ -29,8 +29,27 @@ export const de: Translations = {
         ctaPrimary: 'Jetzt beitreten',
         ctaSecondary: 'Mehr erfahren',
         featuredArtists: 'Ausgewählte Künstler',
+        featuredArtistsDesc: 'Entdecke talentierte Künstler für dein nächstes Event',
         viewAll: 'Alle anzeigen',
+        viewAllArtists: 'Alle Künstler',
         seeProfile: 'Profil ansehen',
+        whyBioBeats: 'Warum BIO BEATS?',
+        whyBioBeatsDesc: 'Wir bauen die Infrastruktur, die elektronische Musik verdient. Professionell, transparent und auf Wachstum ausgelegt.',
+        features: {
+            smartBooking: 'Smart Booking',
+            smartBookingDesc: 'Optimierter Buchungsprozess mit intelligenter Vermittlung zwischen Künstlern und Venues.',
+            verifiedNetwork: 'Verifiziertes Netzwerk',
+            verifiedNetworkDesc: 'Geprüfte Profis für sichere und professionelle Zusammenarbeit.',
+            globalReach: 'Globale Reichweite',
+            globalReachDesc: 'Verbinde dich mit Künstlern, Labels und Venues aus der ganzen Welt.',
+            careerGrowth: 'Karriere-Wachstum',
+            careerGrowthDesc: 'Tools und Einblicke für eine nachhaltige Musikkarriere.',
+        },
+        whoAreYou: 'Wer bist du?',
+        whoAreYouDesc: 'BIO BEATS ist für alle im elektronischen Musik-Ökosystem gebaut. Finde deine Rolle und starte durch.',
+        readyToJoin: 'Bereit beizutreten?',
+        readyToJoinDesc: 'Schließe dich hunderten von Künstlern, Bookern und Branchenprofis an, die bereits ihre Karriere mit BIO BEATS aufbauen.',
+        createProfile: 'Profil erstellen',
     },
 
     // Common
@@ -64,6 +83,10 @@ export const de: Translations = {
 
     // Artists
     artists: {
+        pageTitle: 'Künstler & Labels — BIO BEATS',
+        pageDescription: 'Entdecke verifizierte Künstler und Labels der elektronischen Musik.',
+        heroTitle: 'Künstler & Labels',
+        heroSubtitle: 'Entdecke verifizierte Künstler, DJs, Live-Acts und Labels der elektronischen Musik.',
         title: 'Künstler-Verzeichnis',
         subtitle: 'Entdecke verifizierte Künstler der elektronischen Musik',
         searchPlaceholder: 'Künstler suchen...',
@@ -71,6 +94,24 @@ export const de: Translations = {
         allGenres: 'Alle Genres',
         bookNow: 'Jetzt buchen',
         viewProfile: 'Profil ansehen',
+        backToArtists: 'Zurück zu Künstlern',
+        verified: 'Verifiziert',
+        availableBookings: 'Verfügbar für Bookings',
+        limitedAvailability: 'Begrenzte Verfügbarkeit',
+        unavailable: 'Derzeit nicht verfügbar',
+        requestBooking: 'Buchung anfragen',
+        quickStats: 'Quick Stats',
+        type: 'Typ',
+        bpmRange: 'BPM Bereich',
+        location: 'Standort',
+        status: 'Status',
+        unverified: 'Unverifiziert',
+        genres: 'Genres',
+        getInTouch: 'Kontakt',
+        getInTouchDesc: 'Interessiert an einer Buchung von {name}? Sende eine Anfrage über die Plattform.',
+        sendInquiry: 'Buchungsanfrage senden',
+        latestTracks: 'Neueste Tracks',
+        noTracks: 'Keine Tracks auf SoundCloud verfügbar.',
     },
 
     // Festivals
@@ -83,6 +124,24 @@ export const de: Translations = {
         festivalInfo: 'Festival Info',
         bookArtists: 'Künstler für dieses Festival buchen',
         officialWebsite: 'Offizielle Website',
+        heroTitle: 'Festival Guide',
+        heroSubtitle: 'Entdecke elektronische Musikfestivals weltweit. Finde dein nächstes Abenteuer und verbinde dich mit der globalen Community.',
+        exploreFestivals: 'Festivals entdecken',
+        submitFestival: 'Festival einreichen',
+        forOrganizers: 'Für Veranstalter',
+        partnerTitle: 'Partner werden',
+        partnerDesc: 'Optimiere deinen Booking-Prozess, finde verifizierte Talente und verwalte dein Line-up mit unseren professionellen Tools.',
+        becomePartner: 'Partner werden',
+        benefits: {
+            smartScheduling: 'Smarte Planung',
+            smartSchedulingDesc: 'Line-ups und Zeitpläne mühelos verwalten.',
+            verifiedTalent: 'Verifizierte Talente',
+            verifiedTalentDesc: 'Zugang zu geprüften, professionellen Künstlern.',
+            globalReach: 'Globale Reichweite',
+            globalReachDesc: 'Verbinde dich zuverlässig, überall auf der Welt.',
+            curatedExperience: 'Kuratierte Erfahrung',
+            curatedExperienceDesc: 'Erstelle Line-ups, die eine Geschichte erzählen.',
+        },
     },
 
     // Contact
@@ -136,12 +195,41 @@ export const de: Translations = {
 
     // About
     about: {
-        title: 'Wir bauen die Infrastruktur, die elektronische Musik verdient.',
-        subtitle: 'BIO BEATS ist mehr als eine Booking-Plattform. Es ist ein professionelles Ökosystem, das Chaos reduziert, Klarheit schafft und nachhaltige Karrieren in der elektronischen Musik ermöglicht.',
-        missionTitle: 'Unsere Mission',
-        missionSubtitle: 'Weniger Chaos. Mehr Fokus. Mehr Bookings.',
-        values: 'Unsere Werte',
+        pageTitle: 'Über BIO BEATS — Management & Booking Plattform',
+        pageDescription: 'Erfahre mehr über BIO BEATS, die Management- und Booking-Plattform für elektronische Kultur.',
+        heroTitle: 'Wir bauen die Infrastruktur, die elektronische Musik verdient.',
+        heroSubtitle: 'BIO BEATS ist mehr als eine Booking-Plattform. Es ist ein professionelles Ökosystem, das Chaos reduziert, Klarheit schafft und nachhaltige Karrieren in der elektronischen Musik ermöglicht.',
+        missionLabel: 'Unsere Mission',
+        missionTitle: 'Weniger Chaos. Mehr Fokus. Mehr Bookings.',
+        missionDesc1: 'Die Branche der elektronischen Musik ist fragmentiert. Künstler kämpfen mit Bookings, Booker haben Schwierigkeiten, zuverlässige Acts zu finden, und alle verschwenden Zeit mit Bürokratie statt zu kreieren.',
+        missionDesc2: 'Das ändern wir. BIO BEATS verbindet Künstler, Labels, Booker, Festivals und Dienstleister in einem strukturierten, professionellen Ökosystem.',
+        missionPoints: {
+            infrastructure: 'Professionelle Booking-Infrastruktur',
+            network: 'Verifiziertes Netzwerk von Profis',
+            finance: 'Finanz-Tools und Reporting',
+            services: 'Modulare Services für Wachstum',
+        },
+        beatsFull: 'Bringing Electronic Artists To Success',
+        valuesTitle: 'Unsere Werte',
         valuesSubtitle: 'Die Prinzipien, die alles leiten, was wir bauen.',
+        values: {
+            community: {
+                title: 'Community First',
+                desc: 'Von und für die elektronische Musik-Community gebaut. Wir verstehen die Branche, weil wir Teil davon sind.',
+            },
+            trust: {
+                title: 'Vertrauen & Transparenz',
+                desc: 'Verifizierte Profile, klare Prozesse, ehrliche Kommunikation. Keine versteckten Gebühren, keine Überraschungen.',
+            },
+            sustainable: {
+                title: 'Nachhaltige Karrieren',
+                desc: 'Wir fokussieren auf langfristigen Erfolg, nicht auf schnelle Gewinne. Infrastruktur für dauerhafte Karrieren.',
+            },
+            infrastructure: {
+                title: 'Professionelle Infrastruktur',
+                desc: 'Von Bookings bis Finanzen – wir bieten die Tools, die Profis brauchen, um sich auf ihre Kunst zu konzentrieren.',
+            },
+        },
         readyToJoin: 'Bereit beizutreten?',
         joinSubtitle: 'Werde Teil der Zukunft des Managements elektronischer Musik. Tritt BIO BEATS noch heute bei.',
     },
@@ -405,6 +493,7 @@ export const de: Translations = {
             ],
         },
     },
+
 
     // Footer
     footer: {

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
     MoreHorizontal,
     Search,
@@ -15,15 +15,14 @@ import {
 } from 'lucide-react';
 import type { UserProfile, UserRole } from '../../../lib/supabase';
 
-// Mock Data
-const initialUsers: UserProfile[] = [
-    { id: '1', email: 'admin@biobeats.io', full_name: 'Admin User', role: 'admin', is_verified: true, created_at: '2025-01-01', avatar_url: '' },
-    { id: '2', email: 'artist@techno.de', full_name: 'DJ Techno', role: 'artist', is_verified: true, created_at: '2025-01-02', avatar_url: '' },
-    { id: '3', email: 'booker@club.com', full_name: 'Club Booker', role: 'booker', is_verified: false, created_at: '2025-01-05', avatar_url: '' },
-];
+// Initial state is empty, fetched from DB
+const initialUsers: UserProfile[] = [];
+
+import { supabase } from '../../../lib/supabase';
 
 export default function UserTable() {
     const [users, setUsers] = useState<UserProfile[]>(initialUsers);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [roleFilter, setRoleFilter] = useState<string>('all');
     const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -31,6 +30,30 @@ export default function UserTable() {
     const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Fetch users on mount
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            if (data) setUsers(data as UserProfile[]);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            // Fallback to empty if table doesn't exist yet
+            setUsers([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Filtered Users
     const filteredUsers = users.filter(user => {
@@ -44,16 +67,41 @@ export default function UserTable() {
     });
 
     // Toggle verification status
-    const handleToggleVerification = (id: string) => {
-        setUsers(users.map(u =>
-            u.id === id ? { ...u, is_verified: !u.is_verified } : u
-        ));
+    const handleToggleVerification = async (id: string, currentStatus: boolean) => {
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({ is_verified: !currentStatus })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            // Optimistic update
+            setUsers(users.map(u =>
+                u.id === id ? { ...u, is_verified: !u.is_verified } : u
+            ));
+        } catch (error) {
+            console.error('Error updating verification:', error);
+            alert('Failed to update verification status');
+        }
     };
 
     // CRUD Operations
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this user?')) {
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this user?')) return;
+
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
             setUsers(users.filter(u => u.id !== id));
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('Failed to delete user');
         }
     };
 
@@ -68,39 +116,67 @@ export default function UserTable() {
         }
     };
 
-    const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const newUser: UserProfile = {
-            id: Math.random().toString(36).substr(2, 9),
+
+        // Note: Creating a user here only creates a profile record.
+        // For full auth, we'd need to use supabase.auth.signUp() or Admin API
+        const newUser: Partial<UserProfile> = {
             email: formData.get('email') as string,
             full_name: formData.get('full_name') as string,
             role: formData.get('role') as UserRole,
             is_verified: true,
-            created_at: new Date().toISOString().split('T')[0],
+            created_at: new Date().toISOString(),
             avatar_url: avatarPreview || ''
         };
-        setUsers([...users, newUser]);
-        setIsCreateModalOpen(false);
-        setAvatarPreview(null);
+
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .insert([newUser])
+                .select()
+                .single();
+
+            if (error) throw error;
+            if (data) {
+                setUsers([data as UserProfile, ...users]);
+                setIsCreateModalOpen(false);
+                setAvatarPreview(null);
+            }
+        } catch (error) {
+            console.error('Error creating user:', error);
+            alert('Failed to create user. Ensure you have permissions.');
+        }
     };
 
-    const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!editingUser) return;
 
         const formData = new FormData(e.currentTarget);
-        const updatedUser = {
-            ...editingUser,
+        const updates = {
             email: formData.get('email') as string,
             full_name: formData.get('full_name') as string,
             role: formData.get('role') as UserRole,
             avatar_url: avatarPreview || editingUser.avatar_url || ''
         };
 
-        setUsers(users.map(u => u.id === editingUser.id ? updatedUser : u));
-        setEditingUser(null);
-        setAvatarPreview(null);
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update(updates)
+                .eq('id', editingUser.id);
+
+            if (error) throw error;
+
+            setUsers(users.map(u => u.id === editingUser.id ? { ...u, ...updates } : u));
+            setEditingUser(null);
+            setAvatarPreview(null);
+        } catch (error) {
+            console.error('Error updating user:', error);
+            alert('Failed to update user');
+        }
     };
 
     const openCreateModal = () => {
@@ -222,7 +298,7 @@ export default function UserTable() {
                                 <td className="px-6 py-4">
                                     {user.is_verified ? (
                                         <button
-                                            onClick={() => handleToggleVerification(user.id)}
+                                            onClick={() => handleToggleVerification(user.id, user.is_verified)}
                                             className="flex items-center gap-1.5 text-green-400 hover:text-green-300 transition-colors cursor-pointer"
                                             title="Click to revoke verification"
                                         >
@@ -231,7 +307,7 @@ export default function UserTable() {
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => handleToggleVerification(user.id)}
+                                            onClick={() => handleToggleVerification(user.id, user.is_verified)}
                                             className="flex items-center gap-1.5 text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer"
                                             title="Click to verify user"
                                         >
@@ -247,7 +323,7 @@ export default function UserTable() {
                                     <div className="flex justify-end gap-2">
                                         {user.is_verified ? (
                                             <button
-                                                onClick={() => handleToggleVerification(user.id)}
+                                                onClick={() => handleToggleVerification(user.id, user.is_verified)}
                                                 className="p-2 text-green-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                                 title="Revoke Verification"
                                             >
@@ -255,7 +331,7 @@ export default function UserTable() {
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={() => handleToggleVerification(user.id)}
+                                                onClick={() => handleToggleVerification(user.id, user.is_verified)}
                                                 className="p-2 text-yellow-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-colors"
                                                 title="Verify User"
                                             >
@@ -282,6 +358,16 @@ export default function UserTable() {
                         ))}
                     </tbody>
                 </table>
+                {loading && (
+                    <div className="p-8 text-center text-bio-gray-400">
+                        Loading users...
+                    </div>
+                )}
+                {!loading && filteredUsers.length === 0 && (
+                    <div className="p-8 text-center text-bio-gray-400">
+                        No users found.
+                    </div>
+                )}
             </div>
 
             {/* Create/Edit Modal */}

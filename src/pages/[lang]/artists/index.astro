@@ -3,10 +3,19 @@ export const prerender = true;
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ArtistDirectory from "../../../components/react/ArtistDirectory";
 import { artists, labels } from "../../../data/artists";
+import { languages } from "../../../i18n";
+import { getTranslations } from "../../../i18n";
 
-const pageTitle = "Künstler & Labels — BIO BEATS";
-const pageDescription =
-    "Entdecke verifizierte Künstler und Labels der elektronischen Musik.";
+export function getStaticPaths() {
+    return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = getTranslations(lang as keyof typeof languages);
+const ta = t.artists;
+
+const pageTitle = ta.pageTitle;
+const pageDescription = ta.pageDescription;
 
 // Prepare data for React component
 const artistsData = artists.map((a) => ({
@@ -37,15 +46,14 @@ const labelsData = labels.map((l) => ({
 }));
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} lang={lang}>
     <!-- Header -->
     <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
         <div class="container-wide">
             <div class="max-w-3xl">
-                <h1 class="text-bio-white mb-4">Künstler & Labels</h1>
+                <h1 class="text-bio-white mb-4">{ta.heroTitle}</h1>
                 <p class="text-xl text-bio-gray-400">
-                    Entdecke verifizierte Künstler, DJs, Live-Acts und Labels
-                    der elektronischen Musik.
+                    {ta.heroSubtitle}
                 </p>
             </div>
         </div>
@@ -58,7 +66,7 @@ const labelsData = labels.map((l) => ({
                 client:only="react"
                 artists={artistsData}
                 labels={labelsData}
-                lang="de"
+                lang={lang as "en" | "de"}
             />
         </div>
     </section>

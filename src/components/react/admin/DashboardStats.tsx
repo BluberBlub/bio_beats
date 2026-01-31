@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Users,
     Calendar,
@@ -11,28 +11,59 @@ import {
 } from 'lucide-react';
 
 // Import data for statistics
-import { festivals } from '../../../data/festivals';
-import { artists } from '../../../data/artists';
+import { supabase } from '../../../lib/supabase';
 
 export default function DashboardStats() {
     const [timeRange] = useState<'today' | 'week' | 'month'>('week');
+    const [stats, setStats] = useState({
+        totalUsers: 0,
+        newUsersThisWeek: 0,
+        totalFestivals: 0,
+        upcomingFestivals: 0,
+        totalArtists: 0,
+        verifiedArtists: 0,
+        pendingVerifications: 0,
+    });
+    const [loading, setLoading] = useState(true);
 
-    // Calculate statistics
-    const stats = {
-        totalUsers: 156,
-        newUsersThisWeek: 12,
-        totalFestivals: festivals.length,
-        upcomingFestivals: festivals.filter(f => {
-            const dateMatch = f.date.match(/(\w+)\s+(\d+),\s+(\d+)/);
-            if (dateMatch) {
-                const festivalDate = new Date(`${dateMatch[1]} ${dateMatch[2]}, ${dateMatch[3]}`);
-                return festivalDate > new Date();
-            }
-            return true;
-        }).length,
-        totalArtists: artists.length,
-        verifiedArtists: artists.filter(a => a.isVerified !== false).length,
-        pendingVerifications: 5,
+    useEffect(() => {
+        fetchStats();
+    }, [timeRange]);
+
+    const fetchStats = async () => {
+        try {
+            setLoading(true);
+
+            // 1. Users Stats
+            const { count: totalUsers } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+            const { count: totalArtists } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).in('role', ['artist', 'performer', 'creative']);
+            const { count: verifiedArtists } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).in('role', ['artist', 'performer', 'creative']).eq('is_verified', true);
+            const { count: pendingVerifications } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).in('role', ['artist', 'performer', 'creative']).eq('is_verified', false);
+
+            // New users last 7 days
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const { count: newUsersThisWeek } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo.toISOString());
+
+            // 2. Festivals Stats
+            const { count: totalFestivals } = await supabase.from('festivals').select('*', { count: 'exact', head: true });
+            const { count: upcomingFestivals } = await supabase.from('festivals').select('*', { count: 'exact', head: true }).gte('date', new Date().toISOString());
+
+            setStats({
+                totalUsers: totalUsers || 0,
+                newUsersThisWeek: newUsersThisWeek || 0,
+                totalFestivals: totalFestivals || 0,
+                upcomingFestivals: upcomingFestivals || 0,
+                totalArtists: totalArtists || 0,
+                verifiedArtists: verifiedArtists || 0,
+                pendingVerifications: pendingVerifications || 0,
+            });
+
+        } catch (error) {
+            console.error('Error fetching dashboard stats:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Recent activity mock data
@@ -150,14 +181,14 @@ export default function DashboardStats() {
                         {recentActivity.map((activity, index) => (
                             <div key={index} className="flex items-center gap-3 p-3 rounded-lg hover:bg-bio-gray-800/50 transition-colors">
                                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${activity.type === 'user' ? 'bg-blue-500/10' :
-                                        activity.type === 'festival' ? 'bg-purple-500/10' :
-                                            activity.type === 'verification' ? 'bg-green-500/10' :
-                                                'bg-bio-accent/10'
+                                    activity.type === 'festival' ? 'bg-purple-500/10' :
+                                        activity.type === 'verification' ? 'bg-green-500/10' :
+                                            'bg-bio-accent/10'
                                     }`}>
                                     <activity.icon className={`w-4 h-4 ${activity.type === 'user' ? 'text-blue-500' :
-                                            activity.type === 'festival' ? 'text-purple-500' :
-                                                activity.type === 'verification' ? 'text-green-500' :
-                                                    'text-bio-accent'
+                                        activity.type === 'festival' ? 'text-purple-500' :
+                                            activity.type === 'verification' ? 'text-green-500' :
+                                                'text-bio-accent'
                                         }`} />
                                 </div>
                                 <div className="flex-1 min-w-0">

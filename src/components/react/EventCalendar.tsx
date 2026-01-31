@@ -1,8 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, MapPin, ExternalLink, List, Grid } from 'lucide-react';
-import { festivals as festivalData } from '../../data/festivals';
-import { bookings as bookingData } from '../../data/bookings';
 import { useTranslation } from '../../i18n/useTranslation';
+import { supabase } from '../../lib/supabase';
 
 const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTHS_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
@@ -51,9 +50,49 @@ function parseDate(dateStr: string): Date | null {
 
 export default function EventCalendar({ lang = 'en', viewMode = 'public', artistId }: EventCalendarProps) {
     const { t } = useTranslation(lang);
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 5, 1)); // Start at June 2026
+    const [currentDate, setCurrentDate] = useState(new Date()); // Start at Today
     const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-    const [viewType, setViewType] = useState<'grid' | 'list'>('grid'); // Toggle between Grid and Agenda
+    const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
+
+    // Data state
+    const [fetchedFestivals, setFetchedFestivals] = useState<any[]>([]);
+    const [fetchedBookings, setFetchedBookings] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                // Fetch Festivals
+                const { data: festivals, error: festivalError } = await supabase
+                    .from('festivals')
+                    .select('*');
+
+                if (festivalError) throw festivalError;
+                if (festivals) setFetchedFestivals(festivals);
+
+                // Fetch Bookings (if needed)
+                if (viewMode === 'admin' || viewMode === 'artist') {
+                    let query = supabase.from('bookings').select(`*, artist:artist_id(full_name)`);
+
+                    if (viewMode === 'artist' && artistId) {
+                        query = query.eq('artist_id', artistId);
+                    }
+
+                    const { data: bookings, error: bookingError } = await query;
+                    if (bookingError) throw bookingError;
+                    if (bookings) setFetchedBookings(bookings);
+                }
+
+            } catch (err) {
+                console.error("Error fetching calendar events:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [viewMode, artistId]);
 
     const months = lang === 'de' ? MONTHS_DE : MONTHS_EN;
     const daysOfWeek = lang === 'de' ? DAYS_DE : DAYS;
@@ -61,7 +100,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
     // 1. Process Data
     const events: CalendarEvent[] = useMemo(() => {
         // Process Festivals
-        const festivals: CalendarEvent[] = festivalData.map(f => ({
+        const festivals: CalendarEvent[] = fetchedFestivals.map(f => ({
             id: f.id,
             name: f.name,
             slug: f.slug,
@@ -74,15 +113,15 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
         })).filter(e => e.startDate);
 
         // Process Bookings
-        const bookings: CalendarEvent[] = bookingData.map(b => ({
+        const bookings: CalendarEvent[] = fetchedBookings.map(b => ({
             id: b.id,
-            name: `${b.eventName} (${bookingsArtistName(b.artistId)})`, // Helper to show who is playing
-            startDate: parseDate(b.date) || new Date(),
-            location: b.location,
-            city: b.city,
-            country: b.country,
+            name: `Gig: ${b.artist?.full_name || 'Artist'}`, // Helper to show who is playing
+            startDate: parseDate(b.event_date) || new Date(),
+            location: 'Location TBD', // Modify if location is in DB
+            city: '',
+            country: '', // Modify if country is in DB
             type: 'gig' as const,
-            artistId: b.artistId,
+            artistId: b.artist_id,
             subType: 'Live / DJ Set'
         })).filter(e => e.startDate);
 
@@ -100,15 +139,9 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
         }
 
         return allEvents.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-    }, [viewMode, artistId]);
+    }, [viewMode, artistId, fetchedFestivals, fetchedBookings]);
 
-    // Helper to get artist name (Mock lookup)
-    const bookingsArtistName = (id: string) => {
-        if (id === '1') return 'Rad.Lez';
-        if (id === '2') return 'Deep Circuit';
-        if (id === '4') return 'Roz';
-        return 'Artist';
-    };
+
 
     // 2. Calendar Logic
     const calendarData = useMemo(() => {
@@ -154,7 +187,7 @@ export default function EventCalendar({ lang = 'en', viewMode = 'public', artist
     };
 
     const goToToday = () => {
-        setCurrentDate(new Date(2026, 5, 1));
+        setCurrentDate(new Date());
     };
 
     // Styling

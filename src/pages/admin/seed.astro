@@ -1,0 +1,13 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import SeedData from "../../components/react/admin/SeedData";
+---
+
+<AdminLayout title="Database Migration — Admin">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white mb-2">System Maintenance</h1>
+        <p class="text-bio-gray-400">Manage database records and migrations</p>
+    </div>
+
+    <SeedData client:only="react" />
+</AdminLayout>
