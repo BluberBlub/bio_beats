@@ -32,10 +32,16 @@ const lang = getLangFromUrl(url);
         {
           mainNavigation.map((item) => {
             const href = lang === "de" ? `/de${item.href}` : item.href;
+
+            // Normalize paths for comparison (remove language prefix)
+            const currentPathClean =
+              url.pathname.replace(/^\/(en|de)/, "").replace(/\/$/, "") || "/";
+            const itemPathClean = item.href.replace(/\/$/, "") || "/";
+
             const isActive =
               item.href === "/"
-                ? url.pathname === href
-                : url.pathname.startsWith(href);
+                ? currentPathClean === "/" // Exact match for home
+                : currentPathClean.startsWith(itemPathClean); // Prefix match for others
             return (
               <a
                 href={href}

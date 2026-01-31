@@ -1,5 +1,12 @@
 ---
-// SSR Redirect for legacy links
+import { festivals } from "../../data/festivals";
+
+export function getStaticPaths() {
+    return festivals.map((f) => ({
+        params: { slug: f.slug },
+    }));
+}
+
 const { slug } = Astro.params;
 return Astro.redirect(`/en/festivals/${slug}`);
 ---

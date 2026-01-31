@@ -14,18 +14,24 @@ import {
     Music,
 } from "lucide-react";
 
-// For SSR, we don't strictly need getStaticPaths usually, but if we want to ensure valid routes or if using hybrid
-// However, since this is fully dynamic path [lang]/festivals/[slug], we can just read params.
-// But to prevent 404s for invalid langs, we might want to validate.
+export function getStaticPaths() {
+    return Object.keys(languages).flatMap((lang) =>
+        festivals.map((festival) => ({
+            params: { lang, slug: festival.slug },
+            props: { festival },
+        })),
+    );
+}
 
-const { lang, slug } = Astro.params;
+const { lang } = Astro.params;
+const { festival } = Astro.props;
 
-// Validate language
+// Validate language (should be covered by getStaticPaths but good for type safety)
 if (!lang || !Object.keys(languages).includes(lang)) {
     return Astro.redirect("/en/404");
 }
 
-const festival = getFestivalBySlug(slug!);
+// festival prop is passed from getStaticPaths
 if (!festival) {
     return Astro.redirect(`/${lang}/404`);
 }

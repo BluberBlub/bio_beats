@@ -26,10 +26,8 @@ export default defineConfig({
     },
   },
 
-  output: 'server',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  output: 'static',
+  // adapter: node({ mode: 'standalone' }), // Removed for static build
 
   integrations: [
     react(),

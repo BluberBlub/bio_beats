@@ -8,8 +8,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase keys are missing in environment variables.');
 }
 
+const isValidUrl = (url: string | undefined) => url && url.startsWith('http');
+
 export const supabase = createClient(
-    supabaseUrl || 'https://placeholder.supabase.co',
+    isValidUrl(supabaseUrl) ? supabaseUrl! : 'https://placeholder.supabase.co',
     supabaseAnonKey || 'placeholder'
 );
 

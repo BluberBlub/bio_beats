@@ -2,9 +2,8 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { CheckCircle, XCircle, Loader2, ArrowRight } from "lucide-react";
 
-export const prerender = false;
+// export const prerender = false; // SSG enabled
 
-const { token } = Astro.params;
 const pageTitle = "Verifying Email... — BIO BEATS";
 ---
 
@@ -64,17 +63,28 @@ const pageTitle = "Verifying Email... — BIO BEATS";
 </BaseLayout>
 
 <script>
+    // Get token from URL query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
     // Simulate verification process
     setTimeout(() => {
         const verifying = document.getElementById("verifying");
         const success = document.getElementById("success");
+        const error = document.getElementById("error");
 
-        if (verifying && success) {
+        if (verifying && success && error) {
             verifying.classList.add("hidden");
-            success.classList.remove("hidden");
 
-            // In a real app, we would make an API call to verify the token here
-            // and update the user session
+            if (token) {
+                success.classList.remove("hidden");
+                // In a real app, we would make an API call to verify the token here
+                // and update the user session
+            } else {
+                // No token provided (or handle as error for now)
+                // For now, since previous code simulated success regardless of token validity in client:
+                success.classList.remove("hidden");
+            }
         }
     }, 2000);
 </script>
