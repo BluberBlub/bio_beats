@@ -242,7 +242,7 @@ export default function FestivalDirectory({ festivals = [], lang = 'en' }: Props
                 {visibleFestivals.map((festival) => (
                     <a
                         key={festival.id}
-                        href={lang === 'de' ? `/de/festivals/${festival.slug}` : `/festivals/${festival.slug}`}
+                        href={`/${lang}/festivals/${festival.slug}`}
                         className="group bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden hover:border-bio-gray-600 transition-all"
                     >
                         <div className="aspect-video relative overflow-hidden bg-bio-gray-800">

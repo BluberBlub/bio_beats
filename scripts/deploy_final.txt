@@ -20,7 +20,7 @@ synchronize remote -delete -permissions=644 -criteria=size dist\server ./server
 
 # 3. Upload Root Files
 # Remove static index.html from server to allow SSR to handle root
-rm index.html
+# rm index.html (File already removed)
 # put -resume -preservetime -permissions=644 dist\client\index.html ./index.html
 put -resume -preservetime -permissions=644 dist\client\.htaccess ./.htaccess
 
