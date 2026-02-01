@@ -25,7 +25,6 @@ ErrorDocument 404 /404.html
   # Top-level pages (No extension, strictly ends with / or nothing)
   RewriteRule ^festivals/?$ /en/festivals/ [R=301,L]
   RewriteRule ^about/?$ /en/about/ [R=301,L]
-  RewriteRule ^join/?$ /en/join/ [R=301,L]
   
   # Artists Page (Redirects /artists or /artists/ to /en/artists/)
   # This MUST come before the image rewrite below
