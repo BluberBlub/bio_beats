@@ -351,9 +351,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                                     <img
                                         src={artist.image}
                                         alt={artist.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10 opacity-0"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10"
                                         loading="lazy"
-                                        onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
                                     {artist.isVerified && (
                                         <div className="absolute top-3 right-3 px-2 py-1 bg-bio-accent/90 rounded text-white text-xs font-medium z-20">
@@ -426,9 +425,8 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                                     <img
                                         src={label.image}
                                         alt={label.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10 opacity-0"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10"
                                         loading="lazy"
-                                        onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
                                     {label.isVerified && (
                                         <div className="absolute top-3 right-3 px-2 py-1 bg-bio-accent/90 rounded text-white text-xs font-medium z-20">
