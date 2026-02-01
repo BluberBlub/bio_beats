@@ -7,7 +7,7 @@ interface Props {
   lang?: string;
 }
 
-const { artist, lang = "de" } = Astro.props;
+const { artist, lang = "en" } = Astro.props;
 
 const availabilityColors = {
   available: "bg-green-500/20 text-green-400",
@@ -23,7 +23,7 @@ const typeLabels = {
 ---
 
 <a
-  href={`/artists/${artist.slug}`}
+  href={`/${lang}/artists/${artist.slug}`}
   class="group block card-hover overflow-hidden"
 >
   <!-- Image -->

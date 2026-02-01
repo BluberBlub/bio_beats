@@ -68,7 +68,7 @@ const roleLabels: Record<string, string> = {
         }}
         secondaryCta={{
             label: t.home.ctaSecondary,
-            href: `/${lang === "de" ? "de/" : ""}about`,
+            href: `/${lang}/about`,
         }}
     />
 
@@ -126,7 +126,7 @@ const roleLabels: Record<string, string> = {
                     </p>
                 </div>
                 <a
-                    href={`/${lang === "de" ? "de/" : ""}artists`}
+                    href={`/${lang}/artists`}
                     class="btn-ghost hidden md:inline-flex items-center gap-2"
                 >
                     {t.home.viewAllArtists}
@@ -144,7 +144,7 @@ const roleLabels: Record<string, string> = {
 
             <div class="mt-8 text-center md:hidden">
                 <a
-                    href={`/${lang === "de" ? "de/" : ""}artists`}
+                    href={`/${lang}/artists`}
                     class="btn-secondary inline-flex items-center gap-2"
                 >
                     {t.home.viewAllArtists}

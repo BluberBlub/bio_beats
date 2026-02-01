@@ -62,12 +62,84 @@ const labelsData = labels.map((l) => ({
     <!-- Directory -->
     <section class="section bg-bio-black">
         <div class="container-wide">
-            <ArtistDirectory
-                client:only="react"
-                artists={artistsData}
-                labels={labelsData}
-                lang={lang as "en" | "de"}
-            />
+            <!-- Loading skeleton shown until React hydrates -->
+            <div id="artist-directory-loading" class="space-y-8">
+                <div class="flex flex-col lg:flex-row gap-4 mb-8">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-32 h-12 bg-bio-gray-800 rounded-lg animate-pulse"
+                        >
+                        </div>
+                        <div
+                            class="w-32 h-12 bg-bio-gray-800 rounded-lg animate-pulse"
+                        >
+                        </div>
+                    </div>
+                    <div
+                        class="flex-1 h-12 bg-bio-gray-800 rounded-lg animate-pulse"
+                    >
+                    </div>
+                    <div
+                        class="w-32 h-12 bg-bio-gray-800 rounded-lg animate-pulse"
+                    >
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                    {
+                        [1, 2, 3, 4, 5, 6].map(() => (
+                            <div class="bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden">
+                                <div class="aspect-square bg-bio-gray-800 animate-pulse" />
+                                <div class="p-5 space-y-3">
+                                    <div class="h-6 bg-bio-gray-800 rounded animate-pulse w-3/4" />
+                                    <div class="h-4 bg-bio-gray-800 rounded animate-pulse w-1/2" />
+                                    <div class="flex gap-2">
+                                        <div class="h-6 w-16 bg-bio-gray-800 rounded-full animate-pulse" />
+                                        <div class="h-6 w-16 bg-bio-gray-800 rounded-full animate-pulse" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+            <div id="artist-directory-content" class="hidden">
+                <ArtistDirectory
+                    client:load
+                    artists={artistsData}
+                    labels={labelsData}
+                    lang={lang as "en" | "de"}
+                />
+            </div>
         </div>
     </section>
+
+    <script>
+        // Hide loading skeleton once React component is ready
+        const observer = new MutationObserver((mutations, obs) => {
+            const content = document.getElementById("artist-directory-content");
+            if (content && content.children.length > 0) {
+                const loading = document.getElementById(
+                    "artist-directory-loading",
+                );
+                if (loading) loading.classList.add("hidden");
+                content.classList.remove("hidden");
+                obs.disconnect();
+            }
+        });
+
+        const contentEl = document.getElementById("artist-directory-content");
+        if (contentEl) {
+            observer.observe(contentEl, { childList: true, subtree: true });
+            // Also check immediately in case component already rendered
+            if (contentEl.children.length > 0) {
+                const loading = document.getElementById(
+                    "artist-directory-loading",
+                );
+                if (loading) loading.classList.add("hidden");
+                contentEl.classList.remove("hidden");
+            }
+        }
+    </script>
 </BaseLayout>
