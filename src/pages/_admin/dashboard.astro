@@ -1,11 +1,8 @@
 ---
 import Layout from "../../layouts/AdminLayout.astro";
 import DashboardStats from "../../components/react/admin/DashboardStats";
-import AuthGuard from "../../components/react/admin/AuthGuard";
 ---
 
 <Layout title="Dashboard">
-    <AuthGuard client:only="react">
-        <DashboardStats client:only="react" />
-    </AuthGuard>
+    <DashboardStats client:only="react" />
 </Layout>

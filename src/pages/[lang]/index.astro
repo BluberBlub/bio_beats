@@ -64,11 +64,11 @@ const roleLabels: Record<string, string> = {
         subtitle={t.home.heroSubtitle}
         primaryCta={{
             label: t.home.ctaPrimary,
-            href: `/${lang === "de" ? "de" : "en"}/join`,
+            href: `/${lang === "de" ? "de/" : ""}join`,
         }}
         secondaryCta={{
             label: t.home.ctaSecondary,
-            href: `/${lang === "de" ? "de" : "en"}/about`,
+            href: `/${lang === "de" ? "de/" : ""}about`,
         }}
     />
 
@@ -126,7 +126,7 @@ const roleLabels: Record<string, string> = {
                     </p>
                 </div>
                 <a
-                    href={`/${lang === "de" ? "de" : "en"}/artists`}
+                    href={`/${lang === "de" ? "de/" : ""}artists`}
                     class="btn-ghost hidden md:inline-flex items-center gap-2"
                 >
                     {t.home.viewAllArtists}
@@ -144,7 +144,7 @@ const roleLabels: Record<string, string> = {
 
             <div class="mt-8 text-center md:hidden">
                 <a
-                    href={`/${lang === "de" ? "de" : "en"}/artists`}
+                    href={`/${lang === "de" ? "de/" : ""}artists`}
                     class="btn-secondary inline-flex items-center gap-2"
                 >
                     {t.home.viewAllArtists}
@@ -170,7 +170,7 @@ const roleLabels: Record<string, string> = {
                 {
                     roleOptions.slice(0, 4).map((role) => (
                         <a
-                            href={`/${lang === "de" ? "de" : "en"}/join?role=${role.id}`}
+                            href={`/${lang === "de" ? "de/" : ""}join?role=${role.id}`}
                             class="card-hover p-6 text-center group"
                         >
                             <h4 class="font-semibold text-bio-white group-hover:text-bio-accent transition-colors">
@@ -183,7 +183,7 @@ const roleLabels: Record<string, string> = {
 
             <div class="mt-8 text-center">
                 <a
-                    href={`/${lang === "de" ? "de" : "en"}/join`}
+                    href={`/${lang === "de" ? "de/" : ""}join`}
                     class="btn-primary inline-flex items-center gap-2"
                 >
                     {t.common.getStarted}
@@ -204,7 +204,7 @@ const roleLabels: Record<string, string> = {
                 class="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
                 <a
-                    href={`/${lang === "de" ? "de" : "en"}/join`}
+                    href={`/${lang === "de" ? "de/" : ""}join`}
                     class="btn-primary">{t.home.createProfile}</a
                 >
                 <a href={`/${lang === "de" ? "de/" : ""}faq`} class="btn-ghost"

@@ -72,7 +72,7 @@ const benefits = [
                         {tf.exploreFestivals}
                     </a>
                     <a
-                        href={`/${lang === "de" ? "de" : "en"}/contact`}
+                        href={`/${lang === "de" ? "de/" : ""}contact`}
                         class="btn-secondary"
                     >
                         {tf.submitFestival}
@@ -88,7 +88,7 @@ const benefits = [
             <FestivalDirectory
                 client:load
                 festivals={festivalsData}
-                lang={lang as "de" | "en"}
+                lang={lang}
             />
         </div>
     </section>
@@ -132,7 +132,7 @@ const benefits = [
                         }
                     </div>
                     <a
-                        href={`/${lang === "de" ? "de" : "en"}/join?role=booker`}
+                        href={`/${lang === "de" ? "de/" : ""}join?role=booker`}
                         class="btn-primary inline-flex items-center gap-2"
                     >
                         {tf.becomePartner}

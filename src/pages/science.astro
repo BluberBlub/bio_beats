@@ -1,4 +1,183 @@
 ---
 export const prerender = true;
-return Astro.redirect("/en/science");
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  ArrowRight,
+  Brain,
+  Waves,
+  HeartPulse,
+  Music,
+  BookOpen,
+} from "lucide-react";
+
+const pageTitle = "Sound of Science — BIO BEATS";
+const pageDescription =
+  "Exploring the science behind electronic music, sound, and its effects on human experience.";
+
+const topics = [
+  {
+    icon: "Brain",
+    title: "Music & The Brain",
+    description:
+      "How electronic music affects neural pathways, dopamine release, and cognitive states.",
+    articles: 3,
+  },
+  {
+    icon: "Waves",
+    title: "Frequency & Vibration",
+    description:
+      "The physics of bass, the impact of low frequencies, and why we feel music physically.",
+    articles: 5,
+  },
+  {
+    icon: "HeartPulse",
+    title: "Rhythm & Physiology",
+    description:
+      "How BPM affects heart rate, breathing, and the body's natural rhythms.",
+    articles: 4,
+  },
+  {
+    icon: "Music",
+    title: "Sound Design",
+    description:
+      "The technical craft behind synthesizing sounds that move people.",
+    articles: 6,
+  },
+];
+
+const featuredArticles = [
+  {
+    title: "Why 128 BPM Feels So Good",
+    excerpt:
+      "The science behind the most popular tempo in dance music and its relationship to human physiology.",
+    readTime: "8 min",
+    category: "Rhythm",
+  },
+  {
+    title: "The Subconscious Language of Minor Keys",
+    excerpt:
+      "How harmonic choices in electronic music trigger emotional responses without conscious awareness.",
+    readTime: "12 min",
+    category: "Psychology",
+  },
+  {
+    title: "Bass: The Frequency You Feel",
+    excerpt:
+      "Understanding why low frequencies create such powerful physical and emotional sensations.",
+    readTime: "6 min",
+    category: "Physics",
+  },
+];
 ---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Hero -->
+  <section class="py-20 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <span
+          class="inline-block px-4 py-2 rounded-full bg-bio-accent/10 text-bio-accent text-sm font-medium mb-6"
+        >
+          Sound of Science
+        </span>
+        <h1 class="text-bio-white mb-6">Understanding the science of sound.</h1>
+        <p class="text-xl text-bio-gray-400 leading-relaxed">
+          Electronic music isn't just art—it's science. Explore the research,
+          physics, and psychology behind the sounds that move us.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Topics Grid -->
+  <section class="section bg-bio-black">
+    <div class="container-wide">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {
+          topics.map((topic) => (
+            <div class="card-hover">
+              <div class="w-12 h-12 rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                {topic.icon === "Brain" && (
+                  <Brain className="w-6 h-6 text-bio-accent" />
+                )}
+                {topic.icon === "Waves" && (
+                  <Waves className="w-6 h-6 text-bio-accent" />
+                )}
+                {topic.icon === "HeartPulse" && (
+                  <HeartPulse className="w-6 h-6 text-bio-accent" />
+                )}
+                {topic.icon === "Music" && (
+                  <Music className="w-6 h-6 text-bio-accent" />
+                )}
+              </div>
+              <h3 class="text-lg font-semibold text-bio-white mb-2">
+                {topic.title}
+              </h3>
+              <p class="text-bio-gray-400 text-sm mb-4">{topic.description}</p>
+              <span class="text-bio-accent text-sm">
+                {topic.articles} articles
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Articles -->
+  <section class="section bg-bio-gray-900">
+    <div class="container-wide">
+      <div class="section-header">
+        <h2 class="text-bio-white mb-4">Featured Articles</h2>
+        <p class="text-bio-gray-400 text-lg">
+          Deep dives into the science of electronic music
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {
+          featuredArticles.map((article) => (
+            <article class="card-hover group cursor-pointer">
+              <div class="aspect-video bg-bio-gray-800 rounded-lg mb-4 flex items-center justify-center">
+                <BookOpen className="w-8 h-8 text-bio-gray-600" />
+              </div>
+              <span class="badge text-xs mb-3">{article.category}</span>
+              <h3 class="text-lg font-semibold text-bio-white mb-2 group-hover:text-bio-accent transition-colors">
+                {article.title}
+              </h3>
+              <p class="text-bio-gray-400 text-sm mb-4">{article.excerpt}</p>
+              <span class="text-bio-gray-500 text-sm">
+                {article.readTime} read
+              </span>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter CTA -->
+  <section class="py-16 bg-bio-black">
+    <div class="container-narrow">
+      <div class="card p-8 md:p-12 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+          Stay curious.
+        </h2>
+        <p class="text-bio-gray-400 mb-8 max-w-xl mx-auto">
+          Get the latest articles about the science of sound delivered to your
+          inbox.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <input
+            type="email"
+            placeholder="your@email.com"
+            class="flex-1 px-4 py-3 bg-bio-gray-800 border border-bio-gray-700 rounded-lg text-bio-white placeholder-bio-gray-500 focus:border-bio-accent outline-none"
+          />
+          <button type="submit" class="btn-primary whitespace-nowrap">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
