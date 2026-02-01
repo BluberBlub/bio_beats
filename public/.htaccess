@@ -35,8 +35,7 @@ ErrorDocument 404 /404.html
   # 3. Asset Rewriting (Relative Paths)
   # ----------------------------------------------------------------------
   
-  # Artist Images (Only files with extensions, not directories)
-  RewriteCond %{REQUEST_URI} \.[a-zA-Z0-9]+$
+  # Artist Images (Matches /artists/something)
   RewriteRule ^artists/(.+)$ client/artists/$1 [L]
   
   # Standard Assets
