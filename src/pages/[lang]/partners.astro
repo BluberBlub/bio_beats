@@ -1,0 +1,145 @@
+---
+export const prerender = true;
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "en" } }, { params: { lang: "de" } }];
+}
+
+import { ArrowRight, Users, Building, Music, Mic } from "lucide-react";
+
+const pageTitle = "Partners — BIO BEATS";
+const pageDescription =
+  "Our partners and collaborators in the electronic music industry.";
+
+const partners = [
+  { name: "Berghain", type: "Venue", location: "Berlin" },
+  { name: "Dekmantel", type: "Festival", location: "Amsterdam" },
+  { name: "Tresor Records", type: "Label", location: "Berlin" },
+  { name: "Resident Advisor", type: "Media", location: "Global" },
+  { name: "Awakenings", type: "Festival", location: "Amsterdam" },
+  { name: "Fabric", type: "Venue", location: "London" },
+  { name: "Kompakt", type: "Label", location: "Cologne" },
+  { name: "Movement Detroit", type: "Festival", location: "Detroit" },
+];
+
+const partnerTypes = [
+  {
+    icon: "Building",
+    title: "Venues & Clubs",
+    count: "50+",
+    description: "Leading clubs and venues across Europe and beyond",
+  },
+  {
+    icon: "Music",
+    title: "Labels",
+    count: "30+",
+    description: "Independent and major electronic music labels",
+  },
+  {
+    icon: "Mic",
+    title: "Festivals",
+    count: "25+",
+    description: "Major festivals and event organizers worldwide",
+  },
+  {
+    icon: "Users",
+    title: "Agencies",
+    count: "40+",
+    description: "Booking agencies and artist management companies",
+  },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!-- Header -->
+  <section class="py-16 bg-gradient-to-b from-bio-gray-900 to-bio-black">
+    <div class="container-narrow text-center">
+      <h1 class="text-bio-white mb-4">Our Partners</h1>
+      <p class="text-xl text-bio-gray-400">
+        Working together to build the future of electronic music.
+      </p>
+    </div>
+  </section>
+
+  <!-- Partner Stats -->
+  <section class="py-12 bg-bio-black border-b border-bio-gray-800">
+    <div class="container-wide">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {
+          partnerTypes.map((type) => (
+            <div class="card text-center">
+              <div class="w-12 h-12 mx-auto rounded-lg bg-bio-accent/10 flex items-center justify-center mb-4">
+                {type.icon === "Building" && (
+                  <Building className="w-6 h-6 text-bio-accent" />
+                )}
+                {type.icon === "Music" && (
+                  <Music className="w-6 h-6 text-bio-accent" />
+                )}
+                {type.icon === "Mic" && (
+                  <Mic className="w-6 h-6 text-bio-accent" />
+                )}
+                {type.icon === "Users" && (
+                  <Users className="w-6 h-6 text-bio-accent" />
+                )}
+              </div>
+              <div class="text-2xl font-bold text-bio-accent mb-1">
+                {type.count}
+              </div>
+              <h3 class="font-semibold text-bio-white mb-1">{type.title}</h3>
+              <p class="text-sm text-bio-gray-500">{type.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Partners Grid -->
+  <section class="section bg-bio-black">
+    <div class="container-wide">
+      <h2 class="text-2xl font-bold text-bio-white mb-8">Featured Partners</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {
+          partners.map((partner) => (
+            <div class="card aspect-square flex flex-col items-center justify-center text-center p-6 group hover:border-bio-accent/50 transition-colors">
+              <div class="w-20 h-20 rounded-full bg-bio-gray-800 flex items-center justify-center mb-4 group-hover:bg-bio-accent/20 transition-colors">
+                <span class="text-2xl font-bold text-bio-gray-500 group-hover:text-bio-accent transition-colors">
+                  {partner.name.charAt(0)}
+                </span>
+              </div>
+              <h3 class="font-semibold text-bio-white mb-1 group-hover:text-bio-accent transition-colors">
+                {partner.name}
+              </h3>
+              <span class="text-sm text-bio-gray-500">{partner.type}</span>
+              <span class="text-xs text-bio-gray-600 mt-1">
+                {partner.location}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Become Partner CTA -->
+  <section class="py-16 bg-bio-gray-900">
+    <div class="container-narrow text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-bio-white mb-4">
+        Become a Partner
+      </h2>
+      <p class="text-bio-gray-400 mb-8 max-w-2xl mx-auto">
+        Interested in partnering with BIO BEATS? Whether you're a venue, label,
+        festival, or agency, let's discuss how we can work together to support
+        the electronic music community.
+      </p>
+      <a
+        href="/contact?reason=partnership"
+        class="btn-primary inline-flex items-center gap-2"
+      >
+        Get in Touch
+        <ArrowRight className="w-4 h-4" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -10,6 +10,7 @@ import node from '@astrojs/node';
 export default defineConfig({
   // Production URL for sitemap and canonical URLs
   site: 'https://biobeats.io',
+  base: '/bio_beats',
 
   vite: {
     plugins: [tailwindcss()],

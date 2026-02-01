@@ -343,7 +343,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                         {visibleArtists.map((artist) => (
                             <a
                                 key={artist.id}
-                                href={lang === 'de' ? `/de/artists/${artist.slug}` : `/artists/${artist.slug}`}
+                                href={lang === 'de' ? `/de/artists/${artist.slug}` : `/en/artists/${artist.slug}`}
                                 className="group bg-bio-gray-900 border border-bio-gray-800 rounded-xl overflow-hidden hover:border-bio-gray-700 transition-all hover:shadow-lg"
                             >
                                 <div className="aspect-square relative overflow-hidden bg-bio-gray-800">

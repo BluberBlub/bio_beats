@@ -1,0 +1,118 @@
+---
+export const prerender = true;
+
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { roleOptions } from "../../../data/navigation";
+import { ArrowLeft, CheckCircle } from "lucide-react";
+import AuthForm from "../../../components/react/AuthForm";
+import { languages } from "../../../i18n";
+import { getTranslations } from "../../../i18n";
+
+export function getStaticPaths() {
+    return Object.keys(languages).flatMap((lang) => {
+        return roleOptions.map((role) => ({
+            params: { lang, role: role.id },
+            props: { role },
+        }));
+    });
+}
+
+const { role } = Astro.props;
+const { lang } = Astro.params;
+const t = getTranslations(lang as keyof typeof languages);
+
+// Translation Maps
+const roleLabelMap: Record<string, string> = {
+    artist: t.admin.roles.artist,
+    performer: t.admin.roles.performer,
+    creative: t.admin.roles.creative,
+    manager: t.admin.roles.manager,
+    label: t.admin.roles.label,
+    booker: t.admin.roles.booker,
+    provider: t.admin.roles.provider,
+    guest: t.admin.roles.guest,
+};
+
+// Use type assertion to avoid strict key checking if necessary
+const roleBenefits = (t.join.benefits as any)[role.id] || [];
+
+const roleLabel = roleLabelMap[role.id] || role.label;
+const pageTitle =
+    lang === "de"
+        ? `Registrieren als ${roleLabel} — BIO BEATS`
+        : `Join as ${roleLabel} — BIO BEATS`;
+const pageDescription =
+    lang === "de"
+        ? `Erstelle dein ${roleLabel} Konto bei BIO BEATS.`
+        : `Create your ${roleLabel} account on BIO BEATS.`;
+const backText = t.join.backToRoles;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang={lang}>
+    <!-- Back Link -->
+    <div class="bg-bio-black py-4">
+        <div class="container-narrow">
+            <a
+                href={`/${lang === "de" ? "de" : "en"}/join`}
+                class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
+            >
+                <ArrowLeft className="w-4 h-4" />
+                {backText}
+            </a>
+        </div>
+    </div>
+
+    <section class="section bg-bio-black">
+        <div class="container-narrow">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Benefits -->
+                <div>
+                    <span class="badge-accent mb-4">{roleLabel}</span>
+                    <h1
+                        class="text-3xl md:text-4xl font-bold text-bio-white mb-4"
+                    >
+                        {t.join.title}
+                    </h1>
+                    <p class="text-bio-gray-400 text-lg mb-8">
+                        {t.join.subtitle}
+                    </p>
+
+                    <div class="space-y-4">
+                        {
+                            roleBenefits.map((benefit: string) => (
+                                <div class="flex items-start gap-3">
+                                    <CheckCircle className="w-5 h-5 text-bio-accent flex-shrink-0 mt-0.5" />
+                                    <span class="text-bio-gray-300">
+                                        {benefit}
+                                    </span>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="card p-8">
+                    <h2 class="text-xl font-semibold text-bio-white mb-6">
+                        {t.join.createYourAccount}
+                    </h2>
+
+                    <AuthForm client:load mode="register" role={role.id} />
+
+                    <div
+                        class="mt-6 pt-6 border-t border-bio-gray-800 text-center"
+                    >
+                        <p class="text-sm text-bio-gray-400">
+                            {t.join.alreadyHaveAccount}{" "}
+                            <a
+                                href={`/${lang === "de" ? "de" : "en"}/login`}
+                                class="text-bio-accent hover:underline"
+                                >{t.join.loginHere}</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</BaseLayout>

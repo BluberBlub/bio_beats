@@ -1,0 +1,80 @@
+---
+export const prerender = true;
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "en" } }, { params: { lang: "de" } }];
+}
+
+const pageTitle = "Mission & Manifest — BIO BEATS";
+const pageDescription =
+  "Our mission to transform the electronic music industry through professional infrastructure and community.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <section class="section bg-bio-black">
+    <div class="container-narrow">
+      <div class="prose prose-lg prose-invert mx-auto">
+        <h1 class="text-bio-white text-center mb-12">Our Mission</h1>
+
+        <div class="text-xl text-bio-gray-300 leading-relaxed space-y-8">
+          <p>
+            <strong class="text-bio-white"
+              >BIO BEATS exists to transform how electronic music operates.</strong
+            >
+          </p>
+
+          <p>
+            For too long, the industry has been fragmented. Artists struggle to
+            get booked. Bookers can't find reliable talent. Everyone wastes
+            countless hours on bureaucracy instead of creating.
+          </p>
+
+          <p>We believe it doesn't have to be this way.</p>
+
+          <h2 class="text-bio-white text-2xl font-bold mt-16 mb-6">
+            What We Stand For
+          </h2>
+
+          <ul class="space-y-4 text-bio-gray-300">
+            <li>
+              <strong class="text-bio-white">Clarity over chaos.</strong> Professional
+              infrastructure that makes booking simple and transparent.
+            </li>
+            <li>
+              <strong class="text-bio-white">Community over competition.</strong
+              > A network that lifts everyone up, from emerging artists to established
+              names.
+            </li>
+            <li>
+              <strong class="text-bio-white">Sustainability over hype.</strong> Long-term
+              career building, not quick wins that burn out.
+            </li>
+            <li>
+              <strong class="text-bio-white"
+                >Transparency over obscurity.</strong
+              > Clear processes, fair terms, no hidden agendas.
+            </li>
+          </ul>
+
+          <h2 class="text-bio-white text-2xl font-bold mt-16 mb-6">
+            Our Promise
+          </h2>
+
+          <p>
+            We promise to build tools that serve the community, not exploit it.
+            To create infrastructure that empowers artists to focus on their
+            art. To connect professionals in ways that reduce friction and
+            increase opportunity.
+          </p>
+
+          <p class="text-bio-accent font-semibold text-2xl mt-12 text-center">
+            Less chaos. More focus. More bookings.
+          </p>
+
+          <p class="text-center text-bio-gray-500 mt-12">This is BIO BEATS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

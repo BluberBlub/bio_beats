@@ -7,6 +7,11 @@ import { getLangFromUrl } from "../../i18n";
 
 const url = new URL(Astro.request.url);
 const lang = getLangFromUrl(url);
+
+const localizedNavigation = mainNavigation.map((item) => ({
+  ...item,
+  href: lang === "de" ? `/de${item.href}` : `/en${item.href}`,
+}));
 ---
 
 <header
@@ -31,7 +36,7 @@ const lang = getLangFromUrl(url);
       <div class="hidden lg:flex items-center gap-1">
         {
           mainNavigation.map((item) => {
-            const href = lang === "de" ? `/de${item.href}` : item.href;
+            const href = lang === "de" ? `/de${item.href}` : `/en${item.href}`;
 
             // Normalize paths for comparison (remove language prefix)
             const currentPathClean =
@@ -72,7 +77,7 @@ const lang = getLangFromUrl(url);
       <!-- Mobile Menu Button -->
       <MobileNav
         client:only="react"
-        navigation={mainNavigation}
+        navigation={localizedNavigation}
         currentPath={url.pathname}
       />
     </nav>

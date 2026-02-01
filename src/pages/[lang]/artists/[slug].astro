@@ -16,7 +16,10 @@ import { languages } from "../../../i18n";
 import { getTranslations } from "../../../i18n";
 
 export function getStaticPaths() {
-    const paths = [];
+    const paths: {
+        params: { lang: string; slug: string };
+        props: { artist: (typeof artists)[0] };
+    }[] = [];
     Object.keys(languages).forEach((lang) => {
         artists.forEach((artist) => {
             paths.push({
@@ -61,7 +64,7 @@ const typeLabels = {
     <div class="bg-bio-black py-4">
         <div class="container-wide">
             <a
-                href={`/${lang === "de" ? "de/" : ""}artists`}
+                href={`/${lang === "de" ? "de" : "en"}/artists`}
                 class="inline-flex items-center gap-2 text-bio-gray-400 hover:text-bio-white transition-colors"
             >
                 <ArrowLeft className="w-4 h-4" />
@@ -208,7 +211,7 @@ const typeLabels = {
                     <!-- Booking CTA -->
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a
-                            href={`/${lang === "de" ? "de/" : ""}book/${artist.slug}`}
+                            href={`/${lang === "de" ? "de" : "en"}/book/${artist.slug}`}
                             class="btn-primary"
                         >
                             <Calendar className="w-4 h-4 mr-2" />
@@ -289,7 +292,7 @@ const typeLabels = {
                         {ta.getInTouchDesc.replace("{name}", artist.name)}
                     </p>
                     <a
-                        href={`/${lang === "de" ? "de/" : ""}book/${artist.slug}`}
+                        href={`/${lang === "de" ? "de" : "en"}/book/${artist.slug}`}
                         class="btn-primary w-full text-center"
                     >
                         {ta.sendInquiry}

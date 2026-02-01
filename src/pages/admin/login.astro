@@ -3,7 +3,22 @@ import AdminLoginForm from "../../components/react/admin/AdminLoginForm";
 import "../../styles/global.css";
 ---
 
-<!doctype html>
+<script is:inline>
+    if (typeof window !== "undefined") {
+        const localAuth = localStorage.getItem("bio-admin-auth");
+        const cookieAuth = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("bio-auth="));
+
+        console.log("Login Auth Check:", { localAuth, cookieAuth });
+
+        if (localAuth || cookieAuth) {
+            console.log("Login: Auth found, redirecting to dashboard");
+            window.location.href = "/admin/dashboard";
+        }
+    }
+</script>
+
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
