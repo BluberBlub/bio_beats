@@ -351,7 +351,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                                     <img
                                         src={artist.image}
                                         alt={artist.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10 opacity-0 transition-opacity duration-300"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10 opacity-0"
                                         loading="lazy"
                                         onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
@@ -426,7 +426,7 @@ export default function ArtistDirectory({ artists = [], labels = [], lang = 'en'
                                     <img
                                         src={label.image}
                                         alt={label.name}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10 opacity-0 transition-opacity duration-300"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 relative z-10 opacity-0"
                                         loading="lazy"
                                         onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                                     />
