@@ -35,8 +35,8 @@ ErrorDocument 404 /404.html
   # 3. Asset Rewriting (Relative Paths)
   # ----------------------------------------------------------------------
   
-  # Artist Images (Matches /artists/something)
-  RewriteRule ^artists/(.+)$ client/artists/$1 [L]
+  # Artist Images (Only match image files, not page routes)
+  RewriteRule ^artists/(.+\.(png|jpg|jpeg|webp|gif|svg))$ client/artists/$1 [L,NC]
   
   # Standard Assets
   RewriteRule ^_astro/(.*)$ client/_astro/$1 [L]
